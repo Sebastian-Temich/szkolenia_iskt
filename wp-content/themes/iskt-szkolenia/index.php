@@ -2,10 +2,11 @@
 /**
  * Szablon podstawowy.
  *
- * Do czasu dołożenia szablonów szczegółowych (zadania 5, 7 i 8) index.php
- * obsługuje wszystkie widoki: listę wpisów, archiwa, wyniki wyszukiwania oraz
- * pojedynczy wpis i stronę. Dzięki temu serwis jest spójny od pierwszego dnia,
- * a nie „w budowie”.
+ * Po zadaniach 5, 7 i 8 własne pliki mają: szkolenie, trener, lista aktualności,
+ * archiwum kategorii i artykuł. `index.php` zostaje szablonem awaryjnym dla
+ * widoków, których nie obsługuje żaden inny plik — wyników wyszukiwania, archiwów
+ * dat i autorów oraz stron. Dzięki temu każdy adres serwisu ma wygląd motywu,
+ * także taki, o którym nikt nie pomyślał osobno.
  *
  * @package ISKT\Szkolenia\Theme
  */

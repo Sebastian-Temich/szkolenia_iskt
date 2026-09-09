@@ -1,10 +1,10 @@
 <?php
 /**
- * Pojedynczy wpis lub strona.
+ * Strona statyczna — np. „Kontakt” albo „Polityka prywatności”.
  *
- * Szablon przejściowy: docelowe widoki szkolenia (zadanie 5), trenera
- * (zadanie 7) i aktualności (zadanie 8) dostaną własne pliki. Ten zapewnia
- * poprawną, czytelną prezentację każdej treści od razu.
+ * Szkolenie, trener i artykuł aktualności mają własne szablony (zadania 5, 7
+ * i 8), więc tutaj trafia wyłącznie treść, dla której układ redakcyjny w zupełności
+ * wystarcza: tytuł, opcjonalne zdjęcie i treść z edytora blokowego.
  *
  * @package ISKT\Szkolenia\Theme
  */

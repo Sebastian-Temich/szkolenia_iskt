@@ -89,16 +89,18 @@ function iskt_render_obszary_szkolen( array $atrybuty ): string {
 }
 
 /**
- * Wypisuje siatkę wyróżnionych szkoleń.
+ * Wyróżnione szkolenia — jedno źródło listy dla wszystkich widoków.
  *
- * Wyróżnienie to przełącznik przy szkoleniu (`_iskt_wyroznione`), a nie osobna
- * lista utrzymywana obok katalogu — §4.2 wymaga wyróżniania wybranych szkoleń
- * w jednym miejscu. Gdy właściciel nie wyróżni żadnego, sekcja się nie pokazuje.
+ * Sekcja na stronie głównej i sekcja domykająca artykuł aktualności pokazują tę
+ * samą ofertę. Gdyby każda z nich składała własne zapytanie, wystarczyłaby jedna
+ * poprawka sortowania po jednej stronie, żeby te same szkolenia ustawiły się
+ * w innej kolejności w dwóch miejscach serwisu.
  *
- * @param array<string, mixed> $atrybuty Atrybuty bloku.
+ * @param int $limit Ile szkoleń pobrać; poza zakresem 1–12 przycinamy.
+ *
+ * @return array<int, WP_Post>
  */
-function iskt_render_wyroznione_szkolenia( array $atrybuty ): string {
-	$limit = isset( $atrybuty['liczba'] ) ? (int) $atrybuty['liczba'] : 4;
+function iskt_wyroznione_szkolenia( int $limit = 4 ): array {
 	$limit = max( 1, min( 12, $limit ) );
 
 	$zapytanie = new WP_Query(
@@ -118,13 +120,30 @@ function iskt_render_wyroznione_szkolenia( array $atrybuty ): string {
 		)
 	);
 
-	if ( ! $zapytanie->have_posts() ) {
+	return array_values( array_filter( $zapytanie->posts, static fn ( $wpis ): bool => $wpis instanceof WP_Post ) );
+}
+
+/**
+ * Wypisuje siatkę wyróżnionych szkoleń.
+ *
+ * Wyróżnienie to przełącznik przy szkoleniu (`_iskt_wyroznione`), a nie osobna
+ * lista utrzymywana obok katalogu — §4.2 wymaga wyróżniania wybranych szkoleń
+ * w jednym miejscu. Gdy właściciel nie wyróżni żadnego, sekcja się nie pokazuje.
+ *
+ * @param array<string, mixed> $atrybuty Atrybuty bloku.
+ */
+function iskt_render_wyroznione_szkolenia( array $atrybuty ): string {
+	$limit = isset( $atrybuty['liczba'] ) ? (int) $atrybuty['liczba'] : 4;
+
+	$szkolenia = iskt_wyroznione_szkolenia( $limit );
+
+	if ( array() === $szkolenia ) {
 		return '';
 	}
 
 	$karty = '';
 
-	foreach ( $zapytanie->posts as $szkolenie ) {
+	foreach ( $szkolenia as $szkolenie ) {
 		$karty .= iskt_karta_szkolenia( $szkolenie );
 	}
 

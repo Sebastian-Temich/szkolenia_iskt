@@ -125,7 +125,50 @@ Każdy napis z widoków aktualności jest już w rejestrze tekstów globalnych
 `aktualnosci_czytaj`, `aktualnosci_brak`. Właściciel zmienia je w panelu
 w Szkolenia → Teksty serwisu, bez dotykania kodu.
 
-## 8. O co konkretnie prosimy
+## 8. Stan po akceptacji — co zostało zbudowane
+
+**Bramka 2 zamknięta 2026-09-09.** ISKT przyjęło kierunek bez uwag, więc trzy
+punkty otwarte z §8a rozstrzygnęły się na wariant proponowany:
+
+1. sekcja „Zobacz nasze szkolenia” pod artykułem — **zostaje**;
+2. autor wpisu — **bez podpisu osobowego**, publikujemy jako ISKT;
+3. filtr kategorii nad listą — **jest**, w formie zwykłych odnośników do archiwów.
+
+Powstałe pliki:
+
+| Plik | Rola |
+|---|---|
+| `home.php` | lista aktualności pod adresem strony ustawionej jako lista wpisów |
+| `category.php` | ta sama lista zawężona do jednej kategorii |
+| `single.php` | artykuł |
+| `template-parts/aktualnosc/lista.php` | wspólne ciało obu list — jedno miejsce na siatkę, filtr i paginację |
+| `template-parts/aktualnosc/karta.php` | karta wpisu |
+| `template-parts/aktualnosc/filtry.php` | filtr kategorii |
+| `template-parts/aktualnosc/polecane.php` | sekcja domykająca artykuł |
+| `inc/aktualnosci.php` | wspólne dane: tytuł listy, adres, kategorie, data aktualizacji |
+| `assets/css/aktualnosci.css` | wyłącznie to, czego nie ma w komponentach |
+
+Dwie rzeczy warte odnotowania po wykonaniu:
+
+- **Sekcja domykająca czyta tę samą listę, co strona główna.** Wyróżnione
+  szkolenia pobiera `iskt_wyroznione_szkolenia()` we wtyczce — funkcja wydzielona
+  przy tym zadaniu z bloku strony głównej. Właściciel zarządza tą listą jednym
+  przełącznikiem przy szkoleniu; nie ma osobnego zestawu „pod artykuły”, który
+  mógłby się rozjechać z sekcją na stronie głównej.
+- **Data aktualizacji jest podmieniana tekstowo, nie przez `printf()`.** Wzorzec
+  zdania jest edytowalny z panelu, a właściciel, który wpisałby w nim drugie `%s`
+  albo znak procentu, wywróciłby stronę błędem PHP. Gdy usunie miejsce na datę,
+  data doklei się na końcu zdania, zamiast zniknąć.
+
+Napisy dołożone do rejestru przy tym zadaniu: `aktualnosci_kategorie`,
+`aktualnosci_kategorie_wszystkie`, `aktualnosci_zaktualizowano`,
+`aktualnosci_poprzedni`, `aktualnosci_nastepny`, `aktualnosci_polecane_tytul`,
+`aktualnosci_polecane_katalog`.
+
+Weryfikacja: `tests/e2e/aktualnosci.spec.js` — 4/4, zrzuty 360/768/1440
+w `qa-artifacts/isk-17-aktualnosci/`.
+
+## 8a. O co prosiliśmy przed budową
 
 Zgoda na kierunek z §3–§5 wystarczy, żeby zadanie 8 ruszyło. Trzy punkty,
 w których decyzja ISKT zmienia zakres pracy:

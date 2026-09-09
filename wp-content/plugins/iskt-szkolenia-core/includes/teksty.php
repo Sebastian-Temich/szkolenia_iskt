@@ -349,6 +349,45 @@ function iskt_rejestr_tekstow(): array {
 					'domyslna' => __( 'Nie ma tu jeszcze żadnych treści.', 'iskt-szkolenia-core' ),
 					'typ'      => 'obszar',
 				),
+				'aktualnosci_kategorie'   => array(
+					'etykieta' => __( 'Nazwa filtra kategorii nad listą', 'iskt-szkolenia-core' ),
+					'domyslna' => __( 'Kategorie', 'iskt-szkolenia-core' ),
+					'typ'      => 'linia',
+					'opis'     => __( 'Czytnik ekranu odczytuje ten napis przed listą kategorii. Filtr pokazuje się dopiero przy dwóch niepustych kategoriach.', 'iskt-szkolenia-core' ),
+				),
+				'aktualnosci_kategorie_wszystkie' => array(
+					'etykieta' => __( 'Pozycja „wszystkie” w filtrze kategorii', 'iskt-szkolenia-core' ),
+					'domyslna' => __( 'Wszystkie', 'iskt-szkolenia-core' ),
+					'typ'      => 'linia',
+				),
+				'aktualnosci_zaktualizowano' => array(
+					'etykieta' => __( 'Informacja o dacie aktualizacji wpisu', 'iskt-szkolenia-core' ),
+					'domyslna' => __( 'Zaktualizowano %s', 'iskt-szkolenia-core' ),
+					'typ'      => 'linia',
+					'opis'     => __( '„%s” zastępujemy datą. Bez tego znaku data doklei się na końcu zdania. Informacja pojawia się tylko wtedy, gdy wpis zmieniono w innym dniu niż opublikowano.', 'iskt-szkolenia-core' ),
+				),
+				'aktualnosci_poprzedni'   => array(
+					'etykieta' => __( 'Etykieta odnośnika do poprzedniego wpisu', 'iskt-szkolenia-core' ),
+					'domyslna' => __( 'Poprzedni wpis', 'iskt-szkolenia-core' ),
+					'typ'      => 'linia',
+				),
+				'aktualnosci_nastepny'    => array(
+					'etykieta' => __( 'Etykieta odnośnika do następnego wpisu', 'iskt-szkolenia-core' ),
+					'domyslna' => __( 'Następny wpis', 'iskt-szkolenia-core' ),
+					'typ'      => 'linia',
+				),
+				'aktualnosci_polecane_tytul' => array(
+					'etykieta' => __( 'Tytuł sekcji ze szkoleniami pod artykułem', 'iskt-szkolenia-core' ),
+					'domyslna' => __( 'Zobacz nasze szkolenia', 'iskt-szkolenia-core' ),
+					'typ'      => 'linia',
+					'opis'     => __( 'Sekcja pokazuje szkolenia oznaczone jako wyróżnione. Gdy żadne nie jest wyróżnione, sekcja w ogóle się nie pojawia.', 'iskt-szkolenia-core' ),
+				),
+				'aktualnosci_polecane_katalog' => array(
+					'etykieta' => __( 'Odnośnik do katalogu pod artykułem', 'iskt-szkolenia-core' ),
+					'domyslna' => __( 'Cały katalog', 'iskt-szkolenia-core' ),
+					'typ'      => 'linia',
+					'opis'     => __( 'Puste pole ukrywa przycisk.', 'iskt-szkolenia-core' ),
+				),
 			),
 		),
 		'formularz'   => array(

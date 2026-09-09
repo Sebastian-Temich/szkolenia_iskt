@@ -26,13 +26,14 @@ const ISKT_TOKEN_FILES = array( 'fonts', 'colors', 'typography', 'spacing', 'eff
  * układ → typografia → komponenty → szkielet strony. Żaden z nich nie powtarza
  * wartości z tokenów; wszystkie korzystają ze zmiennych CSS.
  */
-const ISKT_STYLE_FILES = array( 'uklad', 'typografia', 'komponenty', 'szkielet', 'sekcje' );
+const ISKT_STYLE_FILES = array( 'uklad', 'typografia', 'komponenty', 'szkielet', 'sekcje', 'aktualnosci' );
 
 require_once get_theme_file_path( 'inc/teksty.php' );
 require_once get_theme_file_path( 'inc/ikony.php' );
 require_once get_theme_file_path( 'inc/nawigacja.php' );
 require_once get_theme_file_path( 'inc/szablony.php' );
 require_once get_theme_file_path( 'inc/sekcje.php' );
+require_once get_theme_file_path( 'inc/aktualnosci.php' );
 require_once get_theme_file_path( 'inc/instalacja.php' );
 
 /**

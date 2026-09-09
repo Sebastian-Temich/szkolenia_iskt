@@ -68,7 +68,7 @@ z wyglądem z załącznika oraz możliwością samodzielnego dodania i edycji sz
 |---|---|---|---|---|
 | 6 | Katalog: wyszukiwanie po nazwie i opisie, filtry kategoria + forma, paginacja, stan braku wyników, czyszczenie filtrów | WP/frontend | 2,5 | w realizacji od 2026-09-09 |
 | 7 | Trenerzy: lista i profil, spójna prezentacja powiązań w obu widokach | WP/frontend | 2,0 | w realizacji od 2026-09-09 |
-| 8 | Aktualności: lista i artykuł — **projekt widoków do akceptacji ISKT**, brak wzorca w załączniku | WP/frontend | 1,5 | czeka na bramkę 2 — `PROJEKT-AKTUALNOSCI.md` |
+| 8 | Aktualności: lista i artykuł — **projekt widoków do akceptacji ISKT**, brak wzorca w załączniku | WP/frontend | 1,5 | **wykonane 2026-09-09** — `PROJEKT-AKTUALNOSCI.md`; bramka 2 zamknięta, widoki sprawdzone w przeglądarce |
 | 9 | Formularz: walidacja serwerowa, własny antyspam, wysyłka, kontekst szkolenia i terminu, zachowanie danych przy błędzie | backend WP | 3,0 | w realizacji od 2026-09-09 |
 | 10 | Pełna edytowalność treści: ekran tekstów globalnych, menu, stopka, etykiety, komunikaty pustych wyników | backend WP | 2,0 | **wykonane 2026-09-09** — patrz §5a |
 | | **Razem M2** | | **11,0** | |
@@ -231,7 +231,7 @@ wyborze szkolenia dla terminu.
 ## 8. Bramki (§12)
 
 1. ~~Zatwierdzenie planu i startu realizacji~~ — **zamknięte 2026-09-09**, zgoda w zmienionym zakresie
-2. Akceptacja projektu widoków terminów i aktualności — **karta otwarta 2026-09-09**, dokument `PROJEKT-AKTUALNOSCI.md`. Blokuje wyłącznie zadanie 8
+2. ~~Akceptacja projektu widoków terminów i aktualności~~ — **zamknięte 2026-09-09**, dokument `PROJEKT-AKTUALNOSCI.md` przyjęty bez uwag; zadanie 8 wykonane w zaproponowanym wariancie
 3. ~~Odbiór M1 przez ISKT~~ — **zamknięte 2026-09-09**
 4. Przegląd bezpieczeństwa — zadanie 15
 5. Przegląd obsługi danych osobowych i treści informacyjnych — przed publikacją
@@ -250,4 +250,8 @@ z rejestru tekstów zamiast wpisywać je do szablonu. Kolejność nie była kosm
 gdyby trzy gałęzie ruszyły przed rejestrem, powstałyby trzy różne sposoby na te same
 etykiety i komunikaty, a §4.7 wymaga jednego źródła.
 
-Zadanie 8 czeka na bramkę 2 i nie wstrzymuje pozostałych.
+Zadanie 8 jest wykonane: bramka 2 została zamknięta akceptacją bez uwag, więc widoki
+powstały w wariancie proponowanym w dokumencie — z sekcją „Zobacz nasze szkolenia”
+pod artykułem, bez podpisu autora i z filtrem kategorii nad listą.
+
+Po zamknięciu zadań 6, 7, 8 i 10 z M2 zostaje wyłącznie zadanie 9 (formularz).
