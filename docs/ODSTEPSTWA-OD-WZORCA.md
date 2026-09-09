@@ -56,11 +56,11 @@ Te punkty nie są wyborem wykonawcy — wynikają wprost z zatwierdzonego zakres
   trenerów) — nie wprowadzamy ich do motywu. Wymagają potwierdzenia (§9),
   zestawienie w `MATERIALY-I-DECYZJE.md`.
 
-## 5. Czego nie zweryfikowano
+## 5. Weryfikacja w działającym WordPressie
 
-**Wyglądu nie obejrzeliśmy w przeglądarce.** W środowisku wykonawczym nie działa
-demon Dockera, więc `wp-env` nie zostało uruchomione — to ta sama przeszkoda,
-która zostawiła zadanie 1 jako częściowe.
+**Weryfikację wykonano 9 września 2026 r.** w `wp-env` (WordPress 6.6.2,
+PHP 8.2, Chromium 153). Motyw `iskt-szkolenia` i wtyczka
+`iskt-szkolenia-core` były aktywne; skonfigurowano oba menu i widżety stopki.
 
 Co zostało sprawdzone:
 
@@ -75,17 +75,28 @@ Co zostało sprawdzone:
 - `php tests/run.php` — 40 asercji wtyczki nadal przechodzi, motyw ich nie dotyka
   (po zadaniu 4 zestaw liczy 79 asercji — patrz `STRONA-GLOWNA.md` §9).
 
-Czego **nie** sprawdzono i co trzeba obejrzeć po uruchomieniu `wp-env`:
+Wynik testów dynamicznych:
 
-1. rzeczywisty wygląd przy 360, 768 i 1440 px;
-2. zachowanie menu mobilnego i podmenu na urządzeniu dotykowym;
-3. kontrast w realnym renderowaniu (wartości dobrane z palety, ale niemierzone);
-4. `backdrop-filter` w przeglądarkach bez wsparcia — nagłówek pozostaje wtedy
-   półprzezroczysty bez rozmycia, co jest akceptowalne, ale niesprawdzone;
-5. wygląd stopki bez widżetów i bez ustawionego menu.
+1. wykonano zrzuty listy wpisów, pojedynczej treści, strony 404 i wyników
+   wyszukiwania przy 360, 768 i 1440 px; nie stwierdzono przepełnienia poziomego;
+2. menu mobilne i podmenu reagują na dotyk, poprawnie aktualizują
+   `aria-expanded`, a klawisz Escape zamyka panel;
+3. fokus klawiatury jest widoczny (obrys 3 px); przejście obejmuje nagłówek,
+   odnośniki kart oraz elementy formularza;
+4. zmierzone współczynniki kontrastu: tekst podstawowy 18,52:1, tekst karty
+   18,52:1, tekst stopki 17,83:1 — wszystkie powyżej progu WCAG AA 4,5:1;
+5. po wymuszeniu `backdrop-filter: none` nagłówek zachowuje jasne tło
+   `color(srgb 1 1 1 / 0.9)` i czytelność;
+6. stopka bez widżetów i bez przypisanego menu zachowuje spójny układ;
+7. **rozbieżność:** przy 360 px i wyłączonym JavaScripcie `.iskt-site-nav` ma
+   obliczone `display: none`, więc panel nie pozostaje rozwinięty i używalny.
+   Jest to sprzeczne z założeniem progressive enhancement opisanym w komentarzu
+   szablonu. Zrzut `no-js-360.png` dokumentuje brak nawigacji.
 
-Uruchomienie `wp-env` i zrzuty ekranu z trzech szerokości domykają zadanie 1
-i są warunkiem odbioru M1 (bramka 3).
+Aktywację wtyczki sprawdzono także cyklem dezaktywacja → aktywacja: liczba
+kategorii startowych pozostała równa 5, opcja `iskt_slowniki_zasiane` pozostała
+ustawiona na `1`, a uprawnienie `publish_iskt_szkolenia` administratora zostało
+ponownie nadane. Zasiew nie utworzył duplikatów.
 
 ---
 
