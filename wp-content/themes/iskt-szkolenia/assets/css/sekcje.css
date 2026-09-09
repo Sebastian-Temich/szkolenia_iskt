@@ -542,6 +542,30 @@
   margin-block-start: var(--space-2) !important;
 }
 
+.iskt-termin__akcja {
+  margin-block-start: var(--space-2) !important;
+  font-size: var(--text-sm);
+}
+
+/* Formularz zgłoszeniowy (blok wtyczki). Sama oprawa — pola i komunikaty mają
+   już swoje reguły w komponenty.css, więc nic tu się nie powtarza. */
+.iskt-zgloszenie {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-5);
+}
+
+.iskt-zgloszenie .iskt-form {
+  margin-block-start: var(--space-2);
+}
+
+/* Wybór rodzaju odbiorcy stoi w wierszu, dopóki się mieści. Dwie opcje jedna pod
+   drugą zabierałyby wysokość, której formularz z ośmioma polami nie ma na zbyciu. */
+.iskt-zgloszenie .iskt-fieldset .iskt-field--check {
+  display: inline-flex;
+  margin-inline-end: var(--space-5);
+}
+
 .iskt-trener {
   display: flex;
   align-items: center;

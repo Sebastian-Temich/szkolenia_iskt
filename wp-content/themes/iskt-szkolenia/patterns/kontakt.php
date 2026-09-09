@@ -3,7 +3,7 @@
  * Title: Kontakt i zgłoszenie
  * Slug: iskt-szkolenia/kontakt
  * Categories: iskt-sekcje
- * Description: Sekcja kontaktowa z dwoma wariantami tekstu i danymi kontaktowymi. Formularz zgłoszeniowy dokłada osobne zadanie.
+ * Description: Sekcja kontaktowa z dwoma wariantami tekstu, danymi kontaktowymi i formularzem zgłoszeniowym.
  * Keywords: kontakt, zgłoszenie, formularz
  * Viewport Width: 1400
  *
@@ -11,9 +11,9 @@
  * i adres siedziby z prototypu wymagają potwierdzenia (§9), więc wzorzec zostawia
  * w ich miejscu widoczny znacznik zamiast numeru, który wygląda na prawdziwy.
  *
- * Do czasu wykonania zadania 9 sekcja kieruje na działający odnośnik pocztowy —
- * nie na przycisk bez działania. §11 pkt 10 nie dopuszcza roboczych odnośników „#”,
- * a etap pośredni też jest widoczny dla właściciela.
+ * Formularz jest blokiem wtyczki, a nie znacznikami zapisanymi w tym wzorcu.
+ * Różnica jest praktyczna: etykiety, komunikaty i adres odbiorcy zmieniają się
+ * z panelu i działają także na stronach założonych przed edycją wzorca (§4.7).
  *
  * @package ISKT\Szkolenia\Theme
  */
@@ -91,17 +91,14 @@ $iskt_warianty = array(
 		<div class="wp-block-column">
 			<!-- wp:group {"className":"iskt-card iskt-card--padded","layout":{"type":"constrained"}} -->
 			<div class="wp-block-group iskt-card iskt-card--padded">
-				<!-- wp:paragraph -->
-				<p><?php echo esc_html__( 'Napisz, jakiego szkolenia szukasz — odpowiemy z propozycją terminu i wyceną. Wysłanie wiadomości nie rezerwuje miejsca na szkoleniu.', 'iskt-szkolenia' ); ?></p>
-				<!-- /wp:paragraph -->
-
-				<!-- wp:buttons -->
-				<div class="wp-block-buttons">
-					<!-- wp:button -->
-					<div class="wp-block-button"><a class="wp-block-button__link wp-element-button" href="mailto:szkolenia@iskt.pl"><?php echo esc_html__( 'Napisz do nas', 'iskt-szkolenia' ); ?></a></div>
-					<!-- /wp:button -->
-				</div>
-				<!-- /wp:buttons -->
+				<?php
+				/*
+				 * Nagłówek formularza jest wyłączony: sekcja ma już własny tytuł i wstęp
+				 * w obu wariantach odbiorcy powyżej, a drugi nagłówek pod nim czytałby się
+				 * jak początek kolejnej sekcji.
+				 */
+				?>
+				<!-- wp:iskt/formularz-zgloszeniowy {"pokazNaglowek":false} /-->
 			</div>
 			<!-- /wp:group -->
 		</div>

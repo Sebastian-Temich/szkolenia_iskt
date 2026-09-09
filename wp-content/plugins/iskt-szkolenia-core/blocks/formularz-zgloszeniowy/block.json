@@ -1,0 +1,27 @@
+{
+	"$schema": "https://schemas.wp.org/trunk/block.json",
+	"apiVersion": 3,
+	"name": "iskt/formularz-zgloszeniowy",
+	"title": "Formularz zgłoszeniowy",
+	"category": "iskt",
+	"icon": "email-alt",
+	"description": "Formularz zapytania o szkolenie. Zgłoszenie trafia na adres e-mail z ustawień „Teksty serwisu → Dane kontaktowe”. Etykiety i komunikaty zmienia się na tym samym ekranie.",
+	"keywords": [ "formularz", "zgłoszenie", "kontakt", "zapytanie" ],
+	"textdomain": "iskt-szkolenia-core",
+	"attributes": {
+		"pokazNaglowek": {
+			"type": "boolean",
+			"default": true
+		}
+	},
+	"supports": {
+		"html": false,
+		"multiple": false,
+		"align": [ "wide" ],
+		"spacing": {
+			"margin": true,
+			"padding": true
+		}
+	},
+	"editorScript": "iskt-bloki"
+}

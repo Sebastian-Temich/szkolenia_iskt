@@ -260,6 +260,12 @@ function iskt_rejestr_tekstow(): array {
 					'domyslna' => __( 'Zapytaj o to szkolenie', 'iskt-szkolenia-core' ),
 					'typ'      => 'linia',
 				),
+				'szkolenie_termin_cta'              => array(
+					'etykieta' => __( 'Odnośnik zapytania przy pojedynczym terminie', 'iskt-szkolenia-core' ),
+					'domyslna' => __( 'Zapytaj o ten termin', 'iskt-szkolenia-core' ),
+					'typ'      => 'linia',
+					'opis'     => __( 'Prowadzi do formularza z uzupełnionym szkoleniem i tym terminem. Puste pole ukrywa odnośnik. Terminy z zamkniętymi zapisami go nie pokazują.', 'iskt-szkolenia-core' ),
+				),
 				'szkolenie_zastrzezenie'            => array(
 					'etykieta' => __( 'Zastrzeżenie przy przycisku', 'iskt-szkolenia-core' ),
 					'domyslna' => __( 'Wysłanie zapytania nie rezerwuje miejsca na szkoleniu. Odpowiemy z potwierdzeniem dostępności.', 'iskt-szkolenia-core' ),
@@ -444,15 +450,43 @@ function iskt_rejestr_tekstow(): array {
 					'domyslna' => __( 'Szkolenie lub obszar zainteresowania', 'iskt-szkolenia-core' ),
 					'typ'      => 'linia',
 				),
+				'formularz_szkolenie_ogolne' => array(
+					'etykieta' => __( 'Pozycja „zapytanie ogólne” na liście szkoleń', 'iskt-szkolenia-core' ),
+					'domyslna' => __( 'Zapytanie ogólne — opiszę w wiadomości', 'iskt-szkolenia-core' ),
+					'typ'      => 'linia',
+					'opis'     => __( '§5 zlecenia wymaga, aby dało się napisać bez wskazywania konkretnej oferty. Ta pozycja jest zaznaczona na starcie.', 'iskt-szkolenia-core' ),
+				),
+				'formularz_grupa_szkolenia' => array(
+					'etykieta' => __( 'Nagłówek grupy „szkolenia” na liście wyboru', 'iskt-szkolenia-core' ),
+					'domyslna' => __( 'Szkolenia z katalogu', 'iskt-szkolenia-core' ),
+					'typ'      => 'linia',
+				),
+				'formularz_grupa_obszary' => array(
+					'etykieta' => __( 'Nagłówek grupy „obszary” na liście wyboru', 'iskt-szkolenia-core' ),
+					'domyslna' => __( 'Obszary zainteresowania', 'iskt-szkolenia-core' ),
+					'typ'      => 'linia',
+				),
 				'formularz_termin'        => array(
 					'etykieta' => __( 'Etykieta pola wyboru terminu', 'iskt-szkolenia-core' ),
 					'domyslna' => __( 'Wybrany termin', 'iskt-szkolenia-core' ),
 					'typ'      => 'linia',
 				),
+				'formularz_termin_dowolny' => array(
+					'etykieta' => __( 'Pozycja „bez wskazanego terminu” na liście terminów', 'iskt-szkolenia-core' ),
+					'domyslna' => __( 'Termin do ustalenia', 'iskt-szkolenia-core' ),
+					'typ'      => 'linia',
+					'opis'     => __( 'Pole terminu pokazuje się tylko wtedy, gdy wybrane szkolenie ma nadchodzące terminy.', 'iskt-szkolenia-core' ),
+				),
 				'formularz_wiadomosc'     => array(
 					'etykieta' => __( 'Etykieta pola wiadomości', 'iskt-szkolenia-core' ),
 					'domyslna' => __( 'Wiadomość', 'iskt-szkolenia-core' ),
 					'typ'      => 'linia',
+				),
+				'formularz_wymagane_opis' => array(
+					'etykieta' => __( 'Objaśnienie oznaczenia pól wymaganych', 'iskt-szkolenia-core' ),
+					'domyslna' => __( 'Pola oznaczone gwiazdką są wymagane.', 'iskt-szkolenia-core' ),
+					'typ'      => 'linia',
+					'opis'     => __( 'Puste pole ukrywa to zdanie; gwiazdki przy etykietach zostają.', 'iskt-szkolenia-core' ),
 				),
 				'formularz_przycisk'      => array(
 					'etykieta' => __( 'Przycisk wysyłki', 'iskt-szkolenia-core' ),
@@ -485,6 +519,22 @@ function iskt_rejestr_tekstow(): array {
 					'domyslna' => __( 'Nie udało się dostarczyć wiadomości. Prosimy o kontakt e-mailowy — adres znajduje się w stopce.', 'iskt-szkolenia-core' ),
 					'typ'      => 'obszar',
 					'opis'     => __( '§5 zlecenia: potwierdzenie pokazujemy dopiero po przyjęciu zgłoszenia przez mechanizm wysyłkowy. Ten komunikat pojawia się, gdy wysyłka zawiodła.', 'iskt-szkolenia-core' ),
+				),
+				'formularz_blad_nonce' => array(
+					'etykieta' => __( 'Błąd — formularz był otwarty zbyt długo', 'iskt-szkolenia-core' ),
+					'domyslna' => __( 'Formularz był otwarty zbyt długo i wygasł. Odśwież stronę i wyślij zapytanie ponownie — wpisane dane zostają w polach.', 'iskt-szkolenia-core' ),
+					'typ'      => 'obszar',
+				),
+				'formularz_blad_antyspam' => array(
+					'etykieta' => __( 'Błąd — zgłoszenie odrzucone przez ochronę antyspamową', 'iskt-szkolenia-core' ),
+					'domyslna' => __( 'Nie udało się potwierdzić, że zapytanie wysłał człowiek. Spróbuj ponownie albo napisz do nas bezpośrednio — adres znajduje się w stopce.', 'iskt-szkolenia-core' ),
+					'typ'      => 'obszar',
+					'opis'     => __( 'Widzą go automaty wypełniające ukryte pole oraz wysyłki złożone szybciej, niż da się przeczytać formularz. Zakres ochrony opisuje docs/FORMULARZ-ZGLOSZENIOWY.md.', 'iskt-szkolenia-core' ),
+				),
+				'formularz_blad_limit' => array(
+					'etykieta' => __( 'Błąd — zbyt wiele zapytań z jednego łącza', 'iskt-szkolenia-core' ),
+					'domyslna' => __( 'Zapytanie z tego łącza wysłano przed chwilą. Odczekaj minutę przed wysłaniem kolejnego.', 'iskt-szkolenia-core' ),
+					'typ'      => 'obszar',
 				),
 				'formularz_sukces'        => array(
 					'etykieta' => __( 'Potwierdzenie wysłania', 'iskt-szkolenia-core' ),

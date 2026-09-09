@@ -69,6 +69,10 @@ każdy uczestnik otrzyma wsparcie na określonym poziomie.
 Jawna lista — nie da się ich wykonać przed migracją i nie blokują odbioru budowy:
 
 1. Dostarczenie zgłoszenia na prawdziwą skrzynkę szkolenia@iskt.pl (wymaga poczty docelowej).
+   Zadanie 9 sprawdziło wszystko po naszej stronie: wiadomość z poprawnym odbiorcą, tematem,
+   nagłówkami i treścią zostaje przekazana do mechanizmu wysyłkowego, a nieudana wysyłka daje
+   komunikat błędu zamiast podziękowania. Dostawa i filtry antyspamowe odbiorcy — po migracji.
+   Szczegóły: `docs/FORMULARZ-ZGLOSZENIOWY.md` §8.
 2. Poprawność SPF/DKIM/DMARC dla nadawcy w domenie iskt.pl (wymaga DNS — poza zakresem §13).
 3. Działanie na docelowym hostingu SEOHost: wersja PHP, limity, cron, HTTPS.
 4. Pomiar wydajności na docelowej infrastrukturze — mierzymy w środowisku wewnętrznym.

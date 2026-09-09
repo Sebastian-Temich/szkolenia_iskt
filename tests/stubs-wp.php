@@ -198,6 +198,55 @@ function get_post_type( $post_id = null ) {
 }
 
 /**
+ * Rejestr wpisów używany przez atrapę `get_post()`.
+ *
+ * Klucz to identyfikator, wartość to `WP_Post`. Typ wpisu bierzemy z `iskt_test_typy`,
+ * czyli z tego samego rejestru co `get_post_type()` — dwa źródła tej samej informacji
+ * rozjechałyby się w pierwszym teście, który ustawi tylko jedno z nich.
+ *
+ * @var array<int, WP_Post>
+ */
+$GLOBALS['iskt_test_wpisy'] = array();
+
+/**
+ * Zwraca wpis z rejestru testowego wraz z jego typem.
+ *
+ * @param int $post_id Identyfikator wpisu.
+ *
+ * @return WP_Post|null
+ */
+function get_post( $post_id = null ) {
+	$wpis = $GLOBALS['iskt_test_wpisy'][ (int) $post_id ] ?? null;
+
+	if ( $wpis instanceof WP_Post ) {
+		$wpis->post_type = (string) ( $GLOBALS['iskt_test_typy'][ (int) $post_id ] ?? '' );
+	}
+
+	return $wpis;
+}
+
+/**
+ * Zwraca pojęcie taksonomii z rejestru testowego.
+ *
+ * @param int    $term_id     Identyfikator pojęcia.
+ * @param string $taksonomia  Nazwa taksonomii.
+ *
+ * @return WP_Term|null
+ */
+function get_term( $term_id, $taksonomia = '' ) {
+	unset( $taksonomia );
+
+	return $GLOBALS['iskt_test_pojecia'][ (int) $term_id ] ?? null;
+}
+
+/**
+ * Rejestr pojęć używany przez atrapę `get_term()`.
+ *
+ * @var array<int, WP_Term>
+ */
+$GLOBALS['iskt_test_pojecia'] = array();
+
+/**
  * Zwraca pole wpisu z rejestru testowego.
  *
  * @param int    $post_id Identyfikator wpisu.
@@ -482,4 +531,44 @@ function esc_url_raw( string $adres ): string {
  */
 function wp_parse_url( string $adres, int $skladowa = -1 ) {
 	return parse_url( $adres, $skladowa );
+}
+
+/**
+ * Odwzorowuje `is_email()` w zakresie, w jakim korzysta z niego walidacja formularza.
+ *
+ * Oryginał sprawdza długość, obecność `@`, dozwolone znaki części lokalnej oraz
+ * domenę złożoną z co najmniej dwóch członów. Atrapa sprawdza to samo — świadomie
+ * nie filtrem `FILTER_VALIDATE_EMAIL`, bo ten przepuszcza `a@b`, a WordPress nie.
+ *
+ * @param string $adres Adres wejściowy.
+ */
+function is_email( string $adres ): bool {
+	if ( strlen( $adres ) < 6 || ! str_contains( $adres, '@' ) ) {
+		return false;
+	}
+
+	$czesci = explode( '@', $adres );
+
+	if ( 2 !== count( $czesci ) ) {
+		return false;
+	}
+
+	if ( 1 !== preg_match( '/^[a-zA-Z0-9!#$%&\'*+\/=?^_`{|}~.-]+$/', $czesci[0] ) ) {
+		return false;
+	}
+
+	$domena = trim( $czesci[1], '.' );
+	$czlony = explode( '.', $domena );
+
+	if ( count( $czlony ) < 2 ) {
+		return false;
+	}
+
+	foreach ( $czlony as $czlon ) {
+		if ( 1 !== preg_match( '/^[a-z0-9-]+$/i', trim( $czlon, '-' ) ) ) {
+			return false;
+		}
+	}
+
+	return true;
 }

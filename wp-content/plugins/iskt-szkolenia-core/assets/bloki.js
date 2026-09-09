@@ -266,4 +266,43 @@
 			return null;
 		},
 	} );
+	blocks.registerBlockType( 'iskt/formularz-zgloszeniowy', {
+		edit: function ( props ) {
+			var atrybuty = props.attributes;
+
+			return el(
+				'div',
+				blockEditor.useBlockProps(),
+				el(
+					blockEditor.InspectorControls,
+					{ key: 'ustawienia' },
+					el(
+						components.PanelBody,
+						{ title: __( 'Nagłówek', 'iskt-szkolenia-core' ) },
+						el( components.ToggleControl, {
+							label: __( 'Pokaż tytuł i wstęp formularza', 'iskt-szkolenia-core' ),
+							help: __( 'Wyłącz, gdy sekcja ma już własny nagłówek. Treść tytułu zmienia się w Szkolenia → Teksty serwisu.', 'iskt-szkolenia-core' ),
+							checked: false !== atrybuty.pokazNaglowek,
+							onChange: function ( wartosc ) {
+								props.setAttributes( { pokazNaglowek: wartosc } );
+							},
+						} )
+					)
+				),
+				/*
+				 * Podgląd z serwera pokazuje etykiety wpisane w panelu, ale nie ma być
+				 * klikalny: przycisk wysyłki w edytorze przeładowałby ekran redaktora.
+				 */
+				el(
+					'div',
+					{ style: { pointerEvents: 'none' } },
+					podglad( 'iskt/formularz-zgloszeniowy', atrybuty )
+				)
+			);
+		},
+		save: function () {
+			return null;
+		},
+	} );
+
 } )( window.wp );

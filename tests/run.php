@@ -38,6 +38,7 @@ require_once $sciezka . 'kategorie.php';
 require_once $sciezka . 'odbiorca.php';
 require_once $sciezka . 'prezentacja.php';
 require_once $sciezka . 'teksty.php';
+require_once $sciezka . 'formularz.php';
 require_once $sciezka . 'katalog.php';
 
 /*
@@ -751,6 +752,356 @@ sprawdz( 'trzeci człon nie wchodzi do inicjałów', 'AM', iskt_inicjaly( '  Ann
 sprawdz( 'jedno słowo daje jedną literę', 'J', iskt_inicjaly( 'Jan' ) );
 sprawdz( 'pusta nazwa nie daje znaku zastępczego', '', iskt_inicjaly( '' ) );
 sprawdz( 'sama interpunkcja nie daje znaku zastępczego', '', iskt_inicjaly( ' — · ' ) );
+
+// --- Formularz zgłoszeniowy ------------------------------------------------
+
+/*
+ * Walidacja formularza. Sprawdzamy ją tutaj, a nie tylko w przeglądarce, bo tylko
+ * ta warstwa jest zabezpieczeniem: żądanie POST da się złożyć bez `required`
+ * i bez `type="email"`. Test odtwarza więc dane tak, jak przychodzą z sieci.
+ */
+
+$GLOBALS['iskt_test_opcje'][ ISKT_OPCJA_TEKSTY ] = array();
+
+$iskt_komplet = array(
+	'iskt_typ'       => 'firma',
+	'iskt_imie'      => 'Anna Kowalska',
+	'iskt_email'     => 'anna@example.org',
+	'iskt_telefon'   => '+48 32 000 00 00',
+	'iskt_firma'     => 'Przykład sp. z o.o.',
+	'iskt_temat'     => 's-12',
+	'iskt_termin'    => '34',
+	'iskt_wiadomosc' => "Proszę o ofertę.\nDla ośmiu osób.",
+);
+
+$iskt_wynik = iskt_waliduj_zgloszenie( $iskt_komplet );
+
+sprawdz( 'komplet danych przechodzi bez błędów', array(), $iskt_wynik['bledy'] );
+sprawdz( 'rodzaj odbiorcy zachowany', 'firma', $iskt_wynik['dane']['typ'] );
+sprawdz( 'adres e-mail znormalizowany', 'anna@example.org', $iskt_wynik['dane']['email'] );
+sprawdz( 'telefon zachowuje zapis międzynarodowy', '+48 32 000 00 00', $iskt_wynik['dane']['telefon'] );
+sprawdz( 'wiadomość zachowuje złamania wiersza', "Proszę o ofertę.\nDla ośmiu osób.", $iskt_wynik['dane']['wiadomosc'] );
+
+$iskt_puste = iskt_waliduj_zgloszenie( array() );
+
+sprawdz(
+	'brak wymaganych pól daje trzy błędy przy polach',
+	array( 'imie', 'wiadomosc', 'email' ),
+	array_keys( $iskt_puste['bledy'] )
+);
+sprawdz( 'komunikat pola wymaganego pochodzi z rejestru', 'To pole jest wymagane.', $iskt_puste['bledy']['imie'] );
+sprawdz( 'przy braku wyboru rodzaj wraca do osoby', 'osoba', $iskt_puste['dane']['typ'] );
+
+/*
+ * Same spacje przechodzą przez `required` przeglądarki, więc gdyby walidacja
+ * serwerowa ich nie odsiewała, do skrzynki trafiłoby zgłoszenie bez nadawcy.
+ */
+$iskt_spacje = iskt_waliduj_zgloszenie(
+	array(
+		'iskt_imie'      => '   ',
+		'iskt_email'     => 'anna@example.org',
+		'iskt_wiadomosc' => "\t\n ",
+	)
+);
+
+sprawdz( 'samo białe pole nie jest wypełnieniem', 'To pole jest wymagane.', $iskt_spacje['bledy']['imie'] );
+sprawdz( 'pusta wiadomość odrzucona', 'To pole jest wymagane.', $iskt_spacje['bledy']['wiadomosc'] );
+
+$iskt_zly_adres = iskt_waliduj_zgloszenie(
+	array(
+		'iskt_imie'      => 'Jan',
+		'iskt_email'     => 'anna@example',
+		'iskt_wiadomosc' => 'Pytanie',
+	)
+);
+
+sprawdz(
+	'niepoprawny adres ma własny komunikat, nie „pole wymagane”',
+	'Podaj adres e-mail w formacie nazwa@domena.pl.',
+	$iskt_zly_adres['bledy']['email']
+);
+
+/*
+ * Najważniejsza asercja tej grupy: błędny adres WRACA do formularza. Wyczyszczenie
+ * pola przy błędzie kazałoby wpisywać wszystko od nowa — a to jest powód, dla
+ * którego formularze z ośmioma polami zostają niewysłane.
+ */
+sprawdz( 'wpisany adres zostaje mimo błędu', 'anna@example', $iskt_zly_adres['dane']['email'] );
+
+$iskt_znaczniki = iskt_waliduj_zgloszenie(
+	array(
+		'iskt_imie'      => '<script>alert(1)</script>Jan Nowak',
+		'iskt_email'     => 'jan@example.org',
+		'iskt_wiadomosc' => 'Pytanie',
+	)
+);
+
+sprawdz( 'znaczniki nie przechodzą przez walidację', 'alert(1)Jan Nowak', $iskt_znaczniki['dane']['imie'] );
+
+sprawdz( 'rodzaj spoza listy wraca do wartości domyślnej', 'osoba', iskt_waliduj_zgloszenie( array( 'iskt_typ' => 'kosmita' ) )['dane']['typ'] );
+
+sprawdz( 'poprawny wybór szkolenia przechodzi', 's-12', iskt_sanitize_temat( 's-12' ) );
+sprawdz( 'poprawny wybór obszaru przechodzi', 'k-3', iskt_sanitize_temat( 'k-3' ) );
+sprawdz( 'wybór z zerowym identyfikatorem odrzucony', '', iskt_sanitize_temat( 's-0' ) );
+sprawdz( 'nieznany przedrostek odrzucony', '', iskt_sanitize_temat( 'x-9' ) );
+sprawdz( 'wstrzyknięcie w polu wyboru odrzucone', '', iskt_sanitize_temat( '<script>alert(1)</script>' ) );
+sprawdz( 'brak wyboru oznacza zapytanie ogólne', '', iskt_sanitize_temat( '' ) );
+sprawdz( 'identyfikator terminu sprowadzony do liczby', '34', iskt_sanitize_identyfikator( '34' ) );
+sprawdz( 'tekst w polu terminu odrzucony', '', iskt_sanitize_identyfikator( 'abc' ) );
+
+// --- Treść wiadomości ------------------------------------------------------
+
+$iskt_dane_min = array(
+	'typ'             => 'osoba',
+	'imie'            => 'Anna Kowalska',
+	'email'           => 'anna@example.org',
+	'telefon'         => '',
+	'firma'           => '',
+	'szkolenie'       => '',
+	'termin_etykieta' => '',
+	'wiadomosc'       => 'Proszę o ofertę.',
+	'adres'           => '',
+);
+
+sprawdz(
+	'wiadomość pomija pola, których nikt nie wypełnił',
+	"Piszę jako: Osoba indywidualna\nImię i nazwisko: Anna Kowalska\nAdres e-mail: anna@example.org\n\nWiadomość:\nProszę o ofertę.\n",
+	iskt_tresc_zgloszenia( $iskt_dane_min )
+);
+
+$iskt_dane_pelne = array_merge(
+	$iskt_dane_min,
+	array(
+		'typ'             => 'firma',
+		'telefon'         => '+48 32 000 00 00',
+		'firma'           => 'Przykład sp. z o.o.',
+		'szkolenie'       => 'ESG w praktyce',
+		'termin_etykieta' => '2026-11-03',
+		'adres'           => 'https://szkolenia.example/zgloszenie/',
+	)
+);
+
+$iskt_tresc = iskt_tresc_zgloszenia( $iskt_dane_pelne );
+
+sprawdz( 'wiadomość niesie rodzaj odbiorcy', true, str_contains( $iskt_tresc, 'Piszę jako: Firma' ) );
+sprawdz( 'wiadomość niesie nazwę szkolenia', true, str_contains( $iskt_tresc, 'Szkolenie lub obszar zainteresowania: ESG w praktyce' ) );
+sprawdz( 'wiadomość niesie termin', true, str_contains( $iskt_tresc, 'Wybrany termin: 2026-11-03' ) );
+sprawdz( 'wiadomość niesie adres strony wysyłki', true, str_contains( $iskt_tresc, 'https://szkolenia.example/zgloszenie/' ) );
+
+sprawdz(
+	'temat wiadomości niesie kontekst szkolenia',
+	'Zapytanie ze strony: ESG w praktyce',
+	iskt_temat_zgloszenia( $iskt_dane_pelne )
+);
+sprawdz(
+	'zapytanie bez wskazanej oferty ma czytelny temat',
+	'Zapytanie ze strony: Zapytanie ogólne — opiszę w wiadomości',
+	iskt_temat_zgloszenia( $iskt_dane_min )
+);
+
+/*
+ * Etykiety w wiadomości pochodzą z tego samego rejestru, co etykiety pól — zmiana
+ * napisu w panelu ma być widoczna w obu miejscach naraz (§4.7).
+ */
+$GLOBALS['iskt_test_opcje'][ ISKT_OPCJA_TEKSTY ] = array( 'formularz_imie' => 'Kto pisze' );
+
+sprawdz(
+	'etykieta z panelu wchodzi do wiadomości',
+	true,
+	str_contains( iskt_tresc_zgloszenia( $iskt_dane_min ), 'Kto pisze: Anna Kowalska' )
+);
+
+$GLOBALS['iskt_test_opcje'][ ISKT_OPCJA_TEKSTY ] = array();
+
+// --- Kontekst zgłoszenia pobrany z katalogu --------------------------------
+
+/*
+ * Identyfikator szkolenia i terminu przychodzi z adresu oraz z pól formularza, więc
+ * jest do podmienienia. Wiadomość ma opisywać wyłącznie to, co odwiedzający naprawdę
+ * mógł wybrać na stronie — inaczej ISKT odpisuje na ustalenia, których nikt nie
+ * proponował, albo potwierdza ofertę wycofaną z publikacji (§11 pkt 5).
+ */
+
+$GLOBALS['iskt_test_typy'] = array(
+	201 => ISKT_CPT_SZKOLENIE,
+	202 => ISKT_CPT_SZKOLENIE,
+	301 => ISKT_CPT_TERMIN,
+	302 => ISKT_CPT_TERMIN,
+	303 => ISKT_CPT_TERMIN,
+);
+
+$GLOBALS['iskt_test_wpisy'] = array(
+	201 => new WP_Post( 201, 'ESG w praktyce', 'esg-w-praktyce' ),
+	202 => new WP_Post( 202, 'Szkolenie wycofane z oferty', 'wycofane', 'draft' ),
+	301 => new WP_Post( 301, 'Termin szkolenia 201', 'termin-201' ),
+	302 => new WP_Post( 302, 'Termin szkolenia 202', 'termin-202' ),
+	303 => new WP_Post( 303, 'Termin niepublikowany', 'termin-roboczy', 'draft' ),
+);
+
+$GLOBALS['iskt_test_pojecia'] = array(
+	5 => new WP_Term( 5, 'ESG i zrównoważony rozwój' ),
+);
+
+$GLOBALS['iskt_test_pola'] = array(
+	301 => array(
+		ISKT_META_TERMIN_SZKOLENIE  => 201,
+		'_iskt_termin_indywidualny' => '1',
+	),
+	302 => array(
+		ISKT_META_TERMIN_SZKOLENIE  => 202,
+		'_iskt_termin_indywidualny' => '1',
+	),
+	303 => array(
+		ISKT_META_TERMIN_SZKOLENIE  => 201,
+		'_iskt_termin_indywidualny' => '1',
+	),
+);
+
+/**
+ * Zwraca kontekst zgłoszenia dla wybranego tematu i terminu.
+ *
+ * @param string $temat  Wartość pola „szkolenie lub obszar zainteresowania”.
+ * @param string $termin Wartość pola terminu.
+ *
+ * @return array<string, string>
+ */
+$iskt_kontekst = static fn ( string $temat, string $termin = '' ): array => iskt_kontekst_zgloszenia(
+	array(
+		'temat'  => $temat,
+		'termin' => $termin,
+	)
+);
+
+sprawdz( 'opublikowane szkolenie wchodzi do wiadomości pod nazwą', 'ESG w praktyce', $iskt_kontekst( 's-201' )['szkolenie'] );
+sprawdz( 'kategoria wchodzi do wiadomości pod nazwą', 'ESG i zrównoważony rozwój', $iskt_kontekst( 'k-5' )['szkolenie'] );
+
+/*
+ * Sedno grupy. Szkolenie wycofane z publikacji zniknęło z listy wyboru, więc nikt
+ * nie mógł go zaznaczyć — nazwanie go w wiadomości opisywałoby ofertę, której na
+ * stronie nie ma.
+ */
+sprawdz( 'szkolenie wycofane z publikacji nie trafia do wiadomości', '', $iskt_kontekst( 's-202' )['szkolenie'] );
+sprawdz( 'nieistniejące szkolenie nie trafia do wiadomości', '', $iskt_kontekst( 's-999' )['szkolenie'] );
+sprawdz( 'termin podstawiony jako temat nie udaje szkolenia', '', $iskt_kontekst( 's-301' )['szkolenie'] );
+
+sprawdz(
+	'termin wybranego szkolenia wchodzi do wiadomości',
+	'Termin ustalany indywidualnie',
+	$iskt_kontekst( 's-201', '301' )['termin_etykieta']
+);
+
+/*
+ * Termin z innego szkolenia to przypadek podmiany, a nie pomyłki: pole terminu
+ * pokazuje wyłącznie daty wybranego szkolenia.
+ */
+sprawdz( 'termin obcego szkolenia jest pomijany', '', $iskt_kontekst( 's-201', '302' )['termin_etykieta'] );
+sprawdz( 'termin niepublikowany jest pomijany', '', $iskt_kontekst( 's-201', '303' )['termin_etykieta'] );
+sprawdz( 'termin bez wybranego szkolenia jest pomijany', '', $iskt_kontekst( '', '301' )['termin_etykieta'] );
+sprawdz( 'termin przy zapytaniu o kategorię jest pomijany', '', $iskt_kontekst( 'k-5', '301' )['termin_etykieta'] );
+
+// --- Nagłówek Reply-To -----------------------------------------------------
+
+sprawdz(
+	'adres zgłaszającego trafia do Reply-To, nie do nadawcy',
+	'Reply-To: "Anna Kowalska" <anna@example.org>',
+	iskt_naglowek_reply_to( 'Anna Kowalska', 'anna@example.org' )
+);
+
+/*
+ * Wstrzyknięcie do nagłówków poczty: gdyby złamanie wiersza przeszło, treść po nim
+ * stałaby się kolejnym nagłówkiem i wiadomość poszłaby także pod obcy adres.
+ */
+sprawdz(
+	'złamanie wiersza nie dokłada nagłówka',
+	'Reply-To: "Anna Bcc  obcy@example.net" <anna@example.org>',
+	iskt_naglowek_reply_to( "Anna\r\nBcc: obcy@example.net", 'anna@example.org' )
+);
+
+sprawdz( 'niepoprawny adres nie daje nagłówka', '', iskt_naglowek_reply_to( 'Anna', 'anna@example' ) );
+sprawdz( 'brak imienia daje sam adres', 'Reply-To: anna@example.org', iskt_naglowek_reply_to( '  ', 'anna@example.org' ) );
+
+// --- Ochrona antyspamowa ---------------------------------------------------
+
+/**
+ * Buduje stan żądania przechodzącego ochronę, z możliwością podmiany jednego pola.
+ *
+ * @param array<string, mixed> $zmiany Pola do nadpisania.
+ *
+ * @return array<string, mixed>
+ */
+function iskt_stan_antyspamowy( array $zmiany = array() ): array {
+	return array_merge(
+		array(
+			'nonce_ok'       => true,
+			'limit_aktywny'  => false,
+			'pulapka'        => '',
+			'otwarto'        => 1000,
+			'podpis_ok'      => true,
+			'teraz'          => 1010,
+			'minimalny_czas' => 3,
+		),
+		$zmiany
+	);
+}
+
+sprawdz( 'zwykłe zgłoszenie przechodzi ochronę', '', iskt_ocena_antyspamowa( iskt_stan_antyspamowy() ) );
+sprawdz( 'brak poprawnego nonce zatrzymuje wysyłkę', 'nonce', iskt_ocena_antyspamowa( iskt_stan_antyspamowy( array( 'nonce_ok' => false ) ) ) );
+sprawdz( 'limit z jednego adresu IP ma własny powód', 'limit', iskt_ocena_antyspamowa( iskt_stan_antyspamowy( array( 'limit_aktywny' => true ) ) ) );
+sprawdz( 'wypełniona pułapka zatrzymuje wysyłkę', 'antyspam', iskt_ocena_antyspamowa( iskt_stan_antyspamowy( array( 'pulapka' => 'https://spam.example' ) ) ) );
+sprawdz( 'sama spacja w pułapce nie jest wypełnieniem', '', iskt_ocena_antyspamowa( iskt_stan_antyspamowy( array( 'pulapka' => '  ' ) ) ) );
+sprawdz( 'wysyłka szybsza niż minimalny czas odrzucona', 'antyspam', iskt_ocena_antyspamowa( iskt_stan_antyspamowy( array( 'teraz' => 1002 ) ) ) );
+sprawdz( 'wysyłka dokładnie po minimalnym czasie przechodzi', '', iskt_ocena_antyspamowa( iskt_stan_antyspamowy( array( 'teraz' => 1003 ) ) ) );
+sprawdz( 'podrobiony znacznik czasu odrzucony', 'antyspam', iskt_ocena_antyspamowa( iskt_stan_antyspamowy( array( 'podpis_ok' => false ) ) ) );
+sprawdz( 'znacznik z przyszłości odrzucony', 'antyspam', iskt_ocena_antyspamowa( iskt_stan_antyspamowy( array( 'otwarto' => 2000 ) ) ) );
+sprawdz( 'brak znacznika czasu odrzucony', 'antyspam', iskt_ocena_antyspamowa( iskt_stan_antyspamowy( array( 'otwarto' => 0 ) ) ) );
+
+/*
+ * Kolejność sprawdzeń jest częścią zachowania: wygasły formularz to najczęstszy
+ * przypadek u człowieka i ma dostać komunikat o wygaśnięciu, a nie o spamie.
+ */
+sprawdz(
+	'wygasły nonce ma pierwszeństwo przed innymi powodami',
+	'nonce',
+	iskt_ocena_antyspamowa( iskt_stan_antyspamowy( array( 'nonce_ok' => false, 'pulapka' => 'x' ) ) )
+);
+
+sprawdz( 'komunikat wygaśnięcia pochodzi z rejestru', iskt_tekst( 'formularz_blad_nonce' ), iskt_komunikat_odrzucenia( 'nonce' ) );
+sprawdz( 'komunikat limitu pochodzi z rejestru', iskt_tekst( 'formularz_blad_limit' ), iskt_komunikat_odrzucenia( 'limit' ) );
+sprawdz( 'nieznany powód dostaje komunikat antyspamowy', iskt_tekst( 'formularz_blad_antyspam' ), iskt_komunikat_odrzucenia( 'cokolwiek' ) );
+
+/*
+ * Każdy napis formularza musi mieć wpis w rejestrze — inaczej „edytowalne z panelu”
+ * kończy się na tych kluczach, o których ktoś pamiętał.
+ */
+sprawdz(
+	'rejestr zna każdy napis formularza używany w kodzie',
+	true,
+	( static function (): bool {
+		$definicje = iskt_definicje_tekstow();
+
+		$uzywane = array(
+			'formularz_tytul', 'formularz_wstep', 'formularz_typ', 'formularz_typ_osoba',
+			'formularz_typ_firma', 'formularz_imie', 'formularz_email', 'formularz_telefon',
+			'formularz_firma', 'formularz_szkolenie', 'formularz_szkolenie_ogolne',
+			'formularz_grupa_szkolenia', 'formularz_grupa_obszary', 'formularz_termin',
+			'formularz_termin_dowolny', 'formularz_wiadomosc', 'formularz_wymagane_opis',
+			'formularz_przycisk', 'formularz_zastrzezenie', 'formularz_blad_ogolny',
+			'formularz_blad_wymagane', 'formularz_blad_email', 'formularz_blad_wysylki',
+			'formularz_blad_nonce', 'formularz_blad_antyspam', 'formularz_blad_limit',
+			'formularz_sukces', 'kontakt_email', 'szkolenie_termin_cta',
+		);
+
+		foreach ( $uzywane as $klucz ) {
+			if ( ! isset( $definicje[ $klucz ] ) ) {
+				return false;
+			}
+		}
+
+		return true;
+	} )()
+);
+
+sprawdz( 'adres odbiorcy zgłoszeń nie jest wpisany w kod', 'szkolenia@iskt.pl', iskt_tekst( 'kontakt_email' ) );
 
 // --- Wynik -----------------------------------------------------------------
 

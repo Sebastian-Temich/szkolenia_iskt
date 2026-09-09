@@ -60,6 +60,7 @@ require_once ISKT_CORE_DIR . '/includes/prezentacja.php';
 require_once ISKT_CORE_DIR . '/includes/katalog.php';
 require_once ISKT_CORE_DIR . '/includes/teksty.php';
 require_once ISKT_CORE_DIR . '/includes/odbiorca.php';
+require_once ISKT_CORE_DIR . '/includes/formularz.php';
 require_once ISKT_CORE_DIR . '/includes/bloki.php';
 require_once ISKT_CORE_DIR . '/includes/activation.php';
 

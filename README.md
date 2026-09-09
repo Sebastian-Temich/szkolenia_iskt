@@ -26,6 +26,7 @@ Zlecenie: ISK-17. Docelowy hosting: SEOHost (wdrożenie poza zakresem tego zlece
 | [`docs/MOTYW-KOMPONENTY.md`](docs/MOTYW-KOMPONENTY.md) | Umowa nazewnicza motywu: siatka, typografia, komponenty |
 | [`docs/STRONA-GLOWNA.md`](docs/STRONA-GLOWNA.md) | Sekcje strony głównej, bloki dynamiczne i przełącznik odbiorcy |
 | [`docs/ODSTEPSTWA-OD-WZORCA.md`](docs/ODSTEPSTWA-OD-WZORCA.md) | Rejestr odstępstw od załącznika wymagany przez §11 pkt 1 |
+| [`docs/FORMULARZ-ZGLOSZENIOWY.md`](docs/FORMULARZ-ZGLOSZENIOWY.md) | Formularz zgłoszeniowy: walidacja, wysyłka, granice ochrony antyspamowej, pytanie o retencję |
 | [`docs/ODBIOR-M1.md`](docs/ODBIOR-M1.md) | Przejście odbiorowe M1: co kliknąć, czego jeszcze nie ma, treści do potwierdzenia |
 | [`docs/KATALOG-SZKOLEN.md`](docs/KATALOG-SZKOLEN.md) | Katalog: wyszukiwanie, filtry, paginacja, puste widoki i decyzja o indeksowaniu (§7) |
 

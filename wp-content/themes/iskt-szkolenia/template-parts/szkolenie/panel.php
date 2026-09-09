@@ -18,11 +18,12 @@ $iskt_dofinansowanie = (bool) get_post_meta( $iskt_id, '_iskt_dofinansowanie', t
 $iskt_warunki        = trim( (string) get_post_meta( $iskt_id, '_iskt_dofinansowanie_opis', true ) );
 
 /*
- * Adres zgłoszenia. Do czasu wykonania formularza (zadanie 9) prowadzi do sekcji
- * kontaktu na stronie głównej — czyli do czegoś, co istnieje i działa. Zaślepka
- * „#” byłaby złamaniem §11 pkt 10 nawet na etapie pośrednim.
+ * Adres formularza zgłoszeniowego z kontekstem tego szkolenia. Formularz odczyta
+ * parametr i sam ustawi wybrane szkolenie, więc odwiedzający nie szuka go powtórnie
+ * na liście (§5). Gdy strony zgłoszenia nie ma — bo właściciel ją usunął — funkcja
+ * wraca do sekcji kontaktowej strony głównej, nigdy do zaślepki „#” (§11 pkt 10).
  */
-$iskt_adres_zgloszenia = home_url( '/#kontakt' );
+$iskt_adres_zgloszenia = iskt_adres_zgloszenia( $iskt_id );
 
 ?>
 
@@ -86,6 +87,26 @@ $iskt_adres_zgloszenia = home_url( '/#kontakt' );
 					<?php if ( '' !== $iskt_opis['status'] ) : ?>
 						<p class="iskt-badge <?php echo $iskt_opis['zamkniety'] ? 'iskt-badge--neutral' : 'iskt-badge--success'; ?>">
 							<?php echo esc_html( $iskt_opis['status'] ); ?>
+						</p>
+					<?php endif; ?>
+
+					<?php
+					/*
+					 * Zapytanie o konkretny termin. Przycisk nad listą niesie samo szkolenie,
+					 * bo stoi ponad wszystkimi datami; tutaj dokładamy datę, żeby formularz
+					 * wypełnił oba pola i nikt nie musiał przepisywać terminu z ekranu (§5).
+					 *
+					 * Terminu z zamkniętymi zapisami nie zapraszamy do zgłoszenia — odesłanie
+					 * do formularza sugerowałoby dostępność, której nie ma (§4.4).
+					 */
+					$iskt_zapytaj = iskt_tekst( 'szkolenie_termin_cta' );
+					?>
+
+					<?php if ( ! $iskt_opis['zamkniety'] && '' !== $iskt_zapytaj ) : ?>
+						<p class="iskt-termin__akcja">
+							<a href="<?php echo esc_url( iskt_adres_zgloszenia( $iskt_id, (int) $iskt_termin->ID ) ); ?>">
+								<?php echo esc_html( $iskt_zapytaj ); ?>
+							</a>
 						</p>
 					<?php endif; ?>
 				</li>

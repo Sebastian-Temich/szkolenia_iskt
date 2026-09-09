@@ -26,6 +26,7 @@ defined( 'ABSPATH' ) || exit;
 
 require_once ISKT_CORE_DIR . '/includes/bloki/odbiorca.php';
 require_once ISKT_CORE_DIR . '/includes/bloki/katalog.php';
+require_once ISKT_CORE_DIR . '/includes/bloki/formularz.php';
 
 /**
  * Uchwyt wspólnego skryptu edytora dla wszystkich bloków wtyczki.
@@ -43,6 +44,7 @@ function iskt_bloki(): array {
 		'tresc-odbiorcy'       => 'iskt_render_tresc_odbiorcy',
 		'obszary-szkolen'      => 'iskt_render_obszary_szkolen',
 		'wyroznione-szkolenia' => 'iskt_render_wyroznione_szkolenia',
+		'formularz-zgloszeniowy' => 'iskt_render_formularz_zgloszeniowy',
 	);
 }
 

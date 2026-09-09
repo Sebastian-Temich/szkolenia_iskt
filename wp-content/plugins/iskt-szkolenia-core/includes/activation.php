@@ -94,6 +94,13 @@ function iskt_on_activate(): void {
 	iskt_nadaj_capabilities();
 	iskt_zasiej_slowniki();
 
+	/*
+	 * Strona ze zgłoszeniem powstaje razem ze słownikami: przycisk „Zapytaj o to
+	 * szkolenie” musi mieć dokąd prowadzić od pierwszej chwili, a nie dopiero po
+	 * ręcznym założeniu strony przez właściciela (§11 pkt 10).
+	 */
+	iskt_zapewnij_strone_zgloszenia();
+
 	flush_rewrite_rules();
 }
 

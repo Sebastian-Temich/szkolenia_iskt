@@ -13,6 +13,8 @@
     "SCRIPT_DEBUG": true
   },
   "mappings": {
-    "wp-content/uploads": "./.wp-env/uploads"
+    "wp-content/uploads": "./.wp-env/uploads",
+    "wp-content/mu-plugins": "./tests/env/mu-plugins",
+    "wp-content/iskt-tests": "./tests"
   }
 }
