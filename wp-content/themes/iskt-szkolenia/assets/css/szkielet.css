@@ -246,17 +246,41 @@
 /* ----------------------------------------------- układ mobilny (< 1024 px) */
 
 @media (max-width: 63.99em) {
+  /* Bez skryptu nawigacja zajmuje własny wiersz pod marką: panel zostaje
+     w toku strony, więc niczego nie zasłania i ma niezerowe wymiary. */
+  .iskt-site-header__inner {
+    flex-wrap: wrap;
+  }
+
   .iskt-site-nav {
+    flex: 1 0 100%;
     gap: var(--space-2);
   }
 
   .iskt-site-nav__panel {
-    position: absolute;
-    inset-inline: 0;
-    top: 100%;
+    flex: 1 1 auto;
     flex-direction: column;
     align-items: stretch;
     gap: 0;
+    padding-block: var(--space-2) var(--space-3);
+  }
+
+  /* Przyklejony nagłówek z rozwiniętym menu zajmowałby prawie cały ekran
+     telefonu — bez skryptu zostawiamy nagłówek w toku strony. */
+  .iskt-site-header:not(.iskt-site-header--js) {
+    position: static;
+  }
+
+  /* Ze skryptem nawigacja wraca do wiersza marki, a panel staje się
+     wysuwaną warstwą sterowaną przełącznikiem. */
+  .iskt-site-header--js .iskt-site-nav {
+    flex: 0 0 auto;
+  }
+
+  .iskt-site-header--js .iskt-site-nav__panel {
+    position: absolute;
+    inset-inline: 0;
+    top: 100%;
     padding: var(--space-4) var(--container-pad) var(--space-6);
     background: var(--surface-page);
     border-block-end: var(--border-width) solid var(--border-subtle);

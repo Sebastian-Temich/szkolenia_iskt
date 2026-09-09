@@ -88,10 +88,20 @@ Wynik testów dynamicznych:
 5. po wymuszeniu `backdrop-filter: none` nagłówek zachowuje jasne tło
    `color(srgb 1 1 1 / 0.9)` i czytelność;
 6. stopka bez widżetów i bez przypisanego menu zachowuje spójny układ;
-7. **rozbieżność:** przy 360 px i wyłączonym JavaScripcie `.iskt-site-nav` ma
-   obliczone `display: none`, więc panel nie pozostaje rozwinięty i używalny.
-   Jest to sprzeczne z założeniem progressive enhancement opisanym w komentarzu
-   szablonu. Zrzut `no-js-360.png` dokumentuje brak nawigacji.
+7. ~~**rozbieżność:** przy 360 px i wyłączonym JavaScripcie `.iskt-site-nav` ma
+   obliczone `display: none`, więc panel nie pozostaje rozwinięty i używalny.~~
+   **Naprawione w ISK-21.** Przyczyną nie było `display: none`, lecz to, że
+   w układzie mobilnym `.iskt-site-nav__panel` był bezwarunkowo
+   `position: absolute`. Bez skryptu panel wypadał z toku strony: `.iskt-site-nav`
+   miał zerowe wymiary (Playwright zgłaszał `hidden`), a rozwinięte menu
+   przykrywało treść — widać to na `qa-artifacts/isk-20/no-js-360.png`.
+   Wysuwana warstwa jest teraz zawężona do `.iskt-site-header--js`; bez skryptu
+   nagłówek nie jest przyklejony, a nawigacja zajmuje własny wiersz w toku strony.
+   Kontrola przy 360 px po naprawie: `qa-artifacts/isk-21/` (spis
+   `nawigacja-360.spec.js`, zrzuty `no-js-360.png`, `js-360-otwarte.png`,
+   `js-360-zamkniete.png`) — bez JS panel ma 320 × 217 px, `position: static`,
+   4 odnośniki i widoczne podmenu, treść zaczyna się pod nagłówkiem; z JS
+   przełącznik, podmenu i Escape działają bez zmian.
 
 Aktywację wtyczki sprawdzono także cyklem dezaktywacja → aktywacja: liczba
 kategorii startowych pozostała równa 5, opcja `iskt_slowniki_zasiane` pozostała
