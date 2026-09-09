@@ -58,7 +58,7 @@ z wyglądem z załącznika oraz możliwością samodzielnego dodania i edycji sz
 | 1 | Środowisko `wp-env`, szkielet motywu i wtyczki, tokeny designu, lint PHP, testy sanityzacji | WP/frontend | 1,5 | **częściowo — patrz §5** |
 | 2 | Model danych: typy treści, taksonomie, pola natywne, uprawnienia, relacje, kolumny panelu | backend WP | 3,5 | **wykonane 2026-09-09** |
 | 3 | Motyw: siatka, typografia, nagłówek, stopka, menu, komponenty wspólne | WP/frontend | 2,5 | **wykonane 2026-09-09** — `MOTYW-KOMPONENTY.md`, `ODSTEPSTWA-OD-WZORCA.md`; wygląd niesprawdzony w przeglądarce (brak Dockera) |
-| 4 | Strona główna: wzorce bloków + bloki dynamiczne, przełącznik „Dla Ciebie”/„Dla firm”, ukrywanie pustych sekcji | WP/frontend | 4,0 | do zrobienia |
+| 4 | Strona główna: wzorce bloków + bloki dynamiczne, przełącznik „Dla Ciebie”/„Dla firm”, ukrywanie pustych sekcji | WP/frontend | 4,0 | **wykonane 2026-09-09** — `STRONA-GLOWNA.md`; wygląd niesprawdzony w przeglądarce (brak Dockera) |
 | 5 | Strona szkolenia: szablon, program, korzyści, cena z jednostką i podatkiem, dofinansowanie, terminy, trenerzy | WP/frontend | 2,5 | do zrobienia |
 | | **Razem M1** | | **14,0** | |
 
@@ -92,8 +92,8 @@ z wyglądem z załącznika oraz możliwością samodzielnego dodania i edycji sz
 | M1 + M2 + M3 | 34,5 |
 | Koordynacja i przeglądy | 3,0 |
 | **Razem** | **37,5** |
-| Wykonane 2026-09-09 (zadanie 2 i część 1) | −4,0 |
-| **Pozostało** | **33,5** |
+| Wykonane 2026-09-09 (zadania 2, 3, 4 i część 1) | −10,5 |
+| **Pozostało** | **27,0** |
 
 ### Kalendarz
 
@@ -124,9 +124,29 @@ Zadanie 2 — model danych — jest wykonane i zweryfikowane:
   ustalanego indywidualnie;
 - kolumny list w panelu: szkolenie, data realizacji z oznaczeniem zakończonego, tryb, status zgłoszeń.
 
-**Weryfikacja:** `php -l` na wszystkich plikach oraz 40 asercji w `tests/run.php`
+**Weryfikacja:** `php -l` na wszystkich plikach oraz 79 asercji w `tests/run.php`
 (sanityzacja dat, cen, list, programu, słowników, relacji trenerów, rozróżnienie
 terminów zakończonych). Testy uruchamiają prawdziwy kod wtyczki, nie jego kopię.
+
+Zadanie 3 — motyw — dostarcza siatkę, typografię, nagłówek, stopkę, menu i komponenty
+wspólne; umowa nazewnicza w `MOTYW-KOMPONENTY.md`.
+
+Zadanie 4 — strona główna — dostarcza:
+
+- `theme.json` z paletą, skalą pisma i odstępami wskazującymi na te same tokeny,
+  co arkusze motywu; własne kolory i stopnie pisma celowo wyłączone;
+- **siedem wzorców sekcji** w `patterns/` (powitanie, obszary, wyróżnione, przebieg,
+  dofinansowania, wskaźniki, kontakt) plus wzorzec składający całą stronę;
+- **cztery bloki dynamiczne** we wtyczce: przełącznik odbiorcy, pojemnik treści
+  wariantu, obszary szkoleń i wyróżnione szkolenia — każdy zwraca pusty ciąg,
+  gdy nie ma czego pokazać (§4.1);
+- przełącznik „Dla Ciebie”/„Dla firm” **działający bez JavaScriptu**, z wariantem
+  zapisanym w adresie, więc odświeżenie i przycisk „Wstecz” zachowują wybór;
+- symbol kategorii jako pole terminu we wtyczce z mapowaniem na kształt w motywie;
+- `front-page.php` bez ani jednego tekstu redakcyjnego — cała treść pochodzi z bloków.
+
+Rozwiązania i uzasadnienia: `STRONA-GLOWNA.md`. Odstępstwa od załącznika,
+w tym rezygnacja z wyliczanej ceny po dofinansowaniu: `ODSTEPSTWA-OD-WZORCA.md` §6.
 
 Zadanie 1 pozostaje częściowe: `wp-env` nie zostało uruchomione, bo w środowisku
 wykonawczym nie działał demon Dockera. Nie blokuje to zadań 3–5 — blokuje wyłącznie

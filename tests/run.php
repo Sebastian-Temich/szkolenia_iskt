@@ -33,6 +33,29 @@ $sciezka = dirname( __DIR__ ) . '/wp-content/plugins/iskt-szkolenia-core/include
  */
 require_once $sciezka . 'meta.php';
 require_once $sciezka . 'terminy.php';
+require_once $sciezka . 'kategorie.php';
+require_once $sciezka . 'odbiorca.php';
+require_once $sciezka . 'prezentacja.php';
+
+/*
+ * `bloki/odbiorca.php` renderuje pojemnik wariantu i korzysta z pomocnika
+ * `iskt_atrybuty_bloku()`. Samego `bloki.php` nie wczytujemy — jego rejestracje
+ * potrzebują funkcji rdzenia, których nie da się wiernie odwzorować atrapą.
+ */
+require_once $sciezka . 'bloki/odbiorca.php';
+
+/**
+ * Odpowiednik `iskt_atrybuty_bloku()` z `bloki.php`.
+ *
+ * Jedyna funkcja definiowana w teście zamiast wczytywana z wtyczki. Powód jest
+ * jawny: `bloki.php` przy wczytaniu wywołuje `register_block_type()` na plikach
+ * `block.json`, czego bez WordPressa zrobić się nie da.
+ *
+ * @param array<string, string> $dodatkowe Atrybuty opakowania.
+ */
+function iskt_atrybuty_bloku( array $dodatkowe = array() ): string {
+	return get_block_wrapper_attributes( $dodatkowe );
+}
 
 $GLOBALS['iskt_bledy'] = 0;
 $GLOBALS['iskt_ok']    = 0;
@@ -175,6 +198,138 @@ sprawdz( 'termin jednodniowy wczoraj jest zakończony', true, iskt_termin_zakonc
 sprawdz( 'termin indywidualny nigdy nie jest zakończony', false, iskt_termin_zakonczony( 5 ) );
 sprawdz( 'termin bez dat nie jest ukrywany', false, iskt_termin_zakonczony( 6 ) );
 sprawdz( 'termin kończący się dziś jeszcze trwa', false, iskt_termin_zakonczony( 7 ) );
+
+// --- Wariant odbiorcy ------------------------------------------------------
+
+sprawdz( 'znany wariant przechodzi', 'firmowy', iskt_sanitize_odbiorca( 'firmowy' ) );
+sprawdz( 'wariant spoza listy odrzucony', '', iskt_sanitize_odbiorca( 'ktos-inny' ) );
+sprawdz( 'wartość nietekstowa odrzucona', '', iskt_sanitize_odbiorca( array( 'firmowy' ) ) );
+sprawdz( 'wielkie litery sprowadzone do znanego wariantu', 'firmowy', iskt_sanitize_odbiorca( 'FIRMOWY' ) );
+
+$GLOBALS['iskt_test_opcje'] = array();
+unset( $_GET[ ISKT_PARAM_ODBIORCA ] );
+sprawdz( 'bez opcji i bez adresu wariant indywidualny', 'indywidualny', iskt_odbiorca_aktywny() );
+
+$GLOBALS['iskt_test_opcje']['iskt_odbiorca_domyslny'] = 'firmowy';
+sprawdz( 'opcja ustawia wariant domyślny', 'firmowy', iskt_odbiorca_aktywny() );
+
+$_GET[ ISKT_PARAM_ODBIORCA ] = 'indywidualny';
+sprawdz( 'adres ma pierwszeństwo przed opcją', 'indywidualny', iskt_odbiorca_aktywny() );
+
+$_GET[ ISKT_PARAM_ODBIORCA ] = '<script>alert(1)</script>';
+sprawdz( 'wstrzyknięcie w adresie wraca do opcji', 'firmowy', iskt_odbiorca_aktywny() );
+
+$GLOBALS['iskt_test_opcje']['iskt_odbiorca_domyslny'] = 'nieznany';
+unset( $_GET[ ISKT_PARAM_ODBIORCA ] );
+sprawdz( 'uszkodzona opcja wraca do wariantu indywidualnego', 'indywidualny', iskt_odbiorca_domyslny() );
+
+// --- Renderowanie pojemnika wariantu ---------------------------------------
+
+$GLOBALS['iskt_test_opcje'] = array();
+unset( $_GET[ ISKT_PARAM_ODBIORCA ] );
+
+$iskt_widoczny = iskt_render_tresc_odbiorcy( array( 'odbiorca' => 'indywidualny' ), '<p>Dla Ciebie</p>' );
+$iskt_ukryty   = iskt_render_tresc_odbiorcy( array( 'odbiorca' => 'firmowy' ), '<p>Dla firm</p>' );
+
+sprawdz( 'aktywny wariant nie jest ukryty', false, str_contains( $iskt_widoczny, ' hidden>' ) );
+sprawdz( 'nieaktywny wariant dostaje atrybut hidden', true, str_contains( $iskt_ukryty, ' hidden>' ) );
+sprawdz( 'oba warianty trafiają do dokumentu', true, str_contains( $iskt_ukryty, 'Dla firm' ) );
+sprawdz(
+	'pojemnik ma znacznik dla skryptu',
+	true,
+	str_contains( $iskt_widoczny, 'data-iskt-switch-panel="indywidualny"' )
+);
+
+sprawdz( 'pusty pojemnik nie zostawia znacznika', '', iskt_render_tresc_odbiorcy( array( 'odbiorca' => 'firmowy' ), '   ' ) );
+sprawdz( 'pusty akapit nie utrzymuje sekcji przy życiu', '', iskt_render_tresc_odbiorcy( array( 'odbiorca' => 'indywidualny' ), '<p></p>' ) );
+sprawdz(
+	'sekcja z samym zdjęciem nie znika',
+	true,
+	str_contains( iskt_render_tresc_odbiorcy( array( 'odbiorca' => 'indywidualny' ), '<figure><img src="a.jpg" alt="Sala szkoleniowa"></figure>' ), '<img' )
+);
+sprawdz( 'pojemnik bez atrybutu nie znika', true, str_contains( iskt_render_tresc_odbiorcy( array(), '<p>Treść</p>' ), 'Treść' ) );
+sprawdz(
+	'pojemnik z uszkodzonym wariantem nie jest ukrywany',
+	false,
+	str_contains( iskt_render_tresc_odbiorcy( array( 'odbiorca' => 'bzdura' ), '<p>Treść</p>' ), 'hidden' )
+);
+
+// --- Renderowanie przełącznika ---------------------------------------------
+
+$iskt_przelacznik = iskt_render_przelacznik_odbiorcy( array() );
+
+sprawdz( 'przełącznik działa bez JS jako formularz GET', true, str_contains( $iskt_przelacznik, 'method="get"' ) );
+sprawdz( 'aktywny przycisk ma aria-pressed=true', true, str_contains( $iskt_przelacznik, 'value="indywidualny" class="iskt-switch__option" aria-pressed="true"' ) );
+sprawdz( 'nieaktywny przycisk ma aria-pressed=false', true, str_contains( $iskt_przelacznik, 'value="firmowy" class="iskt-switch__option" aria-pressed="false"' ) );
+sprawdz( 'domyślne etykiety pochodzą ze słownika', true, str_contains( $iskt_przelacznik, '>Dla Ciebie</button>' ) );
+
+$iskt_wlasne = iskt_render_przelacznik_odbiorcy( array( 'etykietaFirmowy' => 'Dla zespołów' ) );
+sprawdz( 'etykieta z panelu nadpisuje domyślną', true, str_contains( $iskt_wlasne, '>Dla zespołów</button>' ) );
+
+// --- Symbol kategorii ------------------------------------------------------
+
+sprawdz( 'znany symbol przechodzi', 'esg', iskt_sanitize_symbol( 'esg' ) );
+sprawdz( 'symbol spoza listy odrzucony', '', iskt_sanitize_symbol( 'rakieta' ) );
+sprawdz( 'pusty symbol jest dozwolony', '', iskt_sanitize_symbol( '' ) );
+sprawdz( 'pusty symbol nie wywołuje filtru motywu', '', iskt_symbol_html( '' ) );
+
+// --- Prezentacja ceny ------------------------------------------------------
+
+$GLOBALS['iskt_test_pola'] = array(
+	10 => array(
+		'_iskt_cena'           => '1490.00',
+		'_iskt_cena_jednostka' => 'osoba',
+		'_iskt_cena_podatek'   => 'netto',
+	),
+	11 => array(
+		'_iskt_cena'           => '',
+		'_iskt_cena_jednostka' => 'osoba',
+	),
+	12 => array(
+		'_iskt_cena'           => '2500.00',
+		'_iskt_cena_jednostka' => 'do_ustalenia',
+	),
+	13 => array(
+		'_iskt_cena'           => '990.50',
+		'_iskt_cena_jednostka' => 'grupa',
+		'_iskt_cena_podatek'   => 'zwolnione',
+	),
+	14 => array(
+		'_iskt_cena'         => '1200.00',
+		'_iskt_cena_podatek' => 'nieznany_klucz',
+	),
+);
+
+$iskt_cena = iskt_cena_szkolenia( 10 );
+sprawdz( 'kwota bez groszy nie pokazuje przecinka', "1\u{00A0}490 zł", $iskt_cena['kwota'] );
+sprawdz( 'dopisek łączy podatek i jednostkę', 'netto (+ VAT) · za osobę', $iskt_cena['dopisek'] );
+
+sprawdz( 'brak ceny nie generuje kwoty', '', iskt_cena_szkolenia( 11 )['kwota'] );
+
+$iskt_indywidualna = iskt_cena_szkolenia( 12 );
+sprawdz( 'wycena indywidualna nie pokazuje kwoty', 'Wycena indywidualna', $iskt_indywidualna['kwota'] );
+sprawdz( 'wycena indywidualna nie ma dopisku', '', $iskt_indywidualna['dopisek'] );
+
+$iskt_grosze = iskt_cena_szkolenia( 13 );
+sprawdz( 'kwota z groszami zachowuje część dziesiętną', '990,50 zł', $iskt_grosze['kwota'] );
+sprawdz( 'zwolnienie z VAT trafia do dopisku', 'zwolnione z VAT · za grupę', $iskt_grosze['dopisek'] );
+
+sprawdz( 'nieznany klucz podatku nie trafia do dopisku', '', iskt_cena_szkolenia( 14 )['dopisek'] );
+
+// --- Formy i kategoria szkolenia -------------------------------------------
+
+$GLOBALS['iskt_test_terminy'] = array(
+	20 => array(
+		ISKT_TAX_FORMA     => array( new WP_Term( 1, 'Online' ), new WP_Term( 2, 'Stacjonarnie' ) ),
+		ISKT_TAX_KATEGORIA => array( new WP_Term( 3, 'ESG' ), new WP_Term( 4, 'AI' ) ),
+	),
+	21 => array(),
+);
+
+sprawdz( 'formy zwracane w kolejności z bazy', array( 'Online', 'Stacjonarnie' ), iskt_formy_szkolenia( 20 ) );
+sprawdz( 'brak form daje pustą listę', array(), iskt_formy_szkolenia( 21 ) );
+sprawdz( 'kategoria wybierana alfabetycznie, żeby wynik był powtarzalny', 'AI', iskt_kategoria_szkolenia( 20 )->name );
+sprawdz( 'brak kategorii zwraca null', null, iskt_kategoria_szkolenia( 21 ) );
 
 // --- Wynik -----------------------------------------------------------------
 

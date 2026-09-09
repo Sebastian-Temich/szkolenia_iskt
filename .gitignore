@@ -26,6 +26,9 @@ wp-config-local.php
 /wp-content/upgrade/
 /wp-content/languages/
 
+# Katalog roboczy wp-env (mapowane uploady) — konfiguracja .wp-env.json zostaje w repozytorium
+/.wp-env/
+
 # Narzędzia
 .phpunit.result.cache
 .phpcs-cache

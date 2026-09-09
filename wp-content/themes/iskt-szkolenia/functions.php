@@ -26,7 +26,7 @@ const ISKT_TOKEN_FILES = array( 'fonts', 'colors', 'typography', 'spacing', 'eff
  * układ → typografia → komponenty → szkielet strony. Żaden z nich nie powtarza
  * wartości z tokenów; wszystkie korzystają ze zmiennych CSS.
  */
-const ISKT_STYLE_FILES = array( 'uklad', 'typografia', 'komponenty', 'szkielet' );
+const ISKT_STYLE_FILES = array( 'uklad', 'typografia', 'komponenty', 'szkielet', 'sekcje' );
 
 require_once get_theme_file_path( 'inc/ikony.php' );
 require_once get_theme_file_path( 'inc/nawigacja.php' );
@@ -97,6 +97,24 @@ function iskt_enqueue_assets(): void {
 			'strategy'  => 'defer',
 		)
 	);
+
+	/*
+	 * Skrypt przełącznika odbiorcy wczytujemy tylko tam, gdzie przełącznik może
+	 * wystąpić — czyli na widokach z treścią blokową. Na archiwach i wynikach
+	 * wyszukiwania byłby wyłącznie żądaniem bez zastosowania.
+	 */
+	if ( is_singular() || is_front_page() ) {
+		wp_enqueue_script(
+			'iskt-odbiorca',
+			get_theme_file_uri( 'assets/js/odbiorca.js' ),
+			array(),
+			iskt_asset_version( 'assets/js/odbiorca.js' ),
+			array(
+				'in_footer' => true,
+				'strategy'  => 'defer',
+			)
+		);
+	}
 }
 add_action( 'wp_enqueue_scripts', 'iskt_enqueue_assets' );
 
@@ -141,13 +159,51 @@ function iskt_theme_setup(): void {
 
 	/*
 	 * Edytor blokowy korzysta z tych samych arkuszy co strona — redaktor pisze
-	 * w tej samej typografii, w jakiej treść się ukaże. Palety i wzorce bloków
-	 * dokłada zadanie 4 (theme.json), tutaj celowo ich nie dublujemy.
+	 * w tej samej typografii, w jakiej treść się ukaże. Paleta, skala typografii
+	 * i odstępy pochodzą z theme.json i wskazują na te same tokeny.
 	 */
 	add_theme_support( 'editor-styles' );
 	add_editor_style( array_values( iskt_stylesheets() ) );
+
+	/*
+	 * Wyłączamy wzorce z katalogu WordPress.org. Powód nie jest kosmetyczny:
+	 * pobiera je zewnętrzna usługa przy otwieraniu edytora, wyglądają obco na tle
+	 * marki, a właściciel szukający „sekcji z cenami” trafiałby na kilkadziesiąt
+	 * cudzych układów zamiast na siedem przygotowanych dla tego serwisu.
+	 */
+	remove_theme_support( 'core-block-patterns' );
 }
 add_action( 'after_setup_theme', 'iskt_theme_setup' );
+
+/**
+ * Rejestruje kategorię wzorców motywu i styl przycisku na ciemnym tle.
+ *
+ * Wzorce z katalogu `patterns/` WordPress znajduje sam; kategorię trzeba mu podać,
+ * inaczej wszystkie wylądowałyby w koszu „Nieskategoryzowane”.
+ */
+function iskt_register_block_assets(): void {
+	register_block_pattern_category(
+		'iskt-sekcje',
+		array(
+			'label'       => __( 'Sekcje ISKT', 'iskt-szkolenia' ),
+			'description' => __( 'Gotowe sekcje strony głównej w układzie z projektu.', 'iskt-szkolenia' ),
+		)
+	);
+
+	/*
+	 * Przycisk na tle marki. Rejestrujemy go jako styl bloku, a nie jako klasę
+	 * do wpisania ręcznie — właściciel wybiera go z listy stylów i nie musi
+	 * wiedzieć, jak nazywa się klasa CSS (§4.7).
+	 */
+	register_block_style(
+		'core/button',
+		array(
+			'name'  => 'inverse',
+			'label' => __( 'Na ciemnym tle', 'iskt-szkolenia' ),
+		)
+	);
+}
+add_action( 'init', 'iskt_register_block_assets', 9 );
 
 /**
  * Rejestruje obszar widżetów stopki.

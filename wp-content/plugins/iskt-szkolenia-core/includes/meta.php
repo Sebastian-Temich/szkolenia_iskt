@@ -456,6 +456,27 @@ function iskt_definicje_pol(): array {
 }
 
 /**
+ * Zwraca domyślną wartość pola zgodną z typem `register_post_meta()`.
+ *
+ * @param string $typ Typ pola WordPress REST schema.
+ *
+ * @return mixed
+ */
+function iskt_domyslna_wartosc_pola( string $typ ) {
+	switch ( $typ ) {
+		case 'array':
+			return array();
+		case 'boolean':
+			return false;
+		case 'integer':
+			return 0;
+		case 'string':
+		default:
+			return '';
+	}
+}
+
+/**
  * Rejestruje pola katalogu.
  */
 function iskt_rejestruj_pola(): void {
@@ -474,7 +495,7 @@ function iskt_rejestruj_pola(): void {
 					'type'              => $definicja['type'],
 					'description'       => $definicja['etykieta'],
 					'single'            => true,
-					'default'           => 'array' === $definicja['type'] ? array() : '',
+					'default'           => iskt_domyslna_wartosc_pola( $definicja['type'] ),
 					'sanitize_callback' => $sanitize,
 					'auth_callback'     => 'iskt_moze_edytowac_pole',
 

@@ -53,8 +53,12 @@ const ISKT_META_TERMIN_SZKOLENIE = '_iskt_termin_szkolenie';
 require_once ISKT_CORE_DIR . '/includes/capabilities.php';
 require_once ISKT_CORE_DIR . '/includes/model.php';
 require_once ISKT_CORE_DIR . '/includes/meta.php';
+require_once ISKT_CORE_DIR . '/includes/kategorie.php';
 require_once ISKT_CORE_DIR . '/includes/relacje.php';
 require_once ISKT_CORE_DIR . '/includes/terminy.php';
+require_once ISKT_CORE_DIR . '/includes/prezentacja.php';
+require_once ISKT_CORE_DIR . '/includes/odbiorca.php';
+require_once ISKT_CORE_DIR . '/includes/bloki.php';
 require_once ISKT_CORE_DIR . '/includes/activation.php';
 
 if ( is_admin() ) {

@@ -38,8 +38,56 @@ function iskt_icon_shapes(): array {
 		'graduation'   => '<path d="M22 10 12 5 2 10l10 5 10-5z"/><path d="M6 12v5c0 1.66 2.69 3 6 3s6-1.34 6-3v-5"/>',
 		'leaf'         => '<path d="M11 20A7 7 0 0 1 4 13c0-6 4-9 16-10-1 12-4 16-9 17z"/><path d="M4 21c3-6 6.5-9.5 12-12"/>',
 		'check'        => '<path d="M20 6 9 17l-5-5"/>',
+		'cpu'          => '<rect x="4" y="4" width="16" height="16" rx="2"/><rect x="9" y="9" width="6" height="6"/><path d="M15 2v2"/><path d="M15 20v2"/><path d="M2 15h2"/><path d="M2 9h2"/><path d="M20 15h2"/><path d="M20 9h2"/><path d="M9 2v2"/><path d="M9 20v2"/>',
+		'languages'    => '<path d="m5 8 6 6"/><path d="m4 14 6-6 2-3"/><path d="M2 5h12"/><path d="M7 2h1"/><path d="m22 22-5-10-5 10"/><path d="M14 18h6"/>',
+		'code'         => '<path d="m18 16 4-4-4-4"/><path d="m6 8-4 4 4 4"/><path d="m14.5 4-5 16"/>',
+		'flask'        => '<path d="M10 2v7.5L4.6 18a2 2 0 0 0 1.7 3h11.4a2 2 0 0 0 1.7-3L14 9.5V2"/><path d="M8.5 2h7"/><path d="M7 15h10"/>',
+		'building'     => '<rect x="4" y="2" width="16" height="20" rx="2"/><path d="M9 22v-4h6v4"/><path d="M8 6h.01"/><path d="M16 6h.01"/><path d="M8 10h.01"/><path d="M16 10h.01"/><path d="M8 14h.01"/><path d="M16 14h.01"/>',
+		'banknote'     => '<rect x="2" y="6" width="20" height="12" rx="2"/><circle cx="12" cy="12" r="2"/><path d="M6 12h.01"/><path d="M18 12h.01"/>',
 	);
 }
+
+/**
+ * Symbole kategorii: identyfikator z wtyczki → ikona motywu.
+ *
+ * Wtyczka zapisuje w bazie wyłącznie identyfikator (np. `ai`), bo kształt to
+ * decyzja wizualna, a te należą do motywu (ADR-001 §1). Ta tablica jest jedynym
+ * miejscem, w którym oba światy się spotykają.
+ *
+ * @return array<string, string>
+ */
+function iskt_ikony_symboli(): array {
+	return array(
+		'ai'           => 'cpu',
+		'esg'          => 'leaf',
+		'jezyk'        => 'languages',
+		'kod'          => 'code',
+		'badania'      => 'flask',
+		'edukacja'     => 'graduation',
+		'firma'        => 'building',
+		'finansowanie' => 'banknote',
+	);
+}
+
+/**
+ * Dostarcza wtyczce znacznik symbolu kategorii.
+ *
+ * Nieznany identyfikator zwraca pusty ciąg — karta kategorii wyświetli się bez
+ * symbolu zamiast pokazywać przypadkowy kształt.
+ *
+ * @param string $html   Znacznik ustawiony przez wcześniejsze filtry.
+ * @param string $symbol Identyfikator symbolu.
+ */
+function iskt_symbol_kategorii_html( string $html, string $symbol ): string {
+	$ikony = iskt_ikony_symboli();
+
+	if ( ! isset( $ikony[ $symbol ] ) ) {
+		return $html;
+	}
+
+	return iskt_icon( $ikony[ $symbol ], 'iskt-icon--lg' );
+}
+add_filter( 'iskt_symbol_html', 'iskt_symbol_kategorii_html', 10, 2 );
 
 /**
  * Zwraca gotowy znacznik ikony.

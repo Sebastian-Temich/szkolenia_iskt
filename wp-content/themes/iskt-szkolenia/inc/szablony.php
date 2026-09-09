@@ -10,6 +10,28 @@ declare( strict_types = 1 );
 defined( 'ABSPATH' ) || exit;
 
 /**
+ * Zwraca znaczniki jednej sekcji strony głównej.
+ *
+ * Wzorzec „Strona główna ISKT” składa się z plików pojedynczych sekcji, zamiast
+ * powielać ich treść. Include wykonuje się w zakresie tej funkcji, więc zmienne
+ * pomocnicze poszczególnych sekcji nie nadpisują się nawzajem.
+ *
+ * @param string $nazwa Nazwa pliku sekcji z katalogu `patterns/`, bez rozszerzenia.
+ */
+function iskt_wzorzec_sekcji( string $nazwa ): string {
+	$plik = get_theme_file_path( 'patterns/' . sanitize_file_name( $nazwa ) . '.php' );
+
+	if ( ! file_exists( $plik ) ) {
+		return '';
+	}
+
+	ob_start();
+	include $plik;
+
+	return (string) ob_get_clean();
+}
+
+/**
  * Nagłówek listy wpisów: tytuł i opis.
  *
  * Świeża instalacja WordPressa nazywa listę wpisów nazwą serwisu — a domyślna

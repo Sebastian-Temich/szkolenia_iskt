@@ -1,0 +1,131 @@
+{
+	"$schema": "https://schemas.wp.org/trunk/theme.json",
+	"version": 3,
+	"settings": {
+		"appearanceTools": false,
+		"useRootPaddingAwareAlignments": false,
+		"layout": {
+			"contentSize": "1200px",
+			"wideSize": "1400px"
+		},
+		"color": {
+			"custom": false,
+			"customDuotone": false,
+			"customGradient": false,
+			"duotone": [],
+			"defaultPalette": false,
+			"defaultGradients": false,
+			"palette": [
+				{ "slug": "zielen", "name": "Zieleń ISKT", "color": "var(--green-700)" },
+				{ "slug": "zielen-ciemna", "name": "Zieleń ciemna", "color": "var(--green-900)" },
+				{ "slug": "zielen-akcent", "name": "Zieleń akcentowa", "color": "var(--green-500)" },
+				{ "slug": "zielen-jasna", "name": "Zieleń jasna", "color": "var(--green-200)" },
+				{ "slug": "tlo-zielone", "name": "Tło zielone", "color": "var(--green-50)" },
+				{ "slug": "atrament", "name": "Atrament", "color": "var(--ink-900)" },
+				{ "slug": "tekst-drugorzedny", "name": "Tekst drugorzędny", "color": "var(--neutral-600)" },
+				{ "slug": "tlo-subtelne", "name": "Tło subtelne", "color": "var(--neutral-50)" },
+				{ "slug": "obramowanie", "name": "Obramowanie", "color": "var(--neutral-200)" },
+				{ "slug": "biel", "name": "Biel", "color": "#FFFFFF" }
+			],
+			"gradients": [
+				{
+					"slug": "marka",
+					"name": "Gradient marki",
+					"gradient": "linear-gradient(135deg, var(--green-700) 0%, var(--green-900) 100%)"
+				}
+			]
+		},
+		"typography": {
+			"customFontSize": false,
+			"lineHeight": false,
+			"dropCap": false,
+			"fluid": false,
+			"fontFamilies": [
+				{
+					"slug": "sans",
+					"name": "Inter",
+					"fontFamily": "var(--font-sans)"
+				},
+				{
+					"slug": "mono",
+					"name": "JetBrains Mono",
+					"fontFamily": "var(--font-mono)"
+				}
+			],
+			"fontSizes": [
+				{ "slug": "xs", "name": "Bardzo mały", "size": "var(--text-xs)" },
+				{ "slug": "small", "name": "Mały", "size": "var(--text-sm)" },
+				{ "slug": "medium", "name": "Podstawowy", "size": "var(--text-base)" },
+				{ "slug": "large", "name": "Duży", "size": "var(--text-lg)" },
+				{ "slug": "x-large", "name": "Nagłówek", "size": "var(--text-2xl)" },
+				{ "slug": "xx-large", "name": "Nagłówek duży", "size": "var(--text-3xl)" },
+				{ "slug": "display", "name": "Tytuł strony", "size": "var(--text-4xl)" }
+			]
+		},
+		"spacing": {
+			"customSpacingSize": false,
+			"units": [ "px", "rem", "%", "vw" ],
+			"spacingSizes": [
+				{ "slug": "20", "name": "Bardzo mały", "size": "var(--space-2)" },
+				{ "slug": "30", "name": "Mały", "size": "var(--space-4)" },
+				{ "slug": "40", "name": "Średni", "size": "var(--space-6)" },
+				{ "slug": "50", "name": "Duży", "size": "var(--space-10)" },
+				{ "slug": "60", "name": "Bardzo duży", "size": "var(--space-16)" },
+				{ "slug": "70", "name": "Sekcja", "size": "var(--section-pad-y)" }
+			]
+		},
+		"border": {
+			"color": false,
+			"radius": false,
+			"style": false,
+			"width": false
+		},
+		"shadow": {
+			"defaultPresets": false,
+			"presets": [
+				{ "slug": "karta", "name": "Karta", "shadow": "var(--shadow-sm)" },
+				{ "slug": "uniesiona", "name": "Uniesiona", "shadow": "var(--shadow-lg)" }
+			]
+		},
+		"blocks": {
+			"core/button": {
+				"border": {
+					"radius": false
+				}
+			}
+		}
+	},
+	"styles": {
+		"color": {
+			"background": "var(--surface-page)",
+			"text": "var(--text-primary)"
+		},
+		"typography": {
+			"fontFamily": "var(--font-sans)",
+			"fontSize": "var(--text-base)",
+			"lineHeight": "var(--lh-normal)"
+		},
+		"spacing": {
+			"blockGap": "var(--space-6)"
+		},
+		"elements": {
+			"link": {
+				"color": {
+					"text": "var(--text-link)"
+				},
+				":hover": {
+					"color": {
+						"text": "var(--text-link-hover)"
+					}
+				}
+			},
+			"heading": {
+				"typography": {
+					"fontWeight": "var(--fw-extrabold)",
+					"lineHeight": "var(--lh-snug)",
+					"letterSpacing": "var(--ls-tight)"
+				}
+			}
+		}
+	}
+}

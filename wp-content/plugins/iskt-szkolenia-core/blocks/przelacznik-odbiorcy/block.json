@@ -1,0 +1,33 @@
+{
+	"$schema": "https://schemas.wp.org/trunk/block.json",
+	"apiVersion": 3,
+	"name": "iskt/przelacznik-odbiorcy",
+	"title": "Przełącznik odbiorcy",
+	"category": "iskt",
+	"icon": "randomize",
+	"description": "Przełącza komunikację między wariantem „Dla Ciebie” i „Dla firm”. Wstaw raz na stronie — steruje wszystkimi blokami „Treść dla odbiorcy”.",
+	"keywords": [ "odbiorca", "firma", "przełącznik" ],
+	"textdomain": "iskt-szkolenia-core",
+	"attributes": {
+		"etykietaIndywidualny": {
+			"type": "string",
+			"default": ""
+		},
+		"etykietaFirmowy": {
+			"type": "string",
+			"default": ""
+		},
+		"opis": {
+			"type": "string",
+			"default": ""
+		}
+	},
+	"supports": {
+		"html": false,
+		"align": [ "center" ],
+		"spacing": {
+			"margin": true
+		}
+	},
+	"editorScript": "iskt-bloki"
+}

@@ -33,7 +33,11 @@ kontraktu — wymaga poprawienia dokumentu i wszystkich miejsc użycia.
 | `assets/css/typografia.css` | skala nagłówków, role tekstu, `.iskt-prose` dla treści z edytora |
 | `assets/css/komponenty.css` | przycisk, karta, plakietka, pole formularza, komunikat, paginacja |
 | `assets/css/szkielet.css` | nagłówek, nawigacja, stopka, drobne elementy szablonów |
+| `assets/css/sekcje.css` | sekcje strony głównej i oprawa bloków rdzenia (zadanie 4) |
+| `theme.json` | paleta, skala pisma i odstępy dla edytora — wskazują na te same tokeny (zadanie 4) |
+| `patterns/*.php` | wzorce sekcji strony głównej (zadanie 4) — patrz `STRONA-GLOWNA.md` |
 | `assets/js/nawigacja.js` | menu mobilne, podmenu, stan nagłówka po przewinięciu |
+| `assets/js/odbiorca.js` | przyspieszenie przełącznika odbiorcy; strona działa bez niego (zadanie 4) |
 | `inc/ikony.php` | wbudowane ikony SVG (`iskt_icon()`, `iskt_the_icon()`) |
 | `inc/nawigacja.php` | zawartość zastępcza menu, `aria-current`, nazwa i hasło serwisu |
 | `inc/szablony.php` | nagłówek listy, metadane wpisu, paginacja |
