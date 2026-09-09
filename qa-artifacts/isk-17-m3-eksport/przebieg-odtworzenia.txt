@@ -1,0 +1,137 @@
+ISK-17 M3 zadanie 13 — przebieg testu odtworzenia z paczki
+Paczka: /var/folders/22/2p7c0mnd5c9bncbfq5nj3j6r0000gq/T/paperclip-run-isk-34-9e76a18c-905-xResLy/paczka
+Adres źródłowy w bazie po zamianie: https://szkolenia.iskt.pl
+WordPress w źródle: 6.6.2
+Prefiks tabel (docelowa instalacja musi mieć taki sam): wp_
+
+» Czysty WordPress: dwa kontenery, pusta baza
+
+» Narzędzia w kontenerze docelowym (WP-CLI, klient MySQL)
+
+» Instalacja WordPressa z KONTEM WŁAŚCICIELA (paczka kont nie przenosi)
+  WordPress 6.6.2, prefiks wp_, motyw twentytwentyfour, wpisów: 1
+
+» Import paczki
+
+» Sprawdzenie paczki
+  ✓ Sumy kontrolne zgodne z manifestem.
+  ✓ Prefiks tabel zgodny: wp_
+
+» Kopia stanu sprzed importu
+  ✓ Zapisana w /var/www/html/kopia-przed-importem — wycofanie: tools/wycofaj-import.sh /var/www/html/kopia-przed-importem
+
+» Import bazy
+Success: Imported from '/paczka/baza.sql'.
+  ✓ Baza wczytana.
+sh: 1: /usr/sbin/sendmail: not found
+  ✓ Adres administratora tej instalacji zachowany: redakcja@iskt.pl
+
+» Rozpakowanie wp-content
+  ✓ Motyw, wtyczka i biblioteka mediów na miejscu.
+
+» Zamiana adresów: https://szkolenia.iskt.pl → http://localhost:8890
+  ✓ Adresy zamienione z zachowaniem danych serializowanych.
+
+» Motyw, wtyczka i reguły adresów
+  ✓ Motyw i wtyczka włączone, reguły adresów przeładowane, dane podręczne wyczyszczone.
+
+» Indeksowanie
+  ! blog_public = 0 — witryna jest POZA indeksem wyszukiwarek.
+  ! Po sprawdzeniu witryny włącz indeksowanie: patrz docs/EKSPORT-I-MIGRACJA.md §7.
+
+» Stan po imporcie
+  adres:    http://localhost:8890
+  motyw:    iskt-szkolenia
+  szkolenia: 15
+  trenerzy:  3
+  terminy:   4
+  media:     2
+
+» Zrób teraz przejście z §6 instrukcji — import bez sprawdzenia nie jest odtworzeniem.
+
+» Sprawdzenie odtworzonej witryny
+
+  Adresy odpowiadają (§11 pkt 6 — po bezpośrednim wejściu, nie z panelu)
+  ✓ /                                                              200
+  ✓ /szkolenia/                                                    200
+  ✓ /szkolenia/demo-audyt-energetyczny-budynkow/                   200
+  ✓ /trenerzy/                                                     200
+  ✓ /trenerzy/demo-anna-kowalczyk/                                 200
+  ✓ /aktualnosci/                                                  200
+  ✓ /zgloszenie/                                                   200
+  ✓ /szkolenia/page/2/                                             200
+
+  Katalog: wyszukiwanie, filtry, brak wyników (§4.2)
+  ✓ wyszukiwanie po opisie znajduje 1 szkolenie                    1
+  ✓ filtr kategorii zwraca wyniki                                  200
+  ✓ filtr formy zwraca wyniki                                      200
+  ✓ stan braku wyników pokazuje komunikat                         1
+
+  Powiązanie szkolenie ↔ trener widoczne z OBU stron (§11 pkt 8)
+  ✓ szkolenie pokazuje pierwszego trenera                          1
+  ✓ szkolenie pokazuje drugiego trenera                            1
+  ✓ profil trenera pokazuje szkolenie A                            1
+  ✓ profil trenera pokazuje szkolenie B                            1
+
+  Terminy, w tym zakończony (§11 pkt 5)
+  ✓ najbliższy termin jest na stronie szkolenia                   1
+  ✓ termin zakończony NIE jest prezentowany jako nadchodzący     0
+
+  Teksty globalne z zadania 10
+  ✓ tytuł katalogu z panelu                                       2
+  ✓ napis przycisku menu z panelu                                  1
+  ✓ komunikat pustego katalogu z panelu                            1
+
+  Media z biblioteki, nie puste ramki
+  ✓ zdjęcie trenera osadzone w stronie                            1
+  ✓ plik zdjęcia serwowany                                        200
+  ✓ rozmiar pochodny wygenerowany przy źródle też jest          200
+
+  Formularz zgłoszeniowy (bez wysyłki — patrz §9 instrukcji)
+  ✓ strona /zgloszenie/ istnieje                                   200
+  ✓ blok formularza jest na stronie                                1
+  ✓ pole wyboru szkolenia wypełnione katalogiem                   1
+
+  Ślady środowiska wewnętrznego na odtworzonej witrynie
+  ✓ brak adresu localhost:8888 na stronie głównej                0
+  ✓ brak adresu localhost:8888 w katalogu                          0
+  ✓ adres administratora należy do instalacji docelowej           redakcja@iskt.pl
+
+  Indeksowanie — stan po imporcie (§7 instrukcji)
+  ✓ blog_public = 0 (witryna poza indeksem do decyzji ISKT)        0
+  ✓ znacznik noindex obecny                                        1
+
+  Zgodność liczb ze źródłem
+  ✓ liczba wpisów: iskt_szkolenie                                 15
+  ✓ liczba wpisów: iskt_trener                                    3
+  ✓ liczba wpisów: iskt_termin                                    4
+  ✓ liczba wpisów: post                                           3
+  ✓ liczba wpisów: page                                           3
+  ✓ wierszy w postmeta                                             254
+
+» Wynik odtworzenia
+  Wszystkie sprawdzenia przeszły. Witryna działa pod http://localhost:8890
+
+» Wycofanie importu — powrót do stanu sprzed
+
+» Przywracanie bazy
+  ✓ Baza z chwili sprzed importu.
+
+» Przywracanie wp-content
+  ✓ Motyw, wtyczki i media z chwili sprzed importu.
+
+» Reguły adresów
+  ✓ Przeładowane.
+
+» Stan: http://localhost:8890, motyw twentytwentyfour
+
+  ✓ motyw wrócił do domyślnego WordPressa                       twentytwentyfour
+  ✓ wtyczka serwisu wyłączona                                    
+  ✓ katalogu szkoleń nie ma                                       0
+  ✓ konto właściciela nietknięte                                wlasciciel
+  ✓ witryna odpowiada                                              200
+
+» Wynik
+  Odtworzenie i wycofanie przeszły w całości.
+  Zapis przebiegu: /Users/ST/Documents/ISKT/Strona_www_firmowa/Szkolenia_ISKT/qa-artifacts/isk-17-m3-eksport/przebieg-odtworzenia.txt
+  Sprzątanie: docker rm -f iskt-odtw-wp iskt-odtw-db

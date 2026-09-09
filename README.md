@@ -30,6 +30,7 @@ Zlecenie: ISK-17. Docelowy hosting: SEOHost (wdrożenie poza zakresem tego zlece
 | [`docs/ODBIOR-M1.md`](docs/ODBIOR-M1.md) | Przejście odbiorowe M1: co kliknąć, czego jeszcze nie ma, treści do potwierdzenia |
 | [`docs/KATALOG-SZKOLEN.md`](docs/KATALOG-SZKOLEN.md) | Katalog: wyszukiwanie, filtry, paginacja, puste widoki i decyzja o indeksowaniu (§7) |
 | [`docs/ADMINISTRACJA.md`](docs/ADMINISTRACJA.md) | Instrukcja administracji dla właściciela: prowadzenie oferty z panelu, role, czego serwis nie robi (§11 pkt 13) |
+| [`docs/EKSPORT-I-MIGRACJA.md`](docs/EKSPORT-I-MIGRACJA.md) | Przeniesienie serwisu na docelowy hosting: paczka eksportu, import, adresy, HTTPS, poczta, indeksowanie i wycofanie wdrożenia (§8) |
 
 ## Struktura
 
@@ -39,6 +40,7 @@ design/
   assets/    logo ISKT
   source/    materiały wejściowe bez zmian — wzorzec, nie kod produkcyjny
 docs/        dokumentacja projektowa
+tools/       skrypty przekazania: eksport paczki, import, wycofanie, test odtworzenia
 wp-content/
   themes/iskt-szkolenia/            motyw — wyłącznie prezentacja
   plugins/iskt-szkolenia-core/      wtyczka — model danych, formularz, SEO
