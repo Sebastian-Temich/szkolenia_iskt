@@ -226,7 +226,15 @@ do zabezpieczenia i do usuwania na żądanie, nie zmniejszając pierwszego. Wari
 ma sens dopiero wtedy, gdy ISKT chce obsługiwać zgłoszenia w panelu WordPressa
 zamiast w poczcie — i wtedy trzeba go domówić razem z okresem retencji.
 
-Pytanie zgłoszone na ISK-17. Do czasu odpowiedzi obowiązuje wariant A.
+Pytanie wystawione ISKT na ISK-17 dnia 2026-09-09 jako decyzja zastrzeżona dla
+człowieka (§12) — pyta o wariant **wraz z okresem retencji**, bo wariant B bez
+terminu automatycznego usunięcia nie jest odpowiedzią: zbiór danych osobowych
+rosnący bez końca jest gorszy niż brak zapisu.
+
+Do czasu odpowiedzi obowiązuje wariant A i zadanie 9 jest zamknięte. Odpowiedź „B"
+otwiera **osobne zadanie** — model, ekran w panelu, uprawnienia, automatyczne
+usuwanie, eksport — a nie poprawkę do tego, co powstało. Pozycja D5 w
+`MATERIALY-I-DECYZJE.md`.
 
 ## 8. Weryfikacja
 

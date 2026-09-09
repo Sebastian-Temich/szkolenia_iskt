@@ -19,7 +19,7 @@ Legenda pilności:
 | D2 | Edytor pól | **zamknięte 2026-09-09** | ACF Pro odrzucone. Realizujemy natywnie: `register_post_meta` + skrzynki metadanych w edytorze blokowym. Zero zależności |
 | D3 | Termin i budżet zlecenia | **[START] — nadal otwarte** | Odpowiedź ISKT ich nie podała. Nie blokuje realizacji; wraca przy odbiorze M1 |
 | D4 | Repozytorium źródeł | ustalone | `github.com/Sebastian-Temich/szkolenia_iskt` — potwierdzić, że to właściwe miejsce |
-| D5 | Czy zapisywać zgłoszenia w bazie i na jak długo | **[BUDOWA]** | Domyślnie **nie zapisujemy** — tylko email. Włączenie to przełącznik |
+| D5 | Czy zapisywać zgłoszenia w bazie i na jak długo | **[BUDOWA] — pytanie wystawione ISKT 2026-09-09** | Obowiązuje wariant A: **nie zapisujemy**, zgłoszenie idzie wyłącznie pocztą. To nie jest przełącznik — modelu nie ma. Wariant B (zapis w panelu) to osobne zadanie z własną estymacją i **musi zapaść razem z okresem retencji**. Porównanie: `FORMULARZ-ZGLOSZENIOWY.md` §7 |
 | D6 | Czy zgłaszający ma otrzymywać email potwierdzający | **[BUDOWA]** | §5 „do uzgodnienia” |
 | D7 | ~~Cloudflare Turnstile~~ | **zamknięte 2026-09-09** | Odrzucone — usługa zewnętrzna. Antyspam wyłącznie własny: honeypot, pułapka czasowa, `nonce`, limit na IP |
 | D8 | ~~Analityka~~ | **zamknięte 2026-09-09** | Poza bieżącym zakresem (pkt 4 decyzji) |
