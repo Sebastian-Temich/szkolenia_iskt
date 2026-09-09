@@ -1,0 +1,41 @@
+/*
+ * Panel katalogu ISKT — style skrzynek metadanych.
+ *
+ * Celowo minimalne: skrzynka ma wyglądać jak reszta panelu WordPressa, a nie jak
+ * osobny interfejs. Redaktor uczy się jednego układu, nie dwóch.
+ */
+
+.iskt-pole {
+	margin: 0 0 1.25rem;
+}
+
+.iskt-pole:last-child {
+	margin-bottom: 0;
+}
+
+.iskt-pole__etykieta {
+	display: block;
+	margin-bottom: 0.35rem;
+	font-weight: 600;
+}
+
+.iskt-pole .description {
+	margin-top: 0.35rem;
+}
+
+.iskt-pole select[multiple] {
+	width: 100%;
+	max-width: 32rem;
+}
+
+.iskt-program__modul {
+	margin-bottom: 0.75rem;
+	padding: 0.75rem;
+	border: 1px solid #dcdcde;
+	border-radius: 4px;
+	background: #fff;
+}
+
+.iskt-program__modul input {
+	margin-bottom: 0.5rem;
+}
