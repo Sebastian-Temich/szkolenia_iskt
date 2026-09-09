@@ -167,6 +167,40 @@ function iskt_opis_terminu( int $termin_id ): array {
 }
 
 /**
+ * Zwraca inicjały z nazwy, do zastępczego znaku przy braku zdjęcia.
+ *
+ * Profil trenera bez zdjęcia ma wyglądać kompletnie, a nie jak strona z brakującym
+ * obrazkiem — §9 zostawia zdjęcia do czasu potwierdzenia praw, więc stan „bez zdjęcia”
+ * jest normalny i długotrwały. Pomijamy człony, które nie zaczynają się literą:
+ * dopisek „Demo — ” z danych demonstracyjnych dałby inicjał „—”.
+ *
+ * @param string $nazwa Imię i nazwisko.
+ */
+function iskt_inicjaly( string $nazwa ): string {
+	$czlony = preg_split( '/\s+/u', trim( wp_strip_all_tags( $nazwa ) ) );
+
+	if ( ! is_array( $czlony ) ) {
+		return '';
+	}
+
+	$litery = array();
+
+	foreach ( $czlony as $czlon ) {
+		if ( 1 !== preg_match( '/^\p{L}/u', $czlon ) ) {
+			continue;
+		}
+
+		$litery[] = mb_substr( $czlon, 0, 1 );
+
+		if ( 2 === count( $litery ) ) {
+			break;
+		}
+	}
+
+	return mb_strtoupper( implode( '', $litery ) );
+}
+
+/**
  * Zwraca symbol graficzny dla identyfikatora zapisanego przy kategorii.
  *
  * Wtyczka zna tylko identyfikator (patrz `includes/kategorie.php`); kształt

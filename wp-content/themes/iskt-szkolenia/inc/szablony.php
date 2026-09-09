@@ -46,6 +46,77 @@ function iskt_wzorzec_sekcji( string $nazwa ): string {
 }
 
 /**
+ * Zwraca pole listowe wpisu jako tablicę niepustych wierszy.
+ *
+ * Pola `lista` (doświadczenie, wykształcenie, specjalizacje, korzyści) trzymane są
+ * jako tablica, ale w bazie może zostać wartość po starszym zapisie albo pusty
+ * wiersz po skasowaniu treści. Szablon ma decydować „pokazać sekcję czy nie” na
+ * podstawie tego, czy jest co pokazać — a nie na podstawie samego istnienia pola.
+ *
+ * @param int    $post_id Identyfikator wpisu.
+ * @param string $klucz   Nazwa pola.
+ *
+ * @return array<int, string>
+ */
+function iskt_lista_pola( int $post_id, string $klucz ): array {
+	$wartosc = get_post_meta( $post_id, $klucz, true );
+
+	if ( ! is_array( $wartosc ) ) {
+		return array();
+	}
+
+	return array_values(
+		array_filter(
+			array_map( static fn ( $pozycja ): string => trim( (string) $pozycja ), $wartosc ),
+			static fn ( string $pozycja ): bool => '' !== $pozycja
+		)
+	);
+}
+
+/**
+ * Zwraca znacznik zdjęcia osoby albo znak zastępczy z inicjałami.
+ *
+ * Dwie rzeczy załatwione w jednym miejscu, żeby wyglądały tak samo w panelu
+ * szkolenia, na liście trenerów i na profilu:
+ *
+ * 1. Tekst alternatywny. Gdy redaktor opisał zdjęcie w bibliotece mediów, wygrywa
+ *    jego opis; gdy nie — wstawiamy imię i nazwisko, zamiast zostawić obraz bez
+ *    opisu albo z nazwą pliku.
+ * 2. Brak zdjęcia. §9 zostawia zdjęcia trenerów do czasu potwierdzenia praw, więc
+ *    profil bez zdjęcia to stan normalny i długotrwały. Znak zastępczy jest ozdobą
+ *    (`aria-hidden`) — imię i nazwisko stoi obok w tekście.
+ *
+ * @param WP_Post $osoba     Wpis osoby.
+ * @param string  $rozmiar   Rozmiar obrazu WordPressa.
+ * @param string  $ladowanie Wartość atrybutu `loading`.
+ */
+function iskt_zdjecie_osoby( WP_Post $osoba, string $rozmiar = 'thumbnail', string $ladowanie = 'lazy' ): string {
+	$id    = (int) $osoba->ID;
+	$nazwa = (string) get_the_title( $osoba );
+
+	if ( has_post_thumbnail( $id ) ) {
+		$opis = trim( (string) get_post_meta( (int) get_post_thumbnail_id( $id ), '_wp_attachment_image_alt', true ) );
+
+		return (string) get_the_post_thumbnail(
+			$id,
+			$rozmiar,
+			array(
+				'loading' => $ladowanie,
+				'alt'     => '' !== $opis ? $opis : $nazwa,
+			)
+		);
+	}
+
+	$inicjaly = function_exists( 'iskt_inicjaly' ) ? iskt_inicjaly( $nazwa ) : '';
+
+	if ( '' === $inicjaly ) {
+		return '';
+	}
+
+	return '<span class="iskt-avatar" aria-hidden="true">' . esc_html( $inicjaly ) . '</span>';
+}
+
+/**
  * Nagłówek listy wpisów: tytuł i opis.
  *
  * Świeża instalacja WordPressa nazywa listę wpisów nazwą serwisu — a domyślna

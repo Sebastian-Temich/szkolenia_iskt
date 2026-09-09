@@ -609,6 +609,23 @@ $iskt_katalog_oba = iskt_argumenty_katalogu(
 sprawdz( 'dwa filtry zawężają razem, nie po jednym', 'AND', $iskt_katalog_oba['tax_query']['relation'] );
 sprawdz( 'drugi filtr dotyczy formy realizacji', ISKT_TAX_FORMA, $iskt_katalog_oba['tax_query'][1]['taxonomy'] );
 
+// --- Inicjały (znak zastępczy zamiast zdjęcia trenera) ----------------------
+
+sprawdz( 'imię i nazwisko dają dwie litery', 'AK', iskt_inicjaly( 'Anna Kowalska' ) );
+sprawdz( 'polskie znaki zostają polskimi znakami', 'ŻŚ', iskt_inicjaly( 'Żaneta Śliwa' ) );
+sprawdz( 'małe litery idą na wersaliki', 'JN', iskt_inicjaly( 'jan nowak' ) );
+
+/*
+ * Dane demonstracyjne (§9) noszą przedrostek „Demo — ”. Myślnik nie jest imieniem,
+ * więc inicjał „D—” byłby usterką widoczną na każdym kaflu listy trenerów.
+ */
+sprawdz( 'człon bez litery jest pomijany', 'DA', iskt_inicjaly( 'Demo — Anna Kowalska' ) );
+
+sprawdz( 'trzeci człon nie wchodzi do inicjałów', 'AM', iskt_inicjaly( '  Anna   Maria  Kowalska ' ) );
+sprawdz( 'jedno słowo daje jedną literę', 'J', iskt_inicjaly( 'Jan' ) );
+sprawdz( 'pusta nazwa nie daje znaku zastępczego', '', iskt_inicjaly( '' ) );
+sprawdz( 'sama interpunkcja nie daje znaku zastępczego', '', iskt_inicjaly( ' — · ' ) );
+
 // --- Wynik -----------------------------------------------------------------
 
 printf( "\n%d przeszło, %d nie przeszło\n", $GLOBALS['iskt_ok'], $GLOBALS['iskt_bledy'] );

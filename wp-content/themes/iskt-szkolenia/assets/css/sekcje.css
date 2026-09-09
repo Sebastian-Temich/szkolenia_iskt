@@ -548,8 +548,20 @@
   gap: var(--space-3);
 }
 
+.iskt-trener__zdjecie {
+  flex: none;
+}
+
 .iskt-trener__zdjecie img {
   display: block;
+}
+
+/* Zdjęcie i znak zastępczy zajmują dokładnie to samo miejsce — dzięki temu
+   lista trenerów, z których część nie ma jeszcze zdjęcia (§9), nie faluje.
+   `display` zostaje przy obrazie: znak zastępczy potrzebuje `flex`, żeby
+   wyśrodkować inicjały. */
+.iskt-trener__zdjecie img,
+.iskt-trener__zdjecie .iskt-avatar {
   width: var(--space-12);
   height: var(--space-12);
   border-radius: var(--radius-pill);
@@ -564,6 +576,148 @@
 .iskt-trener__rola {
   color: var(--text-secondary);
   font-size: var(--text-sm);
+}
+
+/* --------------------------------------------------- Trenerzy: lista i profil */
+
+/* Znak zastępczy zamiast zdjęcia. Inicjały składa `iskt_inicjaly()`; element jest
+   ozdobą (`aria-hidden`), bo imię i nazwisko stoi obok jako tekst. */
+.iskt-avatar {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background: var(--green-100);
+  color: var(--green-800);
+  font-family: var(--font-heading);
+  font-weight: var(--fw-bold);
+  letter-spacing: var(--ls-wide);
+  text-transform: uppercase;
+  user-select: none;
+}
+
+.iskt-trenerzy-lista {
+  --iskt-grid-min: 19rem;
+}
+
+.iskt-trener-karta .iskt-trener__zdjecie img,
+.iskt-trener-karta .iskt-trener__zdjecie .iskt-avatar {
+  width: var(--space-16);
+  height: var(--space-16);
+}
+
+.iskt-trener-karta .iskt-trener__zdjecie .iskt-avatar {
+  font-size: var(--text-sm);
+}
+
+.iskt-trener-karta .iskt-trener__nazwa {
+  font-size: var(--text-lg);
+  font-weight: var(--fw-semibold);
+  line-height: var(--lh-snug);
+}
+
+/* Opis stoi pod kaflem, nie obok niego: nazwisko i rola mają zostać w jednym
+   miejscu wzroku, a zdanie o trenerze czyta się dopiero potem. */
+.iskt-trener-karta__opis {
+  margin-block: var(--space-4) 0;
+  color: var(--text-secondary);
+  font-size: var(--text-sm);
+}
+
+/* Profil. Na wąskim ekranie zdjęcie stoi nad nazwiskiem, bo obok niego nie zostaje
+   już miejsce na sensowną długość wiersza. Wyrównanie do lewej zostaje w obu
+   układach — wyśrodkowany profil rozjeżdża się przy dłuższych rolach. */
+.iskt-trener-profil__osoba {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-6);
+  margin-block-start: var(--space-6);
+}
+
+.iskt-trener-profil__zdjecie {
+  flex: none;
+}
+
+.iskt-trener-profil__zdjecie img,
+.iskt-trener-profil__zdjecie .iskt-avatar {
+  width: clamp(11rem, 24vw, 12rem);
+  height: clamp(11rem, 24vw, 12rem);
+  border-radius: var(--radius-pill);
+  object-fit: cover;
+}
+
+.iskt-trener-profil__zdjecie .iskt-avatar {
+  font-size: var(--text-3xl);
+}
+
+.iskt-trener-profil__intro {
+  min-width: 0;
+}
+
+.iskt-trener-profil__specjalizacje .iskt-badge {
+  font-weight: var(--fw-regular);
+}
+
+/* Biografia dostaje własną miarę wiersza. Sekcja jest jednokolumnowa, więc bez
+   ograniczenia wiersz na szerokim ekranie miałby ponad sto znaków. */
+.iskt-trener-profil__tresc .iskt-prose {
+  max-width: 68ch;
+}
+
+.iskt-trener-profil__sekcje {
+  --iskt-grid-min: 20rem;
+}
+
+.iskt-trener-profil__szkolenia .iskt-grid {
+  margin-block-start: var(--space-8);
+}
+
+.iskt-trener-profil__szkolenia p {
+  margin-block-start: var(--space-4);
+}
+
+/* Lista wypunktowana bez znaku systemowego: kropka rysowana pseudoelementem
+   trzyma się linii bazowej pierwszego wiersza także wtedy, gdy pozycja zawija
+   się na dwa wiersze — a wykształcenie i certyfikaty zawijają się często. */
+.iskt-list--bullet {
+  margin-block: var(--space-4) 0;
+  padding-inline-start: 0;
+  list-style: none;
+}
+
+.iskt-list--bullet li {
+  position: relative;
+  padding-inline-start: var(--space-4);
+}
+
+.iskt-list--bullet li + li {
+  margin-block-start: var(--space-2);
+}
+
+.iskt-list--bullet li::before {
+  content: "";
+  position: absolute;
+  inset-block-start: 0.65em;
+  inset-inline-start: 0;
+  width: 0.25rem;
+  height: 0.25rem;
+  border-radius: var(--radius-pill);
+  background: var(--green-500);
+}
+
+/* Plakietki są listą (czytnik ekranu ogłasza ich liczbę), więc trzeba zdjąć
+   znaki wypunktowania i wcięcie, które lista niesie domyślnie. */
+.iskt-badges {
+  margin-block: 0;
+  padding-inline-start: 0;
+  list-style: none;
+}
+
+@media (width >= 48rem) {
+  .iskt-trener-profil__osoba {
+    flex-direction: row;
+    align-items: center;
+    gap: var(--space-8);
+  }
 }
 
 /* Przyklejony panel ma sens tylko wtedy, gdy obok niego jest co przewijać.

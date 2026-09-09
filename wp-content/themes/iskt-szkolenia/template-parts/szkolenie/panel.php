@@ -121,28 +121,15 @@ $iskt_adres_zgloszenia = home_url( '/#kontakt' );
 		 * Powiązanie zapisane jest wyłącznie na szkoleniu, a profil trenera wylicza
 		 * swoje szkolenia tym samym zapytaniem w drugą stronę (ADR-001 §2.4). Stąd
 		 * spójność obu widoków wymagana przez §4.5 — bez logiki synchronizacji.
+		 *
+		 * Sam kafel składa wspólna część szablonu, z której korzysta też lista
+		 * trenerów — żeby spójność była widoczna również w wyglądzie.
 		 */
 		?>
 		<ul class="iskt-trenerzy">
 			<?php foreach ( $iskt_trenerzy as $iskt_trener ) : ?>
 				<li class="iskt-trener">
-					<?php if ( has_post_thumbnail( $iskt_trener ) ) : ?>
-						<span class="iskt-trener__zdjecie">
-							<?php echo get_the_post_thumbnail( $iskt_trener, 'thumbnail', array( 'loading' => 'lazy' ) ); ?>
-						</span>
-					<?php endif; ?>
-
-					<span class="iskt-trener__opis">
-						<a href="<?php echo esc_url( (string) get_permalink( $iskt_trener ) ); ?>">
-							<?php echo esc_html( get_the_title( $iskt_trener ) ); ?>
-						</a>
-
-						<?php $iskt_rola = (string) get_post_meta( (int) $iskt_trener->ID, '_iskt_rola', true ); ?>
-
-						<?php if ( '' !== $iskt_rola ) : ?>
-							<span class="iskt-trener__rola"><?php echo esc_html( $iskt_rola ); ?></span>
-						<?php endif; ?>
-					</span>
+					<?php get_template_part( 'template-parts/trener/kafel', null, array( 'trener' => $iskt_trener ) ); ?>
 				</li>
 			<?php endforeach; ?>
 		</ul>

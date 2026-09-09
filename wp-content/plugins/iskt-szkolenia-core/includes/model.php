@@ -230,6 +230,31 @@ function iskt_rejestruj_taksonomie(): void {
 }
 add_action( 'init', 'iskt_rejestruj_taksonomie', 9 );
 
+/**
+ * Porządkuje listę trenerów pod `/trenerzy/`.
+ *
+ * Domyślna kolejność archiwum to data publikacji — dla listy ludzi jest to
+ * porządek, którego odwiedzający nie zna i nie potrafi przewidzieć. Alfabetycznie
+ * da się przeszukać wzrokiem, a atrybut „Kolejność” (page-attributes) pozwala
+ * właścicielowi wysunąć kogoś na początek z panelu, bez dotykania kodu.
+ *
+ * @param WP_Query $zapytanie Zapytanie w trakcie przygotowania.
+ */
+function iskt_kolejnosc_trenerow( WP_Query $zapytanie ): void {
+	if ( is_admin() || ! $zapytanie->is_main_query() || ! $zapytanie->is_post_type_archive( ISKT_CPT_TRENER ) ) {
+		return;
+	}
+
+	$zapytanie->set(
+		'orderby',
+		array(
+			'menu_order' => 'ASC',
+			'title'      => 'ASC',
+		)
+	);
+}
+add_action( 'pre_get_posts', 'iskt_kolejnosc_trenerow' );
+
 /*
  * Trwałość adresu (§4.3) nie wymaga tu żadnego kodu. Po publikacji edytor odsyła
  * istniejący `post_name`, więc zmiana tytułu nie przelicza sluga. Rozważaliśmy filtr

@@ -158,3 +158,40 @@ Szczegóły rozwiązań: `STRONA-GLOWNA.md`.
 Sekcje strony szkolenia pojawiają się wyłącznie wtedy, gdy mają treść: szkolenie
 bez wpisanego programu nie pokazuje pustego nagłówka „Program szkolenia”, a bez
 terminów — pustej listy terminów.
+
+---
+
+# Zadanie 7 — trenerzy: lista i profil
+
+## 9. Odstępstwa widoków trenera
+
+Numeracja sekcji rośnie w kolejności powstawania. Zadania 6 i 9 idą równolegle,
+więc mogą sięgnąć po ten sam numer — przy scalaniu gałęzi wystarczy przenumerować,
+treść odstępstw jest rozłączna.
+
+| # | Wzorzec | Co robimy | Dlaczego |
+|---|---|---|---|
+| 9.1 | Powiązanie trener–szkolenie zapisane **po stronie trenera** (`teach[]`) | Powiązanie zapisane po stronie szkolenia (`_iskt_trenerzy`), profil trenera wylicza swoje szkolenia zapytaniem zwrotnym | Kierunek z ADR-001 §2.4. Prototyp też ma relację jednostronną, tylko z drugiej strony. Redaktor przypisuje trenera tam, gdzie i tak pracuje nad ofertą, a nie w dwóch miejscach — §4.5 wymaga jednego miejsca zarządzania |
+| 9.2 | Doświadczenie jako rekordy `{period, title, org, desc}` | Jedna pozycja w wierszu, w polu tekstowym | Model pól przyjęty w zadaniu 2 (ADR-002: bez płatnych zależności, więc bez kontrolki powtarzalnej dla każdego pola). Czterowierszowy formularz na każdą pozycję kosztuje właściciela więcej, niż daje układ; gdyby ISKT chciało oś czasu z datami, wraca to jako osobna zmiana |
+| 9.3 | `initials` jako osobne pole trenera | Inicjały wyliczane z imienia i nazwiska (`iskt_inicjaly()`) | Pole, które trzeba wpisać ręcznie i które zawsze da się policzyć, to pole do rozjechania się z nazwiskiem. §9 zostawia zdjęcia trenerów do potwierdzenia praw, więc znak zastępczy jest stanem długotrwałym i musi być poprawny bez pracy redaktora |
+| 9.4 | Profil trenera w układzie z panelem bocznym, jak strona szkolenia | Jedna kolumna; specjalizacje jako plakietki w nagłówku | Panel boczny miałby tu jedną zawartość. Trener bez specjalizacji zostawiałby pustą kolumnę, a §9 sprawia, że profil z połową pól jest na tym etapie stanem typowym, nie wyjątkiem |
+| 9.5 | Lista trenerów pokazuje wyłącznie zdjęcie, nazwisko i rolę | To samo plus krótki opis; gdy redaktor go nie wpisał, WordPress składa go z początku biografii | Kafel z samym nazwiskiem nie daje powodu, żeby wejść w profil. Na profilu obowiązuje zasada odwrotna — tam pokazujemy tylko opis wpisany ręcznie, żeby nie powtarzać pierwszego zdania biografii tuż nad nią |
+| 9.6 | Kolejność trenerów wynika z tablicy w kodzie | Atrybut „Kolejność” z panelu, a przy równych wartościach alfabetycznie | Kolejność publikacji jest dla odwiedzającego nieprzewidywalna. Alfabetycznie da się przeszukać wzrokiem, a wysunięcie kogoś na przód pozostaje decyzją właściciela, podejmowaną w panelu |
+
+Kafel trenera na liście i w panelu strony szkolenia składa jedna część szablonu
+(`template-parts/trener/kafel.php`). §4.5 wymaga spójności powiązania w obu
+widokach — odwiedzający ocenia ją wzrokiem, nie zapytaniem do bazy.
+
+## 10. Stany, które wyglądają jak usterka, a nią nie są
+
+Sprawdzone w przeglądarce i objęte testem `tests/e2e/trenerzy.spec.js`:
+
+- **trener bez zdjęcia** — znak zastępczy z inicjałami zajmuje dokładnie tyle
+  miejsca, co zdjęcie, więc lista się nie faluje;
+- **trener bez szkoleń** — sekcja zostaje, z komunikatem z rejestru tekstów;
+  cisza w tym miejscu czytałaby się jak urwany szablon;
+- **szkolenie wycofane z publikacji** — znika z profilu trenera w tej samej chwili,
+  bo zapytanie zwrotne bierze wyłącznie wpisy opublikowane. Nie ma tu żadnej
+  synchronizacji, która mogłaby zostać w tyle;
+- **trener bez wykształcenia albo bez specjalizacji** — sekcja się nie pokazuje,
+  a nie pokazuje się pusta.
