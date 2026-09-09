@@ -1,0 +1,42 @@
+{
+	"$schema": "https://schemas.wp.org/trunk/block.json",
+	"apiVersion": 3,
+	"name": "iskt/obszary-szkolen",
+	"title": "Obszary szkoleń",
+	"category": "iskt",
+	"icon": "grid-view",
+	"description": "Siatka kategorii szkoleń. Lista bierze się z kategorii katalogu — dodanie kategorii dokłada kafelek, usunięcie go zabiera.",
+	"keywords": [ "kategorie", "obszary", "szkolenia" ],
+	"textdomain": "iskt-szkolenia-core",
+	"attributes": {
+		"nadtytul": {
+			"type": "string",
+			"default": ""
+		},
+		"tytul": {
+			"type": "string",
+			"default": ""
+		},
+		"wstep": {
+			"type": "string",
+			"default": ""
+		},
+		"liczba": {
+			"type": "number",
+			"default": 0
+		}
+	},
+	"supports": {
+		"html": false,
+		"align": [ "wide", "full" ],
+		"color": {
+			"background": true,
+			"text": false
+		},
+		"spacing": {
+			"margin": true,
+			"padding": true
+		}
+	},
+	"editorScript": "iskt-bloki"
+}

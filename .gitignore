@@ -1,0 +1,34 @@
+# macOS
+.DS_Store
+
+# Zależności
+/vendor/
+/node_modules/
+
+# Środowisko lokalne — nigdy nie commitujemy sekretów (ISK-17 §8)
+.env
+.env.*
+!.env.example
+wp-config-local.php
+
+# Artefakty eksportu / kopii zapasowych
+/export/
+*.sql
+*.sql.gz
+*.tar.gz
+*.wpress
+
+# Instalacja WordPressa nie należy do repozytorium — trzymamy tylko motyw i wtyczkę
+/wordpress/
+/wp-admin/
+/wp-includes/
+/wp-content/uploads/
+/wp-content/upgrade/
+/wp-content/languages/
+
+# Katalog roboczy wp-env (mapowane uploady) — konfiguracja .wp-env.json zostaje w repozytorium
+/.wp-env/
+
+# Narzędzia
+.phpunit.result.cache
+.phpcs-cache

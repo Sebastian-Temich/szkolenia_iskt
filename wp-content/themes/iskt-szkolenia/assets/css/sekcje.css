@@ -1,0 +1,575 @@
+/* ISKT Szkolenia — sekcje strony głównej i oprawa bloków rdzenia.
+ *
+ * Arkusz robi dwie rzeczy:
+ * 1. ubiera bloki rdzenia (przycisk, kolumny, lista) w wygląd z załącznika, żeby
+ *    treść dodana przez właściciela w edytorze od razu pasowała do reszty strony;
+ * 2. dokłada komponenty, które w załączniku występują tylko na stronie głównej:
+ *    sekcję powitalną, kroki procesu, panel dofinansowań, pasek wskaźników.
+ *
+ * Wszystkie wartości pochodzą z tokenów — żadnego koloru ani odstępu nie zapisujemy
+ * tu na sztywno.
+ */
+
+/* ---------------------------------------------------------------- Przełącznik */
+
+/* Grupa przycisków „Dla Ciebie” / „Dla firm”. Bez JavaScriptu to formularz GET,
+   który przeładowuje stronę — dlatego wygląda jak przełącznik, a jest formularzem. */
+.iskt-switch {
+  display: inline-flex;
+  gap: var(--space-1);
+  padding: var(--space-1);
+  margin-inline: auto;
+  background: var(--neutral-100);
+  border: var(--border-width) solid var(--border-subtle);
+  border-radius: var(--radius-pill);
+}
+
+.iskt-switch__option {
+  display: inline-flex;
+  align-items: center;
+  padding: var(--space-2) var(--space-5);
+  border: 0;
+  border-radius: var(--radius-pill);
+  background: transparent;
+  color: var(--text-secondary);
+  font: inherit;
+  font-weight: var(--fw-semibold);
+  font-size: var(--text-sm);
+  line-height: var(--lh-normal);
+  cursor: pointer;
+  transition:
+    background-color var(--dur-fast) var(--ease-standard),
+    color var(--dur-fast) var(--ease-standard);
+}
+
+.iskt-switch__option:hover {
+  color: var(--text-primary);
+}
+
+/* Stan wciśnięcia niesie `aria-pressed`, więc kolor bierzemy z tego samego
+   atrybutu, którym opisujemy stan czytnikowi ekranu. Jedno źródło stanu znaczy,
+   że wygląd nie może rozjechać się z tym, co słyszy odwiedzający. */
+.iskt-switch__option[aria-pressed='true'] {
+  background: var(--color-primary);
+  color: var(--text-on-brand);
+  box-shadow: var(--shadow-xs);
+}
+
+/* Pojemnik wariantu. `hidden` ukrywa go sam z siebie; reguła poniżej jest
+   zabezpieczeniem na wypadek reguły `display`, która by je nadpisała. */
+.iskt-odbiorca[hidden] {
+  display: none;
+}
+
+/* ------------------------------------------------------------------ Sekcja hero */
+
+.iskt-hero {
+  text-align: center;
+}
+
+.iskt-hero > * {
+  margin-block: 0 var(--space-6);
+}
+
+.iskt-hero .iskt-eyebrow {
+  justify-content: center;
+}
+
+.iskt-hero .iskt-title-xl {
+  max-width: 18ch;
+  margin-inline: auto;
+}
+
+.iskt-hero .iskt-lead {
+  max-width: 60ch;
+  margin-inline: auto;
+}
+
+.iskt-hero__actions {
+  justify-content: center;
+}
+
+.iskt-hero__paths {
+  margin-block-start: clamp(var(--space-10), 5vw, var(--space-16));
+  text-align: start;
+}
+
+/* Karty ścieżek mają różną długość treści — bez tego przycisk „Szkolenia otwarte”
+   wisiałby na innej wysokości w każdej kolumnie. */
+.iskt-hero__paths .wp-block-column {
+  display: flex;
+}
+
+.iskt-hero__paths .iskt-card {
+  flex: 1;
+}
+
+/* ----------------------------------------------------------- Kroki i wskaźniki */
+
+.iskt-steps .wp-block-column {
+  display: flex;
+}
+
+.iskt-step {
+  flex: 1;
+  padding: var(--space-6);
+  background: var(--surface-card);
+  border: var(--border-width) solid var(--border-subtle);
+  border-radius: var(--radius-lg);
+  box-shadow: var(--shadow-xs);
+}
+
+.iskt-step > * {
+  margin-block: 0 var(--space-3);
+}
+
+.iskt-step > *:last-child {
+  margin-block-end: 0;
+}
+
+.iskt-step__number {
+  color: var(--green-300);
+  font-size: var(--text-xl);
+  font-weight: var(--fw-semibold);
+}
+
+.iskt-stats .wp-block-columns {
+  gap: var(--space-8);
+}
+
+.iskt-stat {
+  text-align: center;
+}
+
+.iskt-stat__value {
+  margin-block-end: var(--space-1);
+  color: var(--green-300);
+  font-size: clamp(var(--text-2xl), 4vw, var(--text-4xl));
+  font-weight: var(--fw-extrabold);
+  letter-spacing: var(--ls-tighter);
+  line-height: var(--lh-tight);
+}
+
+.iskt-stat__label {
+  margin-block: 0;
+  color: var(--neutral-300);
+  font-size: var(--text-sm);
+}
+
+/* ------------------------------------------------------------------- Panele */
+
+/* Wyróżniony blok w obrębie sekcji: gradient marki dla dofinansowań, ciemny
+   dla wskaźników. Załącznik używa obu w tej samej roli — zaokrąglonej płyty. */
+.iskt-panel {
+  padding: clamp(var(--space-10), 5vw, var(--space-16));
+  border-radius: var(--radius-2xl);
+  box-shadow: var(--shadow-lg);
+}
+
+.iskt-panel > * {
+  margin-block: 0 var(--space-6);
+}
+
+.iskt-panel > *:last-child {
+  margin-block-end: 0;
+}
+
+.iskt-panel--brand {
+  background: var(--gradient-brand);
+  color: var(--text-on-brand);
+}
+
+.iskt-panel--dark {
+  background: var(--surface-dark);
+  color: var(--text-on-dark);
+}
+
+.iskt-panel--brand :is(h1, h2, h3, h4, h5, h6),
+.iskt-panel--dark :is(h1, h2, h3, h4, h5, h6) {
+  color: inherit;
+}
+
+.iskt-panel--brand .iskt-eyebrow,
+.iskt-panel--brand .iskt-lead {
+  color: var(--green-200);
+}
+
+.iskt-panel--brand :focus-visible,
+.iskt-panel--dark :focus-visible {
+  outline-color: var(--green-200);
+}
+
+.iskt-funding .wp-block-column {
+  display: flex;
+}
+
+.iskt-funding__item {
+  flex: 1;
+  padding: var(--space-6);
+  background: rgb(255 255 255 / 8%);
+  border: var(--border-width) solid rgb(255 255 255 / 16%);
+  border-radius: var(--radius-lg);
+}
+
+.iskt-funding__item > * {
+  margin-block: 0 var(--space-3);
+}
+
+.iskt-funding__item > *:last-child {
+  margin-block-end: 0;
+}
+
+.iskt-funding__tag {
+  font-size: var(--text-lg);
+  font-weight: var(--fw-semibold);
+}
+
+/* ------------------------------------------------------------------ Kontakt */
+
+.iskt-contact__list {
+  padding-inline-start: 0;
+  list-style: none;
+}
+
+.iskt-contact__list li + li {
+  margin-block-start: var(--space-3);
+}
+
+/* ------------------------------------------------------- Fakty i cena na karcie */
+
+.iskt-card__facts {
+  display: flex;
+  flex-wrap: wrap;
+  gap: var(--space-1) var(--space-4);
+  margin-block: var(--space-3) 0;
+  padding-inline-start: 0;
+  color: var(--text-secondary);
+  font-size: var(--text-xs);
+  list-style: none;
+}
+
+.iskt-price {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: baseline;
+  gap: var(--space-1) var(--space-2);
+  margin-block: 0;
+}
+
+.iskt-price__value {
+  color: var(--color-primary);
+  font-size: var(--text-lg);
+  font-weight: var(--fw-extrabold);
+  letter-spacing: var(--ls-tight);
+  white-space: nowrap;
+}
+
+.iskt-price__note {
+  color: var(--text-muted);
+  font-size: var(--text-xs);
+}
+
+/* ------------------------------------------------ Oprawa bloków rdzenia */
+
+/* Przycisk z edytora ma wyglądać tak samo jak przycisk z szablonu — inaczej
+   właściciel dodałby przycisk i zobaczył obcy element na własnej stronie. */
+.wp-block-button__link {
+  display: inline-flex;
+  align-items: center;
+  gap: var(--space-2);
+  /* 2,75rem = 44 px: ten sam minimalny cel dotykowy co w .iskt-button. */
+  min-height: 2.75rem;
+  padding: var(--space-3) var(--space-6);
+  border: var(--border-width-strong) solid var(--color-primary);
+  border-radius: var(--radius-pill);
+  background: var(--color-primary);
+  color: var(--text-on-brand);
+  font-weight: var(--fw-semibold);
+  line-height: var(--lh-snug);
+  text-decoration: none;
+  transition:
+    background-color var(--dur-fast) var(--ease-standard),
+    border-color var(--dur-fast) var(--ease-standard),
+    color var(--dur-fast) var(--ease-standard);
+}
+
+.wp-block-button__link:hover {
+  border-color: var(--color-primary-hover);
+  background: var(--color-primary-hover);
+  color: var(--text-on-brand);
+}
+
+.wp-block-button.is-style-outline .wp-block-button__link {
+  background: transparent;
+  color: var(--color-primary);
+}
+
+.wp-block-button.is-style-outline .wp-block-button__link:hover {
+  background: var(--green-50);
+  color: var(--color-primary-hover);
+}
+
+/* Wariant na ciemnym tle — używany w panelu dofinansowań. */
+.wp-block-button.is-style-inverse .wp-block-button__link {
+  border-color: var(--neutral-0);
+  background: var(--neutral-0);
+  color: var(--green-800);
+}
+
+.wp-block-button.is-style-inverse .wp-block-button__link:hover {
+  border-color: var(--green-50);
+  background: var(--green-50);
+  color: var(--green-900);
+}
+
+/* Lista z odhaczeniem, używana w kartach ścieżek. Znacznik pozostaje zwykłym
+   `<ul>`, więc czytnik ekranu ogłasza liczbę pozycji jak w każdej innej liście. */
+.iskt-list--check {
+  padding-inline-start: 0;
+  list-style: none;
+}
+
+.iskt-list--check li {
+  position: relative;
+  padding-inline-start: var(--space-6);
+}
+
+.iskt-list--check li + li {
+  margin-block-start: var(--space-2);
+}
+
+.iskt-list--check li::before {
+  position: absolute;
+  inset-inline-start: 0;
+  color: var(--green-600);
+  content: '✓';
+  font-weight: var(--fw-bold);
+}
+
+/* Kolumny rdzenia zwijają się domyślnie dopiero przy 782 px i wtedy od razu
+   do jednej. Przy czterech krokach daje to na tablecie cztery ściśnięte słupki. */
+@media (width <= 60rem) {
+  .iskt-steps,
+  .iskt-funding,
+  .iskt-stats .wp-block-columns {
+    flex-wrap: wrap;
+  }
+
+  .iskt-steps .wp-block-column,
+  .iskt-funding .wp-block-column,
+  .iskt-stats .wp-block-column {
+    flex-basis: calc(50% - var(--space-6));
+  }
+}
+
+@media (width <= 40rem) {
+  .iskt-steps .wp-block-column,
+  .iskt-funding .wp-block-column,
+  .iskt-stats .wp-block-column {
+    flex-basis: 100%;
+  }
+}
+
+/* ------------------------------------------------------------------ Ikony */
+
+.iskt-icon--lg {
+  width: var(--space-8);
+  height: var(--space-8);
+}
+
+/* ------------------------------------------------------- Strona szkolenia */
+
+/* Ścieżka powrotu do katalogu. W prototypie prowadziła do stanu komponentu;
+   tutaj to zwykłe odnośniki, więc działa też środkowy przycisk myszy. */
+.iskt-breadcrumb {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: var(--space-2);
+  margin-block-end: var(--space-6);
+  color: var(--text-secondary);
+  font-size: var(--text-sm);
+}
+
+.iskt-breadcrumb a {
+  display: inline-flex;
+  align-items: center;
+  gap: var(--space-1);
+}
+
+.iskt-breadcrumb__sep {
+  color: var(--border-strong);
+}
+
+.iskt-szkolenie__intro {
+  max-width: 46rem;
+}
+
+.iskt-szkolenie__plakietki {
+  margin-block: 0;
+}
+
+.iskt-szkolenie__media {
+  margin-block-start: var(--space-10);
+}
+
+.iskt-szkolenie__media img {
+  display: block;
+  width: 100%;
+  height: auto;
+  border-radius: var(--radius-lg);
+  box-shadow: var(--shadow-md);
+}
+
+/* Fakty jako lista definicji: etykieta i wartość są parą także w znaczeniu,
+   nie tylko wizualnie — czytnik ekranu odczyta „Czas trwania: 2 dni”. */
+.iskt-facts {
+  display: flex;
+  flex-wrap: wrap;
+  gap: var(--space-6) var(--space-10);
+  margin-block: var(--space-2) 0;
+}
+
+.iskt-facts__item dt {
+  color: var(--text-secondary);
+  font-size: var(--text-xs);
+  letter-spacing: var(--ls-wide);
+  text-transform: uppercase;
+}
+
+.iskt-facts__item dd {
+  margin: 0;
+  font-weight: var(--fw-semibold);
+}
+
+.iskt-korzysci {
+  margin-block-start: var(--space-4);
+}
+
+/* Program: numer modułu rysuje licznik listy uporządkowanej, więc numeracja
+   pozostaje poprawna po dodaniu lub usunięciu modułu w panelu. */
+.iskt-program {
+  counter-reset: iskt-modul;
+  margin-block-start: var(--space-4);
+  padding-inline-start: 0;
+  list-style: none;
+}
+
+.iskt-program__modul {
+  position: relative;
+  padding: var(--space-5) var(--space-5) var(--space-5) var(--space-16);
+  border: var(--border-width) solid var(--border-subtle);
+  border-radius: var(--radius-lg);
+  background: var(--surface-card);
+  counter-increment: iskt-modul;
+}
+
+.iskt-program__modul + .iskt-program__modul {
+  margin-block-start: var(--space-3);
+}
+
+.iskt-program__modul::before {
+  position: absolute;
+  inset-block-start: var(--space-5);
+  inset-inline-start: var(--space-5);
+  color: var(--green-400);
+  content: counter(iskt-modul, decimal-leading-zero);
+  font-family: var(--font-mono);
+  font-size: var(--text-lg);
+  font-weight: var(--fw-semibold);
+}
+
+.iskt-program__modul p {
+  margin-block: var(--space-2) 0;
+  color: var(--text-secondary);
+  font-size: var(--text-sm);
+}
+
+.iskt-panel-oferta {
+  position: sticky;
+  /* 68 px to wysokość przyklejonego nagłówka; 1 rem oddechu pod nim. */
+  inset-block-start: calc(68px + var(--space-4));
+}
+
+.iskt-price--lg {
+  display: block;
+  margin-block: var(--space-1) var(--space-5);
+}
+
+.iskt-price--lg .iskt-price__value {
+  display: block;
+  font-size: var(--text-2xl);
+}
+
+.iskt-price--lg .iskt-price__note {
+  display: block;
+  margin-block-start: var(--space-1);
+  font-size: var(--text-sm);
+}
+
+.iskt-terminy,
+.iskt-trenerzy {
+  margin-block-start: var(--space-4);
+  padding-inline-start: 0;
+  list-style: none;
+}
+
+.iskt-termin + .iskt-termin,
+.iskt-trener + .iskt-trener {
+  margin-block-start: var(--space-4);
+  padding-block-start: var(--space-4);
+  border-block-start: var(--border-width) solid var(--border-subtle);
+}
+
+.iskt-termin p {
+  margin-block: 0;
+}
+
+.iskt-termin__data {
+  display: flex;
+  align-items: center;
+  gap: var(--space-2);
+  font-weight: var(--fw-semibold);
+}
+
+.iskt-termin__miejsce {
+  margin-block-start: var(--space-1) !important;
+  color: var(--text-secondary);
+  font-size: var(--text-sm);
+}
+
+.iskt-termin .iskt-badge {
+  margin-block-start: var(--space-2) !important;
+}
+
+.iskt-trener {
+  display: flex;
+  align-items: center;
+  gap: var(--space-3);
+}
+
+.iskt-trener__zdjecie img {
+  display: block;
+  width: var(--space-12);
+  height: var(--space-12);
+  border-radius: var(--radius-pill);
+  object-fit: cover;
+}
+
+.iskt-trener__opis {
+  display: flex;
+  flex-direction: column;
+}
+
+.iskt-trener__rola {
+  color: var(--text-secondary);
+  font-size: var(--text-sm);
+}
+
+/* Przyklejony panel ma sens tylko wtedy, gdy obok niego jest co przewijać.
+   Przy jednej kolumnie panel ląduje pod treścią i przyklejanie przeszkadza. */
+@media (width <= 60rem) {
+  .iskt-panel-oferta {
+    position: static;
+  }
+}

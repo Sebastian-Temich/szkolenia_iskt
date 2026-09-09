@@ -1,0 +1,46 @@
+{
+	"$schema": "https://schemas.wp.org/trunk/block.json",
+	"apiVersion": 3,
+	"name": "iskt/wyroznione-szkolenia",
+	"title": "Wyróżnione szkolenia",
+	"category": "iskt",
+	"icon": "star-filled",
+	"description": "Szkolenia oznaczone jako wyróżnione. Sekcja znika, dopóki żadne szkolenie nie jest wyróżnione.",
+	"keywords": [ "szkolenia", "wyróżnione", "polecane" ],
+	"textdomain": "iskt-szkolenia-core",
+	"attributes": {
+		"nadtytul": {
+			"type": "string",
+			"default": ""
+		},
+		"tytul": {
+			"type": "string",
+			"default": ""
+		},
+		"wstep": {
+			"type": "string",
+			"default": ""
+		},
+		"liczba": {
+			"type": "number",
+			"default": 4
+		},
+		"etykietaKatalogu": {
+			"type": "string",
+			"default": ""
+		}
+	},
+	"supports": {
+		"html": false,
+		"align": [ "wide", "full" ],
+		"color": {
+			"background": true,
+			"text": false
+		},
+		"spacing": {
+			"margin": true,
+			"padding": true
+		}
+	},
+	"editorScript": "iskt-bloki"
+}

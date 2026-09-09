@@ -1,0 +1,9 @@
+/* ISKT Greenovation — Fonts
+   Inter (neutral geometric sans) matches the site's Bolt/Tailwind default.
+   JetBrains Mono for tech/mono accents echoing the circuit-board side of the mark.
+
+   NOTE: No brand font binaries were provided. Inter is the closest match and is
+   loaded from Google Fonts (CDN). Substitution flagged in readme.md — swap for
+   licensed self-hosted files if required. */
+
+@import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&family=JetBrains+Mono:wght@400;500;600&display=swap');

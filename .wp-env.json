@@ -1,0 +1,18 @@
+{
+  "core": "WordPress/WordPress#6.6.2",
+  "phpVersion": "8.2",
+  "plugins": [
+    "./wp-content/plugins/iskt-szkolenia-core"
+  ],
+  "themes": [
+    "./wp-content/themes/iskt-szkolenia"
+  ],
+  "config": {
+    "WP_DEBUG": true,
+    "WP_DEBUG_DISPLAY": true,
+    "SCRIPT_DEBUG": true
+  },
+  "mappings": {
+    "wp-content/uploads": "./.wp-env/uploads"
+  }
+}

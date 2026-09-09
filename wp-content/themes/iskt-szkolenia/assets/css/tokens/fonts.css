@@ -1,0 +1,32 @@
+/* ISKT Greenovation — Fonty (samohostowane)
+ *
+ * Dostarczony design system ładował Inter i JetBrains Mono z CDN Google Fonts.
+ * Świadomie z tego rezygnujemy: CDN Google przekazuje adres IP odwiedzającego
+ * zewnętrznemu podmiotowi, co przy polskim odbiorcy jest zbędnym ryzykiem RODO.
+ * Oba kroje mają licencję OFL 1.1, więc samohostowanie jest dozwolone i bezpłatne.
+ * Uzasadnienie: docs/ADR-001-architektura.md §6.
+ *
+ * Pliki kroju trafią do assets/fonts/ w zadaniu 1 planu. Do tego czasu obowiązuje
+ * awaryjny stos systemowy zdefiniowany w tokens/typography.css — układ jest poprawny,
+ * zmienia się wyłącznie krój.
+ *
+ * Design system oznacza Inter jako SUBSTYTUT — plików kroju firmowego nie dostarczono.
+ * Jeśli ISKT ma licencjonowany krój firmowy, podmieniamy tutaj (decyzja D10).
+ */
+
+/* Docelowo, po dodaniu plików:
+@font-face {
+  font-family: 'Inter';
+  src: url('../../fonts/inter-variable.woff2') format('woff2-variations');
+  font-weight: 400 800;
+  font-display: swap;
+  font-style: normal;
+}
+@font-face {
+  font-family: 'JetBrains Mono';
+  src: url('../../fonts/jetbrains-mono-variable.woff2') format('woff2-variations');
+  font-weight: 400 600;
+  font-display: swap;
+  font-style: normal;
+}
+*/

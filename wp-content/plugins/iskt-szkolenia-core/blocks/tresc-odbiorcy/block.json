@@ -1,0 +1,26 @@
+{
+	"$schema": "https://schemas.wp.org/trunk/block.json",
+	"apiVersion": 3,
+	"name": "iskt/tresc-odbiorcy",
+	"title": "Treść dla odbiorcy",
+	"category": "iskt",
+	"icon": "groups",
+	"description": "Pojemnik na treść jednego wariantu odbiorcy. Wstaw dwa razy — raz dla wariantu indywidualnego, raz dla firmowego — i wpisz w każdym własne teksty oraz przyciski.",
+	"keywords": [ "odbiorca", "wariant", "firma" ],
+	"textdomain": "iskt-szkolenia-core",
+	"attributes": {
+		"odbiorca": {
+			"type": "string",
+			"default": "indywidualny"
+		}
+	},
+	"supports": {
+		"html": false,
+		"align": [ "wide", "full" ],
+		"spacing": {
+			"margin": true,
+			"padding": true
+		}
+	},
+	"editorScript": "iskt-bloki"
+}

@@ -1,0 +1,368 @@
+/* ISKT Szkolenia — układ: kontener, sekcje, siatka, narzędzia pomocnicze.
+ *
+ * Wszystkie wartości pochodzą z tokenów (assets/css/tokens/). Ten plik nie
+ * definiuje własnych kolorów, odstępów ani rozmiarów — składa je w układ.
+ *
+ * Punkty łamania odpowiadają wymaganiu §7 zlecenia (360 / 768 / 1440 px):
+ *   - baza                → telefon, projektujemy od 360 px w górę,
+ *   - min-width: 48em     → 768 px, tablet,
+ *   - min-width: 64em     → 1024 px, moment przejścia nawigacji na poziomą,
+ *   - min-width: 90em     → 1440 px, szeroki pulpit.
+ */
+
+/* ---------------------------------------------------------------- szkielet */
+
+html {
+  -webkit-text-size-adjust: 100%;
+  scroll-behavior: smooth;
+  /* Kotwice nie chowają się pod przyklejonym nagłówkiem. */
+  scroll-padding-top: 6rem;
+}
+
+body {
+  display: flex;
+  flex-direction: column;
+  min-height: 100vh;
+}
+
+.iskt-site-content {
+  flex: 1 0 auto;
+  display: flex;
+  flex-direction: column;
+}
+
+.iskt-main {
+  flex: 1 0 auto;
+}
+
+/* Cel odnośnika „przejdź do treści” nie może rysować obwódki przy kliknięciu
+   myszą — :focus-visible pilnuje, żeby obwódka pojawiła się tylko z klawiatury. */
+.iskt-main:focus {
+  outline: none;
+}
+
+img,
+picture,
+video,
+canvas,
+svg {
+  max-width: 100%;
+  height: auto;
+}
+
+/* -------------------------------------------------------------- kontenery */
+
+.iskt-container {
+  width: 100%;
+  max-width: var(--container-max);
+  margin-inline: auto;
+  padding-inline: var(--container-pad);
+}
+
+/* Tekst czytany w całości — ograniczamy długość wiersza. */
+.iskt-container--narrow {
+  max-width: 46rem;
+}
+
+.iskt-container--wide {
+  max-width: 85rem;
+}
+
+/* ---------------------------------------------------------------- sekcje */
+
+.iskt-section {
+  position: relative;
+  padding-block: var(--section-pad-y);
+}
+
+.iskt-section--tight {
+  padding-block: clamp(var(--space-10), 5vw, var(--space-16));
+}
+
+.iskt-section--flush-top {
+  padding-block-start: 0;
+}
+
+.iskt-section--flush-bottom {
+  padding-block-end: 0;
+}
+
+.iskt-section--subtle {
+  background: var(--surface-subtle);
+}
+
+.iskt-section--muted {
+  background: var(--surface-muted);
+}
+
+.iskt-section--wash {
+  background: var(--gradient-wash);
+}
+
+/* Ciemne pasmo „techniczne” — druga strona znaku marki. */
+.iskt-section--dark {
+  background: var(--surface-dark);
+  color: var(--text-on-dark);
+}
+
+.iskt-section--dark h1,
+.iskt-section--dark h2,
+.iskt-section--dark h3,
+.iskt-section--dark h4,
+.iskt-section--dark h5,
+.iskt-section--dark h6 {
+  color: var(--text-on-dark);
+}
+
+.iskt-section--dark a {
+  color: var(--green-300);
+}
+
+.iskt-section--dark a:hover {
+  color: var(--green-200);
+}
+
+.iskt-section--dark .iskt-muted,
+.iskt-section--dark .iskt-lead {
+  color: var(--neutral-300);
+}
+
+.iskt-section--dark .iskt-eyebrow {
+  color: var(--green-300);
+}
+
+/* Nagłówek sekcji: nadokreślnik → tytuł → jedno zdanie wsparcia. */
+.iskt-section__head {
+  max-width: 44rem;
+  margin-block-end: var(--space-12);
+}
+
+.iskt-section__head--center {
+  margin-inline: auto;
+  text-align: center;
+}
+
+.iskt-section__head > * {
+  margin-block-end: var(--space-3);
+}
+
+.iskt-section__head > *:last-child {
+  margin-block-end: 0;
+}
+
+/* Pasek nad treścią archiwum / wyników / błędu 404. */
+.iskt-page-header {
+  padding-block: clamp(var(--space-10), 6vw, var(--space-20)) var(--space-8);
+  background: var(--gradient-wash);
+  border-block-end: var(--border-width) solid var(--border-subtle);
+}
+
+.iskt-page-header__inner {
+  max-width: 46rem;
+}
+
+/* ---------------------------------------------------------------- siatka */
+
+.iskt-grid {
+  display: grid;
+  gap: var(--iskt-grid-gap, var(--space-6));
+  grid-template-columns: minmax(0, 1fr);
+}
+
+@media (min-width: 48em) {
+  .iskt-grid--2,
+  .iskt-grid--3,
+  .iskt-grid--4 {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+  }
+}
+
+@media (min-width: 64em) {
+  .iskt-grid--3 {
+    grid-template-columns: repeat(3, minmax(0, 1fr));
+  }
+
+  .iskt-grid--4 {
+    grid-template-columns: repeat(4, minmax(0, 1fr));
+  }
+
+  /* Treść + kolumna boczna (np. szkolenie + karta zapisu, zadanie 5). */
+  .iskt-grid--sidebar {
+    grid-template-columns: minmax(0, 2fr) minmax(16rem, 1fr);
+    gap: var(--iskt-grid-gap, var(--space-12));
+    align-items: start;
+  }
+}
+
+/* Siatka samodopasowująca się — liczba kolumn wynika z minimalnej szerokości
+   karty przekazanej w --iskt-grid-min. */
+.iskt-grid--auto {
+  grid-template-columns: repeat(
+    auto-fit,
+    minmax(min(100%, var(--iskt-grid-min, 18rem)), 1fr)
+  );
+}
+
+/* --------------------------------------------------------- proste układy */
+
+/* Pionowy rytm bez marginesów na dzieciach. */
+.iskt-stack {
+  display: flex;
+  flex-direction: column;
+  gap: var(--iskt-stack-space, var(--space-4));
+}
+
+.iskt-stack > * {
+  margin-block: 0;
+}
+
+.iskt-stack--tight {
+  --iskt-stack-space: var(--space-2);
+}
+
+.iskt-stack--loose {
+  --iskt-stack-space: var(--space-6);
+}
+
+/* Ogranicza długość wiersza bez robienia z elementu kontenera strony. */
+.iskt-measure {
+  max-width: 46rem;
+}
+
+/* Poziome grono elementów, które zawija się na wąskim ekranie. */
+.iskt-cluster {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: var(--iskt-cluster-gap, var(--space-3));
+}
+
+.iskt-cluster--center {
+  justify-content: center;
+}
+
+.iskt-cluster--between {
+  justify-content: space-between;
+}
+
+/* --------------------------------------------------------------- pomoce */
+
+/* Klasa WordPressa dla tekstu wyłącznie dla czytników ekranu — motyw musi ją
+   stylować sam. Nasza .iskt-visually-hidden to ten sam mechanizm pod nazwą
+   zgodną z resztą nazewnictwa. */
+.screen-reader-text,
+.iskt-visually-hidden {
+  position: absolute !important;
+  width: 1px;
+  height: 1px;
+  margin: -1px;
+  padding: 0;
+  overflow: hidden;
+  clip: rect(0 0 0 0);
+  clip-path: inset(50%);
+  white-space: nowrap;
+  border: 0;
+}
+
+/* …ale gdy taki element da się sfokusować, musi stać się widoczny. */
+.screen-reader-text:focus,
+.iskt-visually-hidden:focus {
+  position: fixed !important;
+  top: var(--space-4);
+  left: var(--space-4);
+  z-index: 1000;
+  width: auto;
+  height: auto;
+  margin: 0;
+  padding: var(--space-3) var(--space-5);
+  overflow: visible;
+  clip: auto;
+  clip-path: none;
+  color: var(--text-on-brand);
+  background: var(--color-primary);
+  border-radius: var(--radius-md);
+  box-shadow: var(--shadow-lg);
+}
+
+.iskt-skip-link {
+  position: absolute;
+  inset-inline-start: -9999px;
+  z-index: 1000;
+}
+
+.iskt-skip-link:focus {
+  inset-inline-start: var(--space-4);
+  top: var(--space-4);
+  padding: var(--space-3) var(--space-5);
+  color: var(--text-on-brand);
+  background: var(--color-primary);
+  border-radius: var(--radius-md);
+  box-shadow: var(--shadow-lg);
+}
+
+.iskt-center {
+  text-align: center;
+}
+
+.iskt-no-bullets {
+  list-style: none;
+  margin: 0;
+  padding: 0;
+}
+
+/* Klasy wyrównania obrazów z edytora WordPressa. */
+.alignleft {
+  float: left;
+  margin: 0 var(--space-6) var(--space-4) 0;
+}
+
+.alignright {
+  float: right;
+  margin: 0 0 var(--space-4) var(--space-6);
+}
+
+.aligncenter {
+  display: block;
+  margin-inline: auto;
+}
+
+.alignwide {
+  max-width: 85rem;
+  margin-inline: auto;
+}
+
+.alignfull {
+  max-width: none;
+}
+
+.wp-caption {
+  max-width: 100%;
+}
+
+.wp-caption-text,
+.gallery-caption {
+  font-size: var(--text-sm);
+  color: var(--text-muted);
+}
+
+.sticky,
+.bypostauthor {
+  /* Wymagane przez przegląd motywów WordPressa; wygląd nadaje .iskt-card. */
+  display: block;
+}
+
+/* Użytkownik prosił system o mniej ruchu — respektujemy to globalnie. */
+@media (prefers-reduced-motion: reduce) {
+  html {
+    scroll-behavior: auto;
+  }
+
+  *,
+  *::before,
+  *::after {
+    animation-duration: 0.01ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.01ms !important;
+    scroll-behavior: auto !important;
+  }
+}

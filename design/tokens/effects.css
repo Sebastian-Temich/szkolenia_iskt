@@ -1,0 +1,35 @@
+/* ISKT Greenovation — Radii, shadows, borders, motion, gradients */
+
+:root {
+  /* Radii — soft, modern; cards are gently rounded, buttons pill-ish */
+  --radius-xs:   4px;
+  --radius-sm:   8px;
+  --radius-md:   12px;
+  --radius-lg:   16px;
+  --radius-xl:   24px;
+  --radius-2xl:  32px;
+  --radius-pill: 999px;
+
+  /* Borders */
+  --border-width: 1px;
+  --border-width-strong: 2px;
+
+  /* Shadows — soft, low, green-tinted (never harsh black) */
+  --shadow-xs: 0 1px 2px rgba(14, 21, 17, 0.06);
+  --shadow-sm: 0 2px 6px rgba(14, 21, 17, 0.07);
+  --shadow-md: 0 8px 20px -6px rgba(14, 21, 17, 0.12);
+  --shadow-lg: 0 18px 40px -12px rgba(14, 21, 17, 0.18);
+  --shadow-brand: 0 12px 30px -10px rgba(30, 85, 29, 0.35);
+
+  /* Motion */
+  --ease-standard: cubic-bezier(0.22, 0.61, 0.36, 1); /* @kind other */
+  --ease-out: cubic-bezier(0.16, 1, 0.3, 1); /* @kind other */
+  --dur-fast: 130ms; /* @kind other */
+  --dur-base: 220ms; /* @kind other */
+  --dur-slow: 380ms; /* @kind other */
+
+  /* Signature gradients (leaf → forest, echoing the wordmark) */
+  --gradient-brand: linear-gradient(120deg, var(--green-500) 0%, var(--green-700) 60%, var(--green-900) 100%);
+  --gradient-leaf:  linear-gradient(135deg, var(--green-300), var(--green-600));
+  --gradient-wash:  linear-gradient(180deg, var(--green-50), var(--neutral-0));
+}
