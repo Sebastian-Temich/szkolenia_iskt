@@ -57,7 +57,7 @@ z wyglądem z załącznika oraz możliwością samodzielnego dodania i edycji sz
 |---|---|---|---|---|
 | 1 | Środowisko `wp-env`, szkielet motywu i wtyczki, tokeny designu, lint PHP, testy sanityzacji | WP/frontend | 1,5 | **częściowo — patrz §5** |
 | 2 | Model danych: typy treści, taksonomie, pola natywne, uprawnienia, relacje, kolumny panelu | backend WP | 3,5 | **wykonane 2026-09-09** |
-| 3 | Motyw: siatka, typografia, nagłówek, stopka, menu, komponenty wspólne | WP/frontend | 2,5 | do zrobienia |
+| 3 | Motyw: siatka, typografia, nagłówek, stopka, menu, komponenty wspólne | WP/frontend | 2,5 | **wykonane 2026-09-09** — `MOTYW-KOMPONENTY.md`, `ODSTEPSTWA-OD-WZORCA.md`; wygląd niesprawdzony w przeglądarce (brak Dockera) |
 | 4 | Strona główna: wzorce bloków + bloki dynamiczne, przełącznik „Dla Ciebie”/„Dla firm”, ukrywanie pustych sekcji | WP/frontend | 4,0 | do zrobienia |
 | 5 | Strona szkolenia: szablon, program, korzyści, cena z jednostką i podatkiem, dofinansowanie, terminy, trenerzy | WP/frontend | 2,5 | do zrobienia |
 | | **Razem M1** | | **14,0** | |
@@ -150,7 +150,7 @@ uruchomienie i test wizualny. Patrz §7.
 | Brak zatwierdzonych treści ofertowych | Blokuje publikację, nie budowę | Budujemy na oznaczonych danych demonstracyjnych; §14 wprost na to pozwala |
 | Brak dostępu do poczty szkolenia@iskt.pl | Brak testu dostarczenia end-to-end | Test wysyłki w środowisku wewnętrznym; test docelowy dokumentowany osobno po migracji (§8) |
 | Terminy i aktualności bez wzorca wizualnego | Możliwa iteracja projektowa | Propozycja do akceptacji przed implementacją — bramka przed zadaniem 8 |
-| Rozbieżność wyglądu względem prototypu | Kryterium akceptacji §11 pkt 1 | Jawna lista odstępstw z uzasadnieniem, prowadzona od zadania 3 |
+| Rozbieżność wyglądu względem prototypu | Kryterium akceptacji §11 pkt 1 | Jawna lista odstępstw z uzasadnieniem: `ODSTEPSTWA-OD-WZORCA.md`, założona w zadaniu 3 i uzupełniana w każdym kolejnym |
 | Rezygnacja z SEO i danych strukturalnych | Szkolenia nie pojawią się w Google jako kursy z terminami; udostępniane odnośniki bez grafiki i opisu | Skutek świadomej decyzji ISKT (ADR-002 §5). Model danych przygotowany tak, by dodać tę warstwę później bez migracji |
 | Brak wzorca kroju firmowego | Typografia oparta na substytucie (Inter) | Design system sam oznacza Inter jako substytut. Jeśli ISKT ma licencjonowany krój — prosimy o pliki |
 

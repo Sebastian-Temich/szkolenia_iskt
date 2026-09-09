@@ -1,0 +1,551 @@
+/* ISKT Szkolenia — szkielet strony: nagłówek, nawigacja, stopka.
+ *
+ * Zasada dostępności przyjęta w tym pliku: menu mobilne jest ROZWINIĘTE, dopóki
+ * JavaScript go nie zwinie. Nawigacja działa więc również przy wyłączonym lub
+ * niewczytanym skrypcie — klasa .iskt-site-header--js dokłada zwijanie dopiero
+ * wtedy, gdy jest kto ma nim sterować.
+ */
+
+/* ---------------------------------------------------------- nagłówek */
+
+.iskt-site-header {
+  position: sticky;
+  top: 0;
+  z-index: 100;
+  background: color-mix(in srgb, var(--surface-page) 90%, transparent);
+  -webkit-backdrop-filter: blur(12px);
+  backdrop-filter: blur(12px);
+  border-block-end: var(--border-width) solid var(--border-subtle);
+  transition:
+    box-shadow var(--dur-base) var(--ease-standard),
+    background-color var(--dur-base) var(--ease-standard);
+}
+
+/* Po przewinięciu nagłówek odcina się od treści cieniem. */
+.iskt-site-header.is-scrolled {
+  background: color-mix(in srgb, var(--surface-page) 96%, transparent);
+  box-shadow: var(--shadow-sm);
+}
+
+.iskt-site-header__inner {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: var(--space-4);
+  min-height: 4.5rem;
+  padding-block: var(--space-3);
+}
+
+/* ------------------------------------------------------------- marka */
+
+.iskt-site-header__brand {
+  display: inline-flex;
+  align-items: center;
+  gap: var(--space-3);
+  text-decoration: none;
+  color: var(--text-primary);
+}
+
+.iskt-site-header__brand:hover {
+  color: var(--text-brand);
+}
+
+.iskt-site-header__logo img,
+.iskt-site-header__brand .custom-logo {
+  display: block;
+  width: auto;
+  height: 2.75rem;
+}
+
+.iskt-site-header__identity {
+  display: flex;
+  flex-direction: column;
+  gap: 0.1rem;
+  min-width: 0;
+}
+
+.iskt-site-header__name {
+  font-family: var(--font-heading);
+  font-size: var(--text-lg);
+  font-weight: var(--fw-extrabold);
+  letter-spacing: var(--ls-tight);
+  line-height: var(--lh-tight);
+}
+
+.iskt-site-header__tagline {
+  font-size: var(--text-xs);
+  color: var(--text-muted);
+  line-height: var(--lh-snug);
+}
+
+@media (max-width: 29.99em) {
+  /* Na 360 px zostawiamy sam znak i nazwę — hasło zabiera zbyt wiele miejsca. */
+  .iskt-site-header__tagline {
+    display: none;
+  }
+}
+
+/* -------------------------------------------------------- nawigacja */
+
+.iskt-site-nav {
+  display: flex;
+  align-items: center;
+  gap: var(--space-3);
+}
+
+.iskt-site-nav__panel {
+  display: flex;
+  align-items: center;
+  gap: var(--space-2);
+}
+
+.iskt-menu {
+  display: flex;
+  align-items: center;
+  gap: var(--space-1);
+  margin: 0;
+  padding: 0;
+  list-style: none;
+}
+
+.iskt-menu li {
+  position: relative;
+  margin: 0;
+}
+
+.iskt-menu a {
+  display: block;
+  padding: var(--space-2) var(--space-3);
+  font-size: var(--text-base);
+  font-weight: var(--fw-medium);
+  color: var(--text-primary);
+  text-decoration: none;
+  border-radius: var(--radius-pill);
+}
+
+.iskt-menu a:hover {
+  color: var(--text-brand);
+  background: var(--green-50);
+}
+
+.iskt-menu .current-menu-item > a,
+.iskt-menu .current-menu-ancestor > a,
+.iskt-menu .current_page_item > a,
+.iskt-menu .current-menu-parent > a {
+  color: var(--text-brand);
+  font-weight: var(--fw-semibold);
+}
+
+/* Pozycja menu, której właściciel nada w panelu klasę CSS „iskt-cta”,
+   renderuje się jako główny przycisk. Dzięki temu wezwanie do działania
+   jest edytowalne z panelu i nie jest wpisane na stałe w szablon. */
+.iskt-menu .iskt-cta > a {
+  padding: var(--space-3) var(--space-6);
+  color: var(--text-on-brand);
+  background: var(--color-primary);
+  box-shadow: var(--shadow-sm);
+  transition:
+    background-color var(--dur-fast) var(--ease-standard),
+    box-shadow var(--dur-base) var(--ease-standard);
+}
+
+.iskt-menu .iskt-cta > a:hover {
+  color: var(--text-on-brand);
+  background: var(--color-primary-hover);
+  box-shadow: var(--shadow-brand);
+}
+
+/* ------------------------------------------------------- podmenu */
+
+.iskt-menu .sub-menu {
+  margin: 0;
+  padding: var(--space-2);
+  list-style: none;
+}
+
+.iskt-menu .sub-menu a {
+  white-space: normal;
+}
+
+/* Rozwijany przycisk podmenu dokłada skrypt; bez skryptu podmenu otwiera się
+   najechaniem i fokusem klawiatury (:focus-within). */
+.iskt-menu__expand {
+  position: absolute;
+  inset-inline-end: var(--space-1);
+  top: 50%;
+  transform: translateY(-50%);
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 2rem;
+  height: 2rem;
+  padding: 0;
+  cursor: pointer;
+  background: transparent;
+  border: 0;
+  border-radius: var(--radius-pill);
+  color: var(--text-secondary);
+}
+
+.iskt-menu__expand:hover {
+  background: var(--green-50);
+  color: var(--text-brand);
+}
+
+.iskt-menu__expand::before {
+  content: '';
+  width: 0.55rem;
+  height: 0.55rem;
+  border-inline-end: 2px solid currentColor;
+  border-block-end: 2px solid currentColor;
+  transform: translateY(-0.15em) rotate(45deg);
+  transition: transform var(--dur-fast) var(--ease-standard);
+}
+
+.iskt-menu__expand[aria-expanded='true']::before {
+  transform: translateY(0.1em) rotate(-135deg);
+}
+
+/* ------------------------------------------- przełącznik menu mobilnego */
+
+.iskt-site-header__toggle {
+  display: inline-flex;
+  align-items: center;
+  gap: var(--space-2);
+  min-height: 2.75rem;
+  padding: var(--space-2) var(--space-4);
+  font-family: inherit;
+  font-size: var(--text-sm);
+  font-weight: var(--fw-semibold);
+  color: var(--text-primary);
+  cursor: pointer;
+  background: transparent;
+  border: var(--border-width) solid var(--border-default);
+  border-radius: var(--radius-pill);
+}
+
+.iskt-site-header__toggle:hover {
+  border-color: var(--border-brand);
+  color: var(--text-brand);
+}
+
+.iskt-site-header__toggle[hidden] {
+  display: none;
+}
+
+/* Ikona zmienia się wraz ze stanem przycisku — jedna prawda o stanie. */
+.iskt-site-header__toggle .iskt-icon--close,
+.iskt-site-header__toggle[aria-expanded='true'] .iskt-icon--menu {
+  display: none;
+}
+
+.iskt-site-header__toggle[aria-expanded='true'] .iskt-icon--close {
+  display: inline-block;
+}
+
+/* ----------------------------------------------- układ mobilny (< 1024 px) */
+
+@media (max-width: 63.99em) {
+  .iskt-site-nav {
+    gap: var(--space-2);
+  }
+
+  .iskt-site-nav__panel {
+    position: absolute;
+    inset-inline: 0;
+    top: 100%;
+    flex-direction: column;
+    align-items: stretch;
+    gap: 0;
+    padding: var(--space-4) var(--container-pad) var(--space-6);
+    background: var(--surface-page);
+    border-block-end: var(--border-width) solid var(--border-subtle);
+    box-shadow: var(--shadow-md);
+  }
+
+  .iskt-menu {
+    flex-direction: column;
+    align-items: stretch;
+    gap: 0;
+  }
+
+  .iskt-menu a {
+    padding: var(--space-3) var(--space-4);
+    border-radius: var(--radius-md);
+  }
+
+  .iskt-menu .iskt-cta > a {
+    margin-block-start: var(--space-3);
+    text-align: center;
+  }
+
+  .iskt-menu .sub-menu {
+    padding: 0 0 var(--space-2) var(--space-4);
+    border-inline-start: var(--border-width) solid var(--border-subtle);
+    margin-inline-start: var(--space-4);
+  }
+
+  .iskt-menu .sub-menu a {
+    font-size: var(--text-sm);
+    color: var(--text-secondary);
+  }
+
+  /* Zwijamy panel i podmenu dopiero wtedy, gdy skrypt jest gotowy nimi
+     sterować. Bez skryptu całe menu jest rozwinięte i używalne. */
+  .iskt-site-header--js .iskt-site-nav__panel {
+    display: none;
+  }
+
+  .iskt-site-header--js .iskt-site-nav__panel.is-open {
+    display: flex;
+  }
+
+  .iskt-site-header--js .iskt-menu .sub-menu {
+    display: none;
+  }
+
+  .iskt-site-header--js .iskt-menu .sub-menu.is-open {
+    display: block;
+  }
+}
+
+/* ------------------------------------------------ układ pulpitu (≥ 1024 px) */
+
+@media (min-width: 64em) {
+  .iskt-site-header__toggle {
+    display: none;
+  }
+
+  .iskt-site-nav__panel {
+    display: flex !important;
+  }
+
+  .iskt-menu > .menu-item-has-children > a {
+    padding-inline-end: var(--space-8);
+  }
+
+  .iskt-menu .sub-menu {
+    position: absolute;
+    inset-inline-start: 0;
+    top: 100%;
+    z-index: 10;
+    min-width: 15rem;
+    background: var(--surface-card);
+    border: var(--border-width) solid var(--border-subtle);
+    border-radius: var(--radius-md);
+    box-shadow: var(--shadow-md);
+    opacity: 0;
+    visibility: hidden;
+    transform: translateY(var(--space-2));
+    transition:
+      opacity var(--dur-fast) var(--ease-standard),
+      transform var(--dur-fast) var(--ease-standard),
+      visibility var(--dur-fast) var(--ease-standard);
+  }
+
+  .iskt-menu li:hover > .sub-menu,
+  .iskt-menu li:focus-within > .sub-menu,
+  .iskt-menu .sub-menu.is-open {
+    opacity: 1;
+    visibility: visible;
+    transform: translateY(0);
+  }
+
+  /* Podmenu drugiego poziomu wysuwa się w bok. */
+  .iskt-menu .sub-menu .sub-menu {
+    inset-inline-start: 100%;
+    top: 0;
+  }
+}
+
+/* ------------------------------------------------------------- stopka */
+
+.iskt-site-footer {
+  margin-block-start: auto;
+  padding-block: clamp(var(--space-12), 7vw, var(--space-20)) var(--space-8);
+  background: var(--surface-dark);
+  color: var(--text-on-dark);
+}
+
+.iskt-site-footer a {
+  color: var(--neutral-300);
+  text-decoration: none;
+}
+
+.iskt-site-footer a:hover {
+  color: var(--green-300);
+  text-decoration: underline;
+  text-underline-offset: 0.15em;
+}
+
+.iskt-site-footer h2,
+.iskt-site-footer h3,
+.iskt-site-footer h4 {
+  color: var(--text-on-dark);
+  font-size: var(--text-base);
+  letter-spacing: var(--ls-caps);
+  text-transform: uppercase;
+  margin-block-end: var(--space-4);
+}
+
+.iskt-site-footer__top {
+  display: grid;
+  gap: var(--space-10);
+  grid-template-columns: minmax(0, 1fr);
+}
+
+@media (min-width: 48em) {
+  .iskt-site-footer__top {
+    grid-template-columns: minmax(0, 1.3fr) minmax(0, 2fr);
+    gap: var(--space-12);
+  }
+
+  /* Bez widżetów kolumna marki zajmuje całą szerokość — nie zostawiamy
+     pustego pola po prawej stronie. */
+  .iskt-site-footer__top--single {
+    grid-template-columns: minmax(0, 1fr);
+  }
+}
+
+.iskt-site-footer__brand {
+  display: inline-flex;
+  align-items: center;
+  gap: var(--space-3);
+  margin-block-end: var(--space-4);
+  color: var(--text-on-dark);
+  font-family: var(--font-heading);
+  font-size: var(--text-lg);
+  font-weight: var(--fw-extrabold);
+  text-decoration: none;
+}
+
+.iskt-site-footer__brand img {
+  display: block;
+  width: auto;
+  height: 2.5rem;
+}
+
+.iskt-site-footer__description {
+  max-width: 34rem;
+  color: var(--neutral-300);
+  line-height: var(--lh-relaxed);
+}
+
+/* Obszar treści stopki: natywne widżety WordPressa, w pełni edytowalne
+   z panelu (§4.7). Kolumny dobierają się do liczby widżetów. */
+.iskt-site-footer__widgets {
+  display: grid;
+  gap: var(--space-8);
+  grid-template-columns: repeat(auto-fit, minmax(min(100%, 13rem), 1fr));
+}
+
+.iskt-site-footer__widgets .widget ul {
+  list-style: none;
+  margin: 0;
+  padding: 0;
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-2);
+}
+
+.iskt-site-footer__widgets .widget p:last-child {
+  margin-block-end: 0;
+}
+
+.iskt-site-footer__bottom {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  justify-content: space-between;
+  gap: var(--space-4);
+  margin-block-start: var(--space-12);
+  padding-block-start: var(--space-6);
+  border-block-start: var(--border-width) solid rgba(255, 255, 255, 0.12);
+  font-size: var(--text-sm);
+  color: var(--neutral-400);
+}
+
+/* Akapity w pasku dolnym są elementami układu, nie tekstem ciągłym —
+   ich domyślny margines rozjechałby wyrównanie w pionie. */
+.iskt-site-footer__bottom p {
+  margin: 0;
+}
+
+.iskt-site-footer__menu {
+  display: flex;
+  flex-wrap: wrap;
+  gap: var(--space-2) var(--space-5);
+  margin: 0;
+  padding: 0;
+  list-style: none;
+  font-size: var(--text-sm);
+}
+
+.iskt-site-footer__menu .sub-menu {
+  display: none;
+}
+
+.iskt-site-footer__domain {
+  font-family: var(--font-mono);
+  color: var(--green-300);
+}
+
+/* Na ciemnym tle obwódka fokusu musi zostać widoczna. */
+.iskt-site-footer :focus-visible,
+.iskt-section--dark :focus-visible {
+  outline-color: var(--green-300);
+}
+
+/* ----------------------------------------------------- treści szablonów */
+
+.iskt-entry__meta {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: var(--space-2) var(--space-4);
+  margin: 0;
+  font-size: var(--text-sm);
+  color: var(--text-muted);
+}
+
+.iskt-entry__categories a {
+  color: var(--text-brand);
+}
+
+.iskt-entry__header {
+  margin-block-end: var(--space-8);
+}
+
+.iskt-entry__media {
+  margin-block-end: var(--space-8);
+  border-radius: var(--radius-lg);
+  overflow: hidden;
+}
+
+.iskt-entry__media img {
+  display: block;
+  width: 100%;
+  height: auto;
+}
+
+.iskt-entry__pages {
+  margin-block-start: var(--space-8);
+  font-size: var(--text-sm);
+}
+
+.iskt-error-404__menu {
+  display: flex;
+  flex-wrap: wrap;
+  gap: var(--space-2) var(--space-5);
+  margin: var(--space-3) 0 0;
+  padding: 0;
+  list-style: none;
+}
+
+.iskt-error-404__code {
+  font-family: var(--font-mono);
+  font-size: clamp(var(--text-4xl), 12vw, var(--text-6xl));
+  font-weight: var(--fw-bold);
+  line-height: 1;
+  color: var(--green-500);
+}
