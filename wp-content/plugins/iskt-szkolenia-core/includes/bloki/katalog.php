@@ -165,9 +165,14 @@ function iskt_render_wyroznione_szkolenia( array $atrybuty ): string {
  * Ten sam znacznik zasila stronę główną i katalog (zadanie 6) — karta wygląda
  * i zachowuje się identycznie w obu miejscach, bo pochodzi z jednej funkcji.
  *
- * @param WP_Post $szkolenie Szkolenie.
+ * Wyróżnienie pokazujemy tylko tam, gdzie coś znaczy. W sekcji wyróżnionych na
+ * stronie głównej każda karta jest wyróżniona, więc odznaka na każdej z nich nie
+ * niosłaby żadnej informacji; w katalogu obok szkoleń zwykłych — owszem.
+ *
+ * @param WP_Post $szkolenie         Szkolenie.
+ * @param bool    $pokaz_wyroznienie Czy oznaczyć szkolenie wyróżnione.
  */
-function iskt_karta_szkolenia( WP_Post $szkolenie ): string {
+function iskt_karta_szkolenia( WP_Post $szkolenie, bool $pokaz_wyroznienie = false ): string {
 	$id    = (int) $szkolenie->ID;
 	$adres = get_permalink( $id );
 
@@ -175,7 +180,9 @@ function iskt_karta_szkolenia( WP_Post $szkolenie ): string {
 		return '';
 	}
 
-	$html = '<article class="iskt-card iskt-card--interactive">';
+	$wyroznione = $pokaz_wyroznienie && (bool) get_post_meta( $id, '_iskt_wyroznione', true );
+
+	$html = '<article class="iskt-card iskt-card--interactive' . ( $wyroznione ? ' iskt-card--featured' : '' ) . '">';
 
 	if ( has_post_thumbnail( $id ) ) {
 		$html .= '<div class="iskt-card__media">' . get_the_post_thumbnail( $id, 'medium_large', array( 'loading' => 'lazy' ) ) . '</div>';
@@ -187,6 +194,10 @@ function iskt_karta_szkolenia( WP_Post $szkolenie ): string {
 
 	if ( $kategoria instanceof WP_Term ) {
 		$html .= '<p class="iskt-card__meta iskt-mono">' . esc_html( $kategoria->name ) . '</p>';
+	}
+
+	if ( $wyroznione ) {
+		$html .= '<p class="iskt-badge iskt-badge--solid iskt-card__flag">' . esc_html( iskt_tekst( 'szkolenie_odznaka_wyroznione' ) ) . '</p>';
 	}
 
 	$html .= '<h3 class="iskt-card__title">';
@@ -231,7 +242,7 @@ function iskt_karta_szkolenia( WP_Post $szkolenie ): string {
 		 * być dofinansowane, i nie sugeruje żadnej kwoty po wsparciu (§4.3).
 		 */
 		if ( (bool) get_post_meta( $id, '_iskt_dofinansowanie', true ) ) {
-			$html .= '<p class="iskt-badge iskt-badge--accent">' . esc_html__( 'Możliwe dofinansowanie', 'iskt-szkolenia-core' ) . '</p>';
+			$html .= '<p class="iskt-badge iskt-badge--accent">' . esc_html( iskt_tekst( 'szkolenie_odznaka_dofinansowanie' ) ) . '</p>';
 		}
 
 		$html .= '</div>';

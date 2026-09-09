@@ -610,3 +610,90 @@ textarea.iskt-field__control {
 .iskt-search-form__row .iskt-field__control {
   flex: 1 1 14rem;
 }
+
+/* ------------------------------------------------------- filtry katalogu */
+
+/* Pasek wyszukiwania i filtrów katalogu (zadanie 6). Zwykły formularz GET —
+   układ jest jedyną rzeczą, którą dokłada tu CSS; bez arkusza pasek nadal
+   działa i nadal daje się wypełnić. */
+.iskt-filters {
+  display: grid;
+  gap: var(--space-5);
+  padding: var(--space-5);
+  background: var(--surface-muted);
+  border: var(--border-width) solid var(--border-subtle);
+  border-radius: var(--radius-lg);
+}
+
+.iskt-filters__row {
+  display: grid;
+  gap: var(--space-4);
+}
+
+/* Przyciski wyrównane do dolnej krawędzi list, a nie do etykiet nad nimi. */
+.iskt-filters__actions {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: var(--space-3);
+}
+
+@media (min-width: 48em) {
+  .iskt-filters {
+    padding: var(--space-6);
+  }
+
+  .iskt-filters__row {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+    align-items: end;
+  }
+
+  .iskt-filters__actions {
+    grid-column: 1 / -1;
+  }
+}
+
+@media (min-width: 64em) {
+  .iskt-filters__row {
+    grid-template-columns: repeat(2, minmax(0, 1fr)) auto;
+  }
+
+  .iskt-filters__actions {
+    grid-column: auto;
+  }
+}
+
+/* Wyróżnienie szkolenia w katalogu (§4.2). Obwódka jest wsparciem, a nie
+   nośnikiem informacji — samo wyróżnienie niesie napis na plakietce, więc
+   działa też bez rozróżniania kolorów. */
+.iskt-card--featured {
+  border-color: var(--green-300);
+  box-shadow: var(--shadow-sm);
+}
+
+.iskt-card__flag {
+  margin: 0 0 var(--space-3);
+}
+
+/* Lista faktów na karcie: „8 godzin · Online · Poziom podstawowy”. */
+.iskt-card__facts {
+  display: flex;
+  flex-wrap: wrap;
+  gap: var(--space-1) var(--space-3);
+  margin: var(--space-3) 0 0;
+  padding: 0;
+  list-style: none;
+  font-size: var(--text-sm);
+  color: var(--text-muted);
+}
+
+.iskt-card__facts li + li::before {
+  content: '·';
+  margin-inline-end: var(--space-3);
+  color: var(--border-strong);
+}
+
+/* Widok bez trafień: komunikat i droga powrotna do pełnej oferty. */
+.iskt-katalog__pusto {
+  padding-block: var(--space-6);
+}

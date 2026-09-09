@@ -139,6 +139,18 @@ function iskt_rejestruj_typy_tresci(): void {
 }
 add_action( 'init', 'iskt_rejestruj_typy_tresci' );
 
+/*
+ * Taksonomie rejestrujemy PRZED typami treści (priorytet 9 wobec domyślnego 10),
+ * bo o kolejności sprawdzania reguł adresów decyduje kolejność ich rejestracji.
+ * Bez tego reguła załączników szkolenia — `szkolenia/{cokolwiek}/{cokolwiek}` —
+ * przechwytuje `/szkolenia/kategoria/esg-i-zrownowazony-rozwoj/` i oddaje
+ * odwiedzającemu stronę „nie znaleziono”. Kafelki obszarów na stronie głównej
+ * prowadzą dokładnie pod te adresy (§4.1).
+ *
+ * Kolejność musi być taka sama przy aktywacji wtyczki (`activation.php`), bo to
+ * tam po raz pierwszy przeliczamy reguły.
+ */
+
 /**
  * Rejestruje taksonomie katalogu.
  */
@@ -216,7 +228,7 @@ function iskt_rejestruj_taksonomie(): void {
 		)
 	);
 }
-add_action( 'init', 'iskt_rejestruj_taksonomie' );
+add_action( 'init', 'iskt_rejestruj_taksonomie', 9 );
 
 /*
  * Trwałość adresu (§4.3) nie wymaga tu żadnego kodu. Po publikacji edytor odsyła

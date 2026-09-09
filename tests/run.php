@@ -37,6 +37,7 @@ require_once $sciezka . 'kategorie.php';
 require_once $sciezka . 'odbiorca.php';
 require_once $sciezka . 'prezentacja.php';
 require_once $sciezka . 'teksty.php';
+require_once $sciezka . 'katalog.php';
 
 /*
  * `bloki/odbiorca.php` renderuje pojemnik wariantu i korzysta z pomocnika
@@ -500,6 +501,113 @@ sprawdz(
 		return count( iskt_definicje_tekstow() ) === $policzone;
 	} )()
 );
+
+// --- Katalog: parametry z adresu -------------------------------------------
+
+/*
+ * Parametry katalogu przychodzą z adresu, czyli od kogokolwiek. Sanityzacja jest
+ * jedynym miejscem, w którym to sprawdzamy — dalej wartość idzie prosto do
+ * zapytania i do pola formularza.
+ */
+
+sprawdz( 'slug filtra przechodzi bez zmian', 'esg-i-zrownowazony-rozwoj', iskt_sanitize_filtr_slug( 'esg-i-zrownowazony-rozwoj' ) );
+sprawdz( 'wielkie litery sprowadzone do małych', 'online', iskt_sanitize_filtr_slug( 'ONLINE' ) );
+sprawdz( 'polskie znaki w slugu zostają', 'język-angielski', iskt_sanitize_filtr_slug( 'język-angielski' ) );
+sprawdz( 'znaczniki nie przechodzą przez filtr', 'scriptalert1script', iskt_sanitize_filtr_slug( '<script>alert(1)</script>' ) );
+sprawdz( 'apostrof i cudzysłów wycięte', 'onlineor1', iskt_sanitize_filtr_slug( "online' OR 1" ) );
+sprawdz( 'tablica w parametrze nie wysadza widoku', '', iskt_sanitize_filtr_slug( array( 'esg' ) ) );
+sprawdz( 'pusty parametr to brak filtra', '', iskt_sanitize_filtr_slug( '' ) );
+sprawdz( 'zbyt długi slug przycięty', ISKT_KATALOG_MAX_SLUG, mb_strlen( iskt_sanitize_filtr_slug( str_repeat( 'a', 500 ) ) ) );
+
+sprawdz( 'fraza traci znaczniki', 'alert(1)', iskt_sanitize_filtr_fraza( '<b>alert(1)</b>' ) );
+sprawdz( 'fraza traci skrajne spacje', 'esg', iskt_sanitize_filtr_fraza( '  esg  ' ) );
+sprawdz( 'fraza z polskimi znakami zostaje', 'księgowość dla firm', iskt_sanitize_filtr_fraza( 'księgowość dla firm' ) );
+sprawdz( 'zbyt długa fraza przycięta', ISKT_KATALOG_MAX_FRAZA, mb_strlen( iskt_sanitize_filtr_fraza( str_repeat( 'ą', 400 ) ) ) );
+sprawdz( 'tablica w frazie nie wysadza widoku', '', iskt_sanitize_filtr_fraza( array( 'esg' ) ) );
+
+sprawdz(
+	'komplet parametrów czytany z adresu',
+	array(
+		'szukaj'    => 'ESG',
+		'kategoria' => 'esg-i-zrownowazony-rozwoj',
+		'forma'     => 'online',
+	),
+	iskt_parametry_katalogu(
+		array(
+			ISKT_PARAM_SZUKAJ    => 'ESG',
+			ISKT_PARAM_KATEGORIA => 'esg-i-zrownowazony-rozwoj',
+			ISKT_PARAM_FORMA     => 'online',
+		)
+	)
+);
+
+sprawdz(
+	'brak parametrów daje pusty stan',
+	array(
+		'szukaj'    => '',
+		'kategoria' => '',
+		'forma'     => '',
+	),
+	iskt_parametry_katalogu( array() )
+);
+
+sprawdz(
+	'cudzy parametr w adresie jest pomijany',
+	array(
+		'szukaj'    => '',
+		'kategoria' => '',
+		'forma'     => '',
+	),
+	iskt_parametry_katalogu( array( 'post_status' => 'draft' ) )
+);
+
+sprawdz( 'pusty stan to katalog niefiltrowany', false, iskt_katalog_jest_filtrowany( iskt_parametry_katalogu( array() ) ) );
+sprawdz( 'sama fraza to już filtrowanie', true, iskt_katalog_jest_filtrowany( iskt_parametry_katalogu( array( ISKT_PARAM_SZUKAJ => 'ai' ) ) ) );
+sprawdz( 'sama kategoria to już filtrowanie', true, iskt_katalog_jest_filtrowany( iskt_parametry_katalogu( array( ISKT_PARAM_KATEGORIA => 'ai' ) ) ) );
+sprawdz( 'sama forma to już filtrowanie', true, iskt_katalog_jest_filtrowany( iskt_parametry_katalogu( array( ISKT_PARAM_FORMA => 'online' ) ) ) );
+sprawdz( 'fraza z samych spacji nie jest filtrowaniem', false, iskt_katalog_jest_filtrowany( iskt_parametry_katalogu( array( ISKT_PARAM_SZUKAJ => '   ' ) ) ) );
+
+// --- Katalog: argumenty zapytania ------------------------------------------
+
+$iskt_katalog_pusty = iskt_argumenty_katalogu( iskt_parametry_katalogu( array() ) );
+
+sprawdz( 'katalog bez filtrów nie szuka frazy', false, isset( $iskt_katalog_pusty['s'] ) );
+sprawdz( 'katalog bez filtrów nie zawęża taksonomii', false, isset( $iskt_katalog_pusty['tax_query'] ) );
+sprawdz( 'katalog stronicuje od pierwszego dnia', iskt_katalog_na_strone(), $iskt_katalog_pusty['posts_per_page'] );
+sprawdz( 'wyróżnione idą przed resztą', 'DESC', $iskt_katalog_pusty['orderby']['wyroznione'] );
+sprawdz( 'po wyróżnieniu decyduje kolejność właściciela', 'ASC', $iskt_katalog_pusty['orderby']['menu_order'] );
+
+/*
+ * Najważniejszy przypadek całego katalogu: szkolenie, którego nikt nigdy nie
+ * wyróżnił, NIE MA pola `_iskt_wyroznione`. Zwykłe sortowanie po `meta_key`
+ * wycięłoby je z listy — katalog pokazywałby wyłącznie szkolenia wyróżnione,
+ * wyglądając przy tym na kompletny.
+ */
+sprawdz( 'sortowanie po wyróżnieniu nie wycina reszty katalogu', 'OR', $iskt_katalog_pusty['meta_query']['relation'] );
+sprawdz( 'szkolenie bez pola wyróżnienia zostaje w wynikach', 'NOT EXISTS', $iskt_katalog_pusty['meta_query'][0]['compare'] );
+
+$iskt_katalog_fraza = iskt_argumenty_katalogu( iskt_parametry_katalogu( array( ISKT_PARAM_SZUKAJ => 'automatyzacja' ) ) );
+
+sprawdz( 'fraza trafia do wyszukiwania zapytania głównego', 'automatyzacja', $iskt_katalog_fraza['s'] );
+sprawdz( 'sama fraza nie zawęża taksonomii', false, isset( $iskt_katalog_fraza['tax_query'] ) );
+
+$iskt_katalog_kategoria = iskt_argumenty_katalogu( iskt_parametry_katalogu( array( ISKT_PARAM_KATEGORIA => 'projekty-br' ) ) );
+
+sprawdz( 'filtr kategorii pyta o slug', 'slug', $iskt_katalog_kategoria['tax_query'][0]['field'] );
+sprawdz( 'filtr kategorii trafia we właściwą taksonomię', ISKT_TAX_KATEGORIA, $iskt_katalog_kategoria['tax_query'][0]['taxonomy'] );
+sprawdz( 'filtr kategorii przenosi slug z adresu', 'projekty-br', $iskt_katalog_kategoria['tax_query'][0]['terms'] );
+
+$iskt_katalog_oba = iskt_argumenty_katalogu(
+	iskt_parametry_katalogu(
+		array(
+			ISKT_PARAM_KATEGORIA => 'esg-i-zrownowazony-rozwoj',
+			ISKT_PARAM_FORMA     => 'online',
+		)
+	)
+);
+
+sprawdz( 'dwa filtry zawężają razem, nie po jednym', 'AND', $iskt_katalog_oba['tax_query']['relation'] );
+sprawdz( 'drugi filtr dotyczy formy realizacji', ISKT_TAX_FORMA, $iskt_katalog_oba['tax_query'][1]['taxonomy'] );
 
 // --- Wynik -----------------------------------------------------------------
 

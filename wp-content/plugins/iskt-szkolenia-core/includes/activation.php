@@ -83,9 +83,13 @@ function iskt_on_activate(): void {
 	/*
 	 * Typy treści i taksonomie muszą istnieć, zanim zasiejemy terminy i przeliczymy
 	 * reguły adresów. Przy aktywacji hook `init` już przeszedł, więc rejestrujemy je wprost.
+	 *
+	 * Kolejność jest znacząca i taka sama jak na `init` (patrz `model.php`):
+	 * taksonomie przed typami treści, inaczej adres kategorii wpada w regułę
+	 * załączników szkolenia i kończy się stroną „nie znaleziono”.
 	 */
-	iskt_rejestruj_typy_tresci();
 	iskt_rejestruj_taksonomie();
+	iskt_rejestruj_typy_tresci();
 
 	iskt_nadaj_capabilities();
 	iskt_zasiej_slowniki();
