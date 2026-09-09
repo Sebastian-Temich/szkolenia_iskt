@@ -102,7 +102,40 @@ W edytorze pusta sekcja pokazuje wyjaśnienie zamiast pustego miejsca: podgląd 
 renderowany przez serwer (`ServerSideRender`), więc redaktor widzi dokładnie to,
 co zobaczy odwiedzający.
 
-## 5. Cena na karcie szkolenia
+### 4.1. Pusty blok to za mało — znika także oprawa sekcji
+
+Sam blok zwracający pusty ciąg nie wystarczy. Tło, marginesy i zakotwiczenie sekcji
+siedzą w bloku grupy zapisanym we wzorcu, a ten renderuje się zawsze — na świeżej
+instalacji zostawały po nich szerokie, kolorowe pasy bez ani jednego słowa w środku.
+
+`iskt_ukryj_puste_sekcje()` (`inc/sekcje.php`) usuwa przy renderowaniu każdą grupę
+z klasą `iskt-section`, w której nie zostało nic do pokazania. Reguła „brak tekstu
+to nie brak treści” obowiązuje tu tak samo: sekcja ze zdjęciem, filmem, mapą albo
+polem formularza zostaje. W panelu i w podglądzie edytora filtr nie działa — blok
+znikający pod kursorem wyglądałby jak awaria edytora.
+
+## 5. Pierwsze uruchomienie (§2, §11 pkt 10)
+
+`front-page.php` oddaje sterowanie do `index.php`, dopóki nie ma strony statycznej.
+Bez tego kroku świeży WordPress z włączonym motywem pokazywał pod adresem głównym
+listę wpisów z „Hello world!”, a nie stronę główną ISKT.
+
+Włączenie motywu (`after_switch_theme`) wykonuje **dokładnie raz na instalację**
+(`inc/instalacja.php`, znacznik `iskt_instalacja_wykonana`):
+
+| Krok | Efekt |
+|---|---|
+| Strona „Strona główna” | treść z tych samych wzorców sekcji, co wzorzec z edytora |
+| Strona „Aktualności” | ustawiona jako lista wpisów |
+| `show_on_front` / `page_on_front` | ustawiane **tylko**, gdy właściciel jeszcze nic nie wybrał |
+| `blog_public = 0` | §7 — środowisko wewnętrzne poza indeksem; włączenie indeksowania to punkt instrukcji publikacji |
+| „Hello world!” i „Sample Page” | do kosza, ale **tylko nietknięte** (data modyfikacji równa dacie utworzenia) |
+| Domyślne widżety w stopce | odłożone do nieaktywnych — WordPress przenosi tu angielskie „Archives”, „Categories” i „Meta” |
+
+Powtórne włączenie motywu niczego nie cofa i nie zakłada drugiej strony głównej —
+strony są wyszukiwane po adresie przed wstawieniem.
+
+## 6. Cena na karcie szkolenia
 
 `iskt_cena_szkolenia()` składa kwotę z jednostką i sposobem prezentacji podatku
 (§4.3). **Nie wylicza ceny po dofinansowaniu.**
@@ -116,7 +149,7 @@ dofinansowanie”, a warunki są osobnym polem tekstowym szkolenia.
 Jednostka „do ustalenia indywidualnie” daje „Wycena indywidualna” bez kwoty — cena,
 której nie ma, nie udaje, że jest.
 
-## 6. Symbol kategorii
+## 7. Symbol kategorii
 
 Karty obszarów mają w załączniku po jednej ikonie. Kategorie są edytowalne (§4.2),
 więc przypisanie ikony po nazwie albo slugu byłoby kruche.
@@ -131,7 +164,7 @@ Rozwiązanie zachowuje podział z ADR-001 §1:
 Zmiana motywu nie unieważnia zapisanych wartości; motyw bez obsługi filtru pokazuje
 karty bez symbolu i nadal jest kompletny.
 
-## 7. `theme.json` — co dostaje redaktor
+## 8. `theme.json` — co dostaje redaktor
 
 Paleta, skala pisma i odstępy w edytorze wskazują **na te same tokeny**, co arkusze
 motywu — jedna wartość, dwa miejsca użycia.
@@ -145,7 +178,7 @@ pomylić.
 Wyłączone są też wzorce z katalogu WordPress.org — pobiera je zewnętrzna usługa,
 wyglądają obco i zasypałyby siedem wzorców przygotowanych dla tego serwisu.
 
-## 8. Bloki rdzenia w oprawie motywu
+## 9. Bloki rdzenia w oprawie motywu
 
 `assets/css/sekcje.css` ubiera bloki rdzenia (przycisk, kolumny, lista) w wygląd
 z załącznika. Dzięki temu przycisk dodany przez właściciela w dowolnym miejscu
@@ -155,7 +188,7 @@ Styl „Na ciemnym tle” jest zarejestrowany jako **styl bloku**
 (`register_block_style`), a nie jako klasa do wpisania ręcznie — właściciel wybiera
 go z listy i nie musi wiedzieć, jak nazywa się klasa CSS.
 
-## 9. Co sprawdzono
+## 10. Co sprawdzono
 
 - `php -l` na wszystkich plikach PHP motywu i wtyczki — bez błędów;
 - `node --check` na `assets/bloki.js` i `assets/js/odbiorca.js` — bez błędów;

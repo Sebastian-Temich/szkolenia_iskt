@@ -10,6 +10,20 @@ declare( strict_types = 1 );
 defined( 'ABSPATH' ) || exit;
 
 /**
+ * Sekcje strony głównej w kolejności z załącznika.
+ *
+ * Jedno źródło listy: korzysta z niej wzorzec „Strona główna ISKT” i instalacja,
+ * która zakłada stronę główną przy pierwszym uruchomieniu. Gdyby lista istniała
+ * w dwóch miejscach, dołożenie sekcji trafiłoby tylko do jednego z nich —
+ * i świeża instalacja dostałaby inny układ niż wzorzec z edytora.
+ *
+ * @return array<int, string> Nazwy plików z katalogu `patterns/`, bez rozszerzenia.
+ */
+function iskt_sekcje_strony_glownej(): array {
+	return array( 'hero', 'obszary', 'wyroznione', 'przebieg', 'dofinansowania', 'wskazniki', 'kontakt' );
+}
+
+/**
  * Zwraca znaczniki jednej sekcji strony głównej.
  *
  * Wzorzec „Strona główna ISKT” składa się z plików pojedynczych sekcji, zamiast

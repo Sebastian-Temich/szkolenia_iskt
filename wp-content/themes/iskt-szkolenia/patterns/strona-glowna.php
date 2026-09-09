@@ -19,6 +19,6 @@ declare( strict_types = 1 );
 
 defined( 'ABSPATH' ) || exit;
 
-foreach ( array( 'hero', 'obszary', 'wyroznione', 'przebieg', 'dofinansowania', 'wskazniki', 'kontakt' ) as $iskt_sekcja ) {
+foreach ( iskt_sekcje_strony_glownej() as $iskt_sekcja ) {
 	echo iskt_wzorzec_sekcji( $iskt_sekcja ); // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped -- Znaczniki bloków z plików motywu; treść w nich jest już zabezpieczona.
 }

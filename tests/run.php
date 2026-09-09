@@ -367,6 +367,26 @@ $iskt_indywidualny = iskt_opis_terminu( 32 );
 sprawdz( 'termin indywidualny ma własną etykietę', 'Termin ustalany indywidualnie', $iskt_indywidualny['etykieta'] );
 sprawdz( 'nieznany status nie jest wyświetlany', '', $iskt_indywidualny['status'] );
 
+// --- Sekcje bez treści -----------------------------------------------------
+
+/*
+ * Reguła z §4.1 w jednym zdaniu: pusta oprawa znika, ale sekcja złożona z samego
+ * zdjęcia albo formularza zostaje. Brak tekstu to nie brak treści.
+ */
+require_once dirname( __DIR__ ) . '/wp-content/themes/iskt-szkolenia/inc/sekcje.php';
+
+sprawdz( 'pusty ciąg to brak treści', false, iskt_sekcja_ma_tresc( '' ) );
+sprawdz( 'same białe znaki to brak treści', false, iskt_sekcja_ma_tresc( "  \n\t " ) );
+sprawdz( 'sama oprawa bez wnętrza to brak treści', false, iskt_sekcja_ma_tresc( '<div class="iskt-section"></div>' ) );
+sprawdz( 'akapit z twardej spacji to brak treści', false, iskt_sekcja_ma_tresc( '<div><p>&nbsp;</p></div>' ) );
+sprawdz( 'twarda spacja w bajtach też nie jest treścią', false, iskt_sekcja_ma_tresc( "<div><p>\u{00A0}</p></div>" ) );
+sprawdz( 'tekst jest treścią', true, iskt_sekcja_ma_tresc( '<div><p>Obszary szkoleń</p></div>' ) );
+sprawdz( 'samo zdjęcie jest treścią', true, iskt_sekcja_ma_tresc( '<div><img src="a.jpg" alt=""></div>' ) );
+sprawdz( 'sam film jest treścią', true, iskt_sekcja_ma_tresc( '<div><video src="a.mp4"></video></div>' ) );
+sprawdz( 'osadzona mapa jest treścią', true, iskt_sekcja_ma_tresc( '<div><iframe src="https://example.org"></iframe></div>' ) );
+sprawdz( 'samo pole formularza jest treścią', true, iskt_sekcja_ma_tresc( '<div><input type="email"></div>' ) );
+sprawdz( 'nazwa klasy nie udaje treści', false, iskt_sekcja_ma_tresc( '<div class="obrazek image video"></div>' ) );
+
 // --- Wynik -----------------------------------------------------------------
 
 printf( "\n%d przeszło, %d nie przeszło\n", $GLOBALS['iskt_ok'], $GLOBALS['iskt_bledy'] );
