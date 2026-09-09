@@ -75,12 +75,22 @@ export NODE_PATH="$(npm root -g)"           # albo katalog z @playwright/test
 npx --package=@playwright/test playwright test tests/e2e/odbior-m1.spec.js --workers=1
 ```
 
-Test zakłada pusty katalog — przed powtórnym uruchomieniem usuń dane demonstracyjne:
+Spec jest idempotentny: przed każdym przebiegiem usuwa przez panel własne dane
+demonstracyjne (terminy, szkolenie i trenera). Można więc uruchamiać go wielokrotnie
+na tym samym `wp-env` bez ręcznego czyszczenia bazy.
+
+Pełny test od zera uruchom tak:
 
 ```bash
-npx @wordpress/env run cli wp post list --post_type=iskt_szkolenie,iskt_trener,iskt_termin \
-  --format=ids --post_status=any | xargs npx @wordpress/env run cli wp post delete --force
+npx @wordpress/env clean all
+npx @wordpress/env start
+export NODE_PATH="$(npm root -g)"           # albo katalog z @playwright/test
+npx --package=@playwright/test playwright test tests/e2e --workers=1
 ```
+
+`clean all` usuwa całą zawartość środowiska developerskiego, więc używaj go tylko
+dla lokalnego `wp-env`. Do ponowienia samego odbioru M1 wystarczy wcześniejsze
+polecenie dla `tests/e2e/odbior-m1.spec.js`; spec sam sprzątnie swoje rekordy.
 
 Wynik ostatniego przebiegu: **6/6 zaliczonych**. Zrzuty w `qa-artifacts/isk-17-m1-odbior/`:
 strona szkolenia przy 360, 768 i 1440 px, profil trenera oraz strona główna

@@ -43,11 +43,11 @@ w trakcie realizacji.
 Podział wynika wprost z decyzji ISKT: „Pierwszy kamień milowy: działający WordPress
 z wyglądem z załącznika oraz możliwością samodzielnego dodania i edycji szkolenia”.
 
-| Kamień | Co właściciel dostaje do rąk | Dni |
-|---|---|---|
-| **M1** | Działający WordPress z wyglądem z załącznika. Właściciel sam dodaje, edytuje i publikuje szkolenie wraz z terminami i trenerem, i widzi je na stronie | 14,0 |
-| **M2** | Pełny serwis: katalog z wyszukiwaniem i filtrami, trenerzy, aktualności, działający formularz na szkolenia@iskt.pl, pełna edytowalność tekstów | 11,0 |
-| **M3** | Gotowość do odbioru: dostępność, responsywność, wydajność, eksport i sprawdzone odtworzenie, dokumentacja, przegląd bezpieczeństwa, QA wg §11 | 9,5 |
+| Kamień | Co właściciel dostaje do rąk | Dni | Stan |
+|---|---|---|---|
+| **M1** | Działający WordPress z wyglądem z załącznika. Właściciel sam dodaje, edytuje i publikuje szkolenie wraz z terminami i trenerem, i widzi je na stronie | 14,0 | **odebrany 2026-09-09** |
+| **M2** | Pełny serwis: katalog z wyszukiwaniem i filtrami, trenerzy, aktualności, działający formularz na szkolenia@iskt.pl, pełna edytowalność tekstów | 11,0 | w realizacji od 2026-09-09 |
+| **M3** | Gotowość do odbioru: dostępność, responsywność, wydajność, eksport i sprawdzone odtworzenie, dokumentacja, przegląd bezpieczeństwa, QA wg §11 | 9,5 | przed nami |
 
 ## 4. Zadania
 
@@ -64,14 +64,14 @@ z wyglądem z załącznika oraz możliwością samodzielnego dodania i edycji sz
 
 ### M2 — pełny serwis
 
-| # | Zadanie | Kompetencja | Dni |
-|---|---|---|---|
-| 6 | Katalog: wyszukiwanie po nazwie i opisie, filtry kategoria + forma, paginacja, stan braku wyników, czyszczenie filtrów | WP/frontend | 2,5 |
-| 7 | Trenerzy: lista i profil, spójna prezentacja powiązań w obu widokach | WP/frontend | 2,0 |
-| 8 | Aktualności: lista i artykuł — **projekt widoków do akceptacji ISKT**, brak wzorca w załączniku | WP/frontend | 1,5 |
-| 9 | Formularz: walidacja serwerowa, własny antyspam, wysyłka, kontekst szkolenia i terminu, zachowanie danych przy błędzie | backend WP | 3,0 |
-| 10 | Pełna edytowalność treści: ekran tekstów globalnych, menu, stopka, etykiety, komunikaty pustych wyników | backend WP | 2,0 |
-| | **Razem M2** | | **11,0** |
+| # | Zadanie | Kompetencja | Dni | Stan |
+|---|---|---|---|---|
+| 6 | Katalog: wyszukiwanie po nazwie i opisie, filtry kategoria + forma, paginacja, stan braku wyników, czyszczenie filtrów | WP/frontend | 2,5 | w realizacji od 2026-09-09 |
+| 7 | Trenerzy: lista i profil, spójna prezentacja powiązań w obu widokach | WP/frontend | 2,0 | w realizacji od 2026-09-09 |
+| 8 | Aktualności: lista i artykuł — **projekt widoków do akceptacji ISKT**, brak wzorca w załączniku | WP/frontend | 1,5 | czeka na bramkę 2 — `PROJEKT-AKTUALNOSCI.md` |
+| 9 | Formularz: walidacja serwerowa, własny antyspam, wysyłka, kontekst szkolenia i terminu, zachowanie danych przy błędzie | backend WP | 3,0 | w realizacji od 2026-09-09 |
+| 10 | Pełna edytowalność treści: ekran tekstów globalnych, menu, stopka, etykiety, komunikaty pustych wyników | backend WP | 2,0 | **wykonane 2026-09-09** — patrz §5a |
+| | **Razem M2** | | **11,0** | |
 
 ### M3 — gotowość do odbioru
 
@@ -167,6 +167,45 @@ i `save_post`, czyli dokładnie tę część, którą ma potwierdzać.
 Zakres przekazany do odbioru i lista rzeczy, których M1 świadomie nie zawiera:
 `ODBIOR-M1.md`.
 
+## 5a. Co zostało zrobione po odbiorze M1 (2026-09-09)
+
+Zadanie 10 — pełna edytowalność treści — jest wykonane.
+
+Rejestr tekstów globalnych mieszka we wtyczce (`includes/teksty.php`), a ekran
+„Szkolenia → Teksty serwisu” buduje się z tego rejestru. Dodanie napisu do rejestru
+automatycznie dokłada pole w panelu, więc nie da się dopisać tekstu, którego
+właściciel nie może zmienić. Objęte grupy: dane kontaktowe, nagłówek i stopka,
+katalog, strona szkolenia, trenerzy, aktualności, formularz, wyszukiwanie i strona
+błędu — łącznie kilkadziesiąt napisów.
+
+Dwie decyzje warte odnotowania przy odbiorze:
+
+- **puste pole = treść domyślna.** Właściciel nie musi pamiętać oryginału, żeby
+  cofnąć zmianę, i nie skasuje przypadkiem zdania wymaganego przez §5 zlecenia.
+  Napisy, których wolno w ogóle nie pokazywać — telefon, adres, godziny — mają
+  pustą wartość domyślną i szablony je pomijają;
+- **zapisujemy tylko wartości różne od domyślnych**, więc poprawka domyślnej treści
+  w kolejnej wersji dotrze do właściciela, który tego pola nie ruszał.
+
+Formularz ekranu idzie przez `admin-post.php`, nie przez `options.php`: ten drugi
+wymaga uprawnienia `manage_options`, którego redaktor nie ma, a §6 daje dostęp
+administracji **i redakcji**.
+
+Przy okazji naprawiona usterka z M1: strona szkolenia bez nadchodzących terminów
+pokazywała puste miejsce, które czytało się jak wycofana oferta. Teraz mówi wprost,
+że termin ustalamy indywidualnie (§4.4) — i ten komunikat też jest edytowalny.
+
+**Weryfikacja:** `php tests/run.php` — 120 asercji (było 97). Playwright
+`tests/e2e/teksty-globalne.spec.js` — 4/4, ścieżka przez formularz panelu: zmiana
+napisu widoczna na stronie, wyczyszczenie pola wraca do treści domyślnej, znacznik
+`<script>` nie przechodzi przez zapis. Regresja `odbior-m1.spec.js` — 6/6.
+
+**Znalezione przy okazji, zgłoszone osobno:** `odbior-m1.spec.js` przechodzi tylko
+na czystych danych. Drugi przebieg tworzy szkolenie o identycznym tytule, a termin
+trafia do niewłaściwej kopii — główny test odbiorowy M1 daje wtedy fałszywy błąd.
+Trafiło do QA razem z pytaniem, czy właściciel nie ma tego samego problemu przy
+wyborze szkolenia dla terminu.
+
 ## 6. Czego estymacja NIE zawiera
 
 - wdrożenia na SEOHost — poza zakresem (§13) i wprost niezatwierdzone;
@@ -192,8 +231,8 @@ Zakres przekazany do odbioru i lista rzeczy, których M1 świadomie nie zawiera:
 ## 8. Bramki (§12)
 
 1. ~~Zatwierdzenie planu i startu realizacji~~ — **zamknięte 2026-09-09**, zgoda w zmienionym zakresie
-2. Akceptacja projektu widoków terminów i aktualności — przed zadaniem 8
-3. Odbiór M1 przez ISKT — prezentacja działającego WordPressa
+2. Akceptacja projektu widoków terminów i aktualności — **karta otwarta 2026-09-09**, dokument `PROJEKT-AKTUALNOSCI.md`. Blokuje wyłącznie zadanie 8
+3. ~~Odbiór M1 przez ISKT~~ — **zamknięte 2026-09-09**
 4. Przegląd bezpieczeństwa — zadanie 15
 5. Przegląd obsługi danych osobowych i treści informacyjnych — przed publikacją
 6. QA i test odtworzenia — zadania 13 i 16
@@ -205,5 +244,10 @@ pytanie przy odbiorze M1.
 
 ## 9. Kolejny krok
 
-Zadania 3–5 (M1) ruszają równolegle jako zadania podrzędne. Żadne z nich nie zależy
-od treści oczekujących na potwierdzenie — pracują na oznaczonych danych demonstracyjnych.
+Zadania 6, 7 i 9 idą równolegle jako zadania podrzędne — katalog, trenerzy, formularz.
+Zadanie 10 jest zrobione i jest ich wspólnym fundamentem: każde z nich czyta napisy
+z rejestru tekstów zamiast wpisywać je do szablonu. Kolejność nie była kosmetyczna —
+gdyby trzy gałęzie ruszyły przed rejestrem, powstałyby trzy różne sposoby na te same
+etykiety i komunikaty, a §4.7 wymaga jednego źródła.
+
+Zadanie 8 czeka na bramkę 2 i nie wstrzymuje pozostałych.

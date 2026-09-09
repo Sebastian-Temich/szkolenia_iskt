@@ -44,6 +44,46 @@ async function zaloguj(page) {
   }
 }
 
+/**
+ * Usuwa opublikowane dane pozostawione przez wcześniejszy/przerwany przebieg.
+ *
+ * Sprzątamy w panelu, zamiast uzależniać test od WP-CLI. Najpierw terminy, bo
+ * wskazują szkolenie; potem szkolenie i trenera. Wpisy w koszu nie trafiają do
+ * list wyboru, więc nie powodują niejednoznacznych etykiet przy kolejnym biegu.
+ */
+async function usunPozostalosci(page, postType, szukanyTytul) {
+  const adres = `${base}/wp-admin/edit.php?post_type=${postType}&s=${encodeURIComponent(szukanyTytul)}`;
+
+  while (true) {
+    await page.goto(adres);
+
+    const wiersz = page.locator('#the-list tr').filter({
+      has: page.locator('a.row-title', { hasText: szukanyTytul }),
+    }).first();
+
+    if (!(await wiersz.count())) {
+      return;
+    }
+
+    await wiersz.locator('a.submitdelete').click({ force: true });
+    await page.waitForLoadState('domcontentloaded');
+  }
+}
+
+test.beforeAll(async ({ browser }) => {
+  const context = await browser.newContext();
+  const page = await context.newPage();
+
+  try {
+    await zaloguj(page);
+    await usunPozostalosci(page, 'iskt_termin', SZKOLENIE);
+    await usunPozostalosci(page, 'iskt_szkolenie', SZKOLENIE);
+    await usunPozostalosci(page, 'iskt_trener', TRENER);
+  } finally {
+    await context.close();
+  }
+});
+
 /** Modal powitalny edytora blokowego zasłania pole tytułu przy pierwszym wejściu. */
 async function zamknijPowitanie(page) {
   const dialog = page.locator('.components-modal__frame');
