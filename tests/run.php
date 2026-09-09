@@ -32,6 +32,7 @@ $sciezka = dirname( __DIR__ ) . '/wp-content/plugins/iskt-szkolenia-core/include
  * nie jest potrzebne — testowane funkcje go nie wywołują.
  */
 require_once $sciezka . 'meta.php';
+require_once $sciezka . 'relacje.php';
 require_once $sciezka . 'terminy.php';
 require_once $sciezka . 'kategorie.php';
 require_once $sciezka . 'odbiorca.php';
@@ -179,6 +180,131 @@ sprawdz( 'wpis innego typu odrzucony', array(), iskt_sanitize_trenerzy( array( 2
 sprawdz( 'nieistniejący wpis odrzucony', array(), iskt_sanitize_trenerzy( array( 999 ) ) );
 sprawdz( 'zero i tekst odrzucone', array(), iskt_sanitize_trenerzy( array( 0, 'abc' ) ) );
 sprawdz( 'kolejność redaktora zachowana', array( 12, 11 ), iskt_sanitize_trenerzy( array( 12, 11 ) ) );
+
+// --- Etykiety powiązań w panelu --------------------------------------------
+
+/*
+ * Regresja z ISK-27: lista wyboru szkolenia przy terminie pokazywała sam tytuł,
+ * więc dwa szkolenia o identycznym tytule były dla właściciela nierozróżnialne.
+ */
+
+$iskt_rozne = array(
+	new WP_Post( 41, 'ESG w praktyce', 'esg-w-praktyce' ),
+	new WP_Post( 42, 'Audyt wewnętrzny', 'audyt-wewnetrzny' ),
+);
+
+sprawdz(
+	'różne tytuły zostają bez dopisku',
+	array(
+		41 => 'ESG w praktyce',
+		42 => 'Audyt wewnętrzny',
+	),
+	iskt_etykiety_relacji( $iskt_rozne )
+);
+
+$iskt_bliznieta = array(
+	new WP_Post( 51, 'ESG w praktyce', 'esg-w-praktyce' ),
+	new WP_Post( 52, 'ESG w praktyce', 'esg-w-praktyce-2' ),
+);
+
+sprawdz(
+	'identyczne tytuły rozróżnia slug',
+	array(
+		51 => 'ESG w praktyce (esg-w-praktyce)',
+		52 => 'ESG w praktyce (esg-w-praktyce-2)',
+	),
+	iskt_etykiety_relacji( $iskt_bliznieta )
+);
+
+$iskt_kopia = array(
+	new WP_Post( 61, 'ESG w praktyce', 'esg-w-praktyce' ),
+	new WP_Post( 62, 'ESG w praktyce', 'esg-w-praktyce-2', 'draft' ),
+);
+
+sprawdz(
+	'kopia robocza jest opisana statusem',
+	array(
+		61 => 'ESG w praktyce (esg-w-praktyce)',
+		62 => 'ESG w praktyce (szkic, esg-w-praktyce-2)',
+	),
+	iskt_etykiety_relacji( $iskt_kopia )
+);
+
+$iskt_bez_sluga = array(
+	new WP_Post( 71, 'ESG w praktyce', 'esg-w-praktyce' ),
+	new WP_Post( 72, 'ESG w praktyce', '', 'draft' ),
+);
+
+sprawdz(
+	'wpis roboczy bez sluga opisuje sam status',
+	array(
+		71 => 'ESG w praktyce (esg-w-praktyce)',
+		72 => 'ESG w praktyce (szkic)',
+	),
+	iskt_etykiety_relacji( $iskt_bez_sluga )
+);
+
+/*
+ * Opublikowany wpis bez sluga nie powstanie z panelu, ale powstaje z importu
+ * i z wpisu do bazy. Nie ma wtedy ani statusu, ani sluga do pokazania.
+ */
+$iskt_import = array(
+	new WP_Post( 76, 'ESG w praktyce', '' ),
+	new WP_Post( 77, 'ESG w praktyce', 'esg-w-praktyce' ),
+);
+
+sprawdz(
+	'wpis bez sluga i bez statusu dostaje identyfikator',
+	array(
+		76 => 'ESG w praktyce (#76)',
+		77 => 'ESG w praktyce (esg-w-praktyce)',
+	),
+	iskt_etykiety_relacji( $iskt_import )
+);
+
+sprawdz(
+	'wpis bez tytułu jest nazwany',
+	array( 81 => '(bez tytułu)' ),
+	iskt_etykiety_relacji( array( new WP_Post( 81, '   ', 'nowe-szkolenie' ) ) )
+);
+
+/*
+ * Przypadek graniczny, ale to on decyduje o tym, czy etykieta jest gwarancją,
+ * czy tylko zwykle wystarcza: dwa szkice o tym samym tytule, bez slugów, więc
+ * status ani slug niczego nie rozróżniają.
+ */
+$iskt_nierozroznialne = array(
+	new WP_Post( 91, 'ESG w praktyce', '', 'draft' ),
+	new WP_Post( 92, 'ESG w praktyce', '', 'draft' ),
+);
+
+sprawdz(
+	'identyczne wpisy rozróżnia identyfikator',
+	array(
+		91 => 'ESG w praktyce (szkic, #91)',
+		92 => 'ESG w praktyce (szkic, #92)',
+	),
+	iskt_etykiety_relacji( $iskt_nierozroznialne )
+);
+
+sprawdz(
+	'żadna etykieta na liście nie powtarza się',
+	true,
+	( static function (): bool {
+		$etykiety = iskt_etykiety_relacji(
+			array(
+				new WP_Post( 101, 'ESG w praktyce', 'esg-w-praktyce' ),
+				new WP_Post( 102, 'ESG w praktyce', 'esg-w-praktyce-2', 'draft' ),
+				new WP_Post( 103, 'ESG w praktyce', '', 'draft' ),
+				new WP_Post( 104, 'ESG w praktyce', '', 'pending' ),
+				new WP_Post( 105, '', '', 'draft' ),
+				new WP_Post( 106, '', '', 'draft' ),
+			)
+		);
+
+		return count( $etykiety ) === count( array_unique( $etykiety ) );
+	} )()
+);
 
 // --- Zakończenie terminu ---------------------------------------------------
 

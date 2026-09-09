@@ -279,12 +279,15 @@ function iskt_renderuj_wybor_wpisow( string $klucz, string $typ_tresci, array $w
 		printf( '<option value="">%s</option>', esc_html__( '— nie wybrano —', 'iskt-szkolenia-core' ) );
 	}
 
+	// Etykieta powstaje przy relacji (`relacje.php`), nie tutaj — widok ją tylko wypisuje.
+	$etykiety = iskt_etykiety_relacji( $wpisy );
+
 	foreach ( $wpisy as $wpis ) {
 		printf(
 			'<option value="%d"%s>%s</option>',
 			(int) $wpis->ID,
 			in_array( (int) $wpis->ID, $wybrane, true ) ? ' selected' : '',
-			esc_html( '' !== $wpis->post_title ? $wpis->post_title : __( '(bez tytułu)', 'iskt-szkolenia-core' ) )
+			esc_html( (string) ( $etykiety[ (int) $wpis->ID ] ?? '' ) )
 		);
 	}
 

@@ -83,6 +83,33 @@ z definicji, bez logiki synchronizacji.
 Na ekranie trenera dodajemy pole tylko do odczytu pokazujące powiązane szkolenia,
 z odnośnikiem „zarządzaj na stronie szkolenia”, aby redaktor nie szukał tej opcji.
 
+### 2.5. Etykieta pozycji na liście powiązania (ISK-27)
+
+Relacja zapisuje identyfikator, ale właściciel wybiera pozycję po tym, co widzi.
+Sam `post_title` na to nie wystarcza: dwa szkolenia o identycznym tytule są na liście
+nierozróżnialne, a pomyłki nie widać po zapisie. Etykietę buduje więc warstwa relacji
+(`includes/relacje.php`, `iskt_etykiety_relacji()`), a nie widok panelu — powstaje tam,
+gdzie powstaje samo powiązanie, i jest ta sama dla każdej listy, która ją pokaże.
+
+Reguła: **dopisek pojawia się wyłącznie przy kolizji tytułów.** Właściciel ogląda tę
+listę przy każdym terminie, więc stały dopisek przy każdej pozycji byłby szumem —
+dodatkowa treść pojawia się dokładnie tam, gdzie jest do czegoś potrzebna.
+
+Kolejność dopisków idzie od najbardziej ludzkiego do najbardziej technicznego:
+
+1. **status** (`szkic`, `do przejrzenia`, `prywatne`, `zaplanowane`) — najczęstsza
+   przyczyna bliźniaczych tytułów to robocza kopia obok opublikowanej,
+2. **slug** — właściciel rozpozna go z adresu strony szkolenia,
+3. **`#ID`** — dopiero gdy tamte dwa nie rozróżniły pozycji (np. dwa szkice bez sluga).
+
+Trzeci krok domyka gwarancję: funkcja zwraca etykiety parami różne dla każdej listy.
+Rozważane i odrzucone: sam identyfikator numeryczny — rozróżnia rekordy w bazie, ale
+nie mówi właścicielowi, o które szkolenie chodzi.
+
+Publicznych tytułów szkoleń to nie dotyka — dopisek żyje wyłącznie na liście wyboru
+w panelu. Kolumna „Szkolenie” na liście terminów zostaje bez zmian: tam każdy wiersz
+prowadzi odnośnikiem do konkretnego wpisu, więc pomyłki nie ma czym utrwalić.
+
 ## 3. Sposób edycji pól i treści
 
 ### 3.1. Rekomendacja: ACF Pro — wymaga decyzji zakupowej ISKT

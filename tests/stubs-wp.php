@@ -70,6 +70,65 @@ class WP_Term {
 }
 
 /**
+ * Atrapa `WP_Post` w zakresie pól czytanych przy budowaniu etykiet powiązań.
+ *
+ * Jak przy `WP_Term`: tylko te pola, które testowany kod naprawdę czyta.
+ */
+// phpcs:ignore Generic.Files.OneObjectStructurePerFile.MultipleFound
+class WP_Post {
+	/**
+	 * Identyfikator wpisu.
+	 *
+	 * @var int
+	 */
+	public int $ID;
+
+	/**
+	 * Tytuł wpisu.
+	 *
+	 * @var string
+	 */
+	public string $post_title;
+
+	/**
+	 * Slug wpisu.
+	 *
+	 * @var string
+	 */
+	public string $post_name;
+
+	/**
+	 * Status wpisu.
+	 *
+	 * @var string
+	 */
+	public string $post_status;
+
+	/**
+	 * Typ wpisu. Uzupełnia go atrapa `get_post()` z rejestru `iskt_test_typy`.
+	 *
+	 * Pole jest zadeklarowane, a nie dopisywane w locie: od PHP 8.2 własność
+	 * nadana dynamicznie wypisuje ostrzeżenie i test przestaje być czytelny.
+	 *
+	 * @var string
+	 */
+	public string $post_type = '';
+
+	/**
+	 * @param int    $id     Identyfikator.
+	 * @param string $tytul  Tytuł.
+	 * @param string $slug   Slug.
+	 * @param string $status Status.
+	 */
+	public function __construct( int $id, string $tytul, string $slug = '', string $status = 'publish' ) {
+		$this->ID          = $id;
+		$this->post_title  = $tytul;
+		$this->post_name   = $slug;
+		$this->post_status = $status;
+	}
+}
+
+/**
  * Rejestr pól używany przez atrapę `get_post_meta()`.
  *
  * @var array<int, array<string, mixed>>
