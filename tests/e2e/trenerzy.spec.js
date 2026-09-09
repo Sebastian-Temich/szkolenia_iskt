@@ -13,6 +13,7 @@
  * nie zderza się z pierwszym.
  */
 const { test, expect } = require('@playwright/test');
+const { execFileSync } = require('child_process');
 const {
   base,
   zaloguj,
@@ -293,4 +294,18 @@ test('szkolenie wycofane z publikacji znika z profilu trenera', async ({ page })
 
   await page.setViewportSize({ width: 1440, height: 900 });
   await page.screenshot({ path: `${shots}/profil-po-wycofaniu-1440.png`, fullPage: true });
+});
+
+/*
+ * Trenerzy i szkolenie z tego testu powstają klikaniem w panelu, więc nie przechodzą
+ * przez żaden skrypt zasiewu i nie dostają pola `_iskt_demo` same z siebie. Domykamy
+ * to po przebiegu: bez tego wpis „Demo — …” zostawałby w bazie niewidoczny dla ekranu
+ * „Szkolenia → Dane demonstracyjne” (zadanie 12, `docs/DANE-DEMONSTRACYJNE.md`).
+ */
+test.afterAll(() => {
+  execFileSync(
+    'npx',
+    ['@wordpress/env', 'run', 'cli', 'wp', 'eval-file', 'wp-content/iskt-tests/e2e/oznacz-demo.php'],
+    { stdio: 'inherit' }
+  );
 });

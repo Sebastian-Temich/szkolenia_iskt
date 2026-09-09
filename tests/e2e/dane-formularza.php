@@ -10,7 +10,9 @@
  * dokładać kolejne kopie.
  *
  * Tytuły zaczynają się od „Demo —”, bo §9 zabrania przedstawiania niezatwierdzonych
- * treści jako oferty ISKT.
+ * treści jako oferty ISKT. Rozpoznawalne programowo oznaczenie to jednak pole
+ * `_iskt_demo`, które zakłada `iskt_test_zapewnij_wpis()` — po nim ekran
+ * „Szkolenia → Dane demonstracyjne” usuwa te wpisy jednym działaniem (zadanie 12).
  *
  * Bez `declare( strict_types = 1 )`: `wp eval-file` wykonuje treść przez `eval()`,
  * a deklaracja musi być pierwszą instrukcją skryptu.
@@ -22,8 +24,15 @@ if ( ! defined( 'WP_CLI' ) ) {
 	exit( 1 );
 }
 
+if ( ! function_exists( 'iskt_oznacz_demo' ) ) {
+	WP_CLI::error( 'Wtyczka iskt-szkolenia-core nie jest aktywna — dane wpadłyby do bazy bez oznaczenia demonstracyjnego.' );
+}
+
 /**
  * Zwraca identyfikator wpisu o podanym slugu, tworząc go, gdy nie istnieje.
+ *
+ * Oznaczenie demonstracyjne zakładamy tutaj, a nie w wywołaniach: pojedyncze
+ * miejsce zapisu nie pozwala dołożyć wpisu, który wymknie się spisowi.
  *
  * @param string $slug  Slug wpisu.
  * @param string $typ   Typ treści.
@@ -46,10 +55,16 @@ function iskt_test_zapewnij_wpis( $slug, $typ, $tytul, $tresc = '' ) {
 
 		wp_update_post( $dane );
 
+		iskt_oznacz_demo( (int) $istniejacy->ID );
+
 		return (int) $istniejacy->ID;
 	}
 
-	return (int) wp_insert_post( $dane );
+	$iskt_nowy = (int) wp_insert_post( $dane );
+
+	iskt_oznacz_demo( $iskt_nowy );
+
+	return $iskt_nowy;
 }
 
 $iskt_szkolenie = iskt_test_zapewnij_wpis(

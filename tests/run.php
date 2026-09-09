@@ -19,6 +19,7 @@ require_once __DIR__ . '/stubs-wp.php';
 const ISKT_CPT_SZKOLENIE         = 'iskt_szkolenie';
 const ISKT_CPT_TRENER            = 'iskt_trener';
 const ISKT_CPT_TERMIN            = 'iskt_termin';
+const ISKT_CPT_ZGLOSZENIE        = 'iskt_zgloszenie';
 const ISKT_TAX_KATEGORIA         = 'iskt_kategoria';
 const ISKT_TAX_FORMA             = 'iskt_forma';
 const ISKT_META_TRENERZY         = '_iskt_trenerzy';
@@ -38,6 +39,7 @@ require_once $sciezka . 'kategorie.php';
 require_once $sciezka . 'odbiorca.php';
 require_once $sciezka . 'prezentacja.php';
 require_once $sciezka . 'teksty.php';
+require_once $sciezka . 'demo.php';
 require_once $sciezka . 'formularz.php';
 require_once $sciezka . 'katalog.php';
 
@@ -1102,6 +1104,141 @@ sprawdz(
 );
 
 sprawdz( 'adres odbiorcy zgłoszeń nie jest wpisany w kod', 'szkolenia@iskt.pl', iskt_tekst( 'kontakt_email' ) );
+
+// --- Dane demonstracyjne (zadanie 12) --------------------------------------
+
+/*
+ * Oznaczenie ma dokładnie dwa stany. Trzeci — wartość, której nie przewidzieliśmy —
+ * sterowałby kasowaniem treści, więc sanityzacja musi go sprowadzić do jednego z dwóch.
+ */
+sprawdz( 'jedynka jako ciąg jest oznaczeniem', '1', iskt_sanitize_demo( '1' ) );
+sprawdz( 'jedynka jako liczba jest oznaczeniem', '1', iskt_sanitize_demo( 1 ) );
+sprawdz( 'prawda jest oznaczeniem', '1', iskt_sanitize_demo( true ) );
+sprawdz( 'pusta wartość nie jest oznaczeniem', '', iskt_sanitize_demo( '' ) );
+sprawdz( 'fałsz nie jest oznaczeniem', '', iskt_sanitize_demo( false ) );
+sprawdz( 'tablica nie wysadza sanityzacji oznaczenia', '', iskt_sanitize_demo( array( '1' ) ) );
+
+/*
+ * Najważniejsza asercja tej grupy. Gdyby „demo” znaczyło dowolną niepustą wartość,
+ * wpis z polem ustawionym na `0` zostałby skasowany razem z danymi pokazowymi.
+ */
+sprawdz( 'zero nie jest oznaczeniem', '', iskt_sanitize_demo( '0' ) );
+sprawdz( 'słowo „nie” nie jest oznaczeniem', '', iskt_sanitize_demo( 'nie' ) );
+sprawdz( 'dowolny tekst nie jest oznaczeniem', '', iskt_sanitize_demo( 'demo' ) );
+
+/*
+ * Wpisy: 11 — właściciela, 12 i 13 — demonstracyjne, 14 — z oznaczeniem wyłączonym.
+ * Rejestr pól jest wspólny dla całego pliku, więc bierzemy identyfikatory spoza
+ * zakresu używanego przez wcześniejsze grupy testów.
+ */
+$GLOBALS['iskt_test_pola'][11] = array();
+$GLOBALS['iskt_test_pola'][12] = array( ISKT_META_DEMO => '1' );
+$GLOBALS['iskt_test_pola'][13] = array( ISKT_META_DEMO => '1' );
+$GLOBALS['iskt_test_pola'][14] = array( ISKT_META_DEMO => '0' );
+
+sprawdz( 'wpis bez pola nie jest demonstracyjny', false, iskt_czy_demo( 11 ) );
+sprawdz( 'wpis z polem jest demonstracyjny', true, iskt_czy_demo( 12 ) );
+sprawdz( 'wpis z polem wyłączonym nie jest demonstracyjny', false, iskt_czy_demo( 14 ) );
+
+/*
+ * §8 obiecuje właścicielowi, że sprzątanie nie ruszy jego wpisów. Ta asercja jest
+ * dosłownym zapisem tej obietnicy: z listy wychodzą wyłącznie oznaczone.
+ */
+sprawdz(
+	'do usunięcia idą tylko wpisy oznaczone',
+	array( 12, 13 ),
+	iskt_wpisy_do_usuniecia( array( 11, 12, 13, 14 ) )
+);
+sprawdz( 'pusta lista nie daje nic do usunięcia', array(), iskt_wpisy_do_usuniecia( array() ) );
+sprawdz( 'identyfikator zerowy jest odrzucany', array(), iskt_wpisy_do_usuniecia( array( 0, -5 ) ) );
+
+/*
+ * Kategorie założone przez zasiew aktualności są danymi demonstracyjnymi tak samo
+ * jak wpisy. Bez tego po sprzątaniu zostawałoby w menu puste „Demo — …”.
+ */
+$GLOBALS['iskt_test_pola_pojec'][21] = array( ISKT_META_DEMO => '1' );
+$GLOBALS['iskt_test_pola_pojec'][22] = array();
+
+sprawdz( 'hasło taksonomii z polem jest demonstracyjne', true, iskt_czy_demo_termin( 21 ) );
+sprawdz( 'hasło taksonomii właściciela nie jest demonstracyjne', false, iskt_czy_demo_termin( 22 ) );
+
+// Spis kosza wchodzi do sprzątania: wpis w koszu dalej leży w bazie i trafiłby do eksportu.
+sprawdz( 'kosz jest objęty spisem', true, in_array( 'trash', iskt_statusy_demo(), true ) );
+
+/*
+ * Każdy typ treści katalogu musi być przeszukiwany. Test jest zabezpieczeniem na
+ * przyszłość: dołożenie typu bez dopisania go do listy dałoby dane niewidoczne
+ * dla ekranu sprzątania.
+ */
+sprawdz(
+	'spis obejmuje wszystkie typy katalogu',
+	true,
+	array() === array_diff(
+		array( ISKT_CPT_SZKOLENIE, ISKT_CPT_TRENER, ISKT_CPT_TERMIN, ISKT_CPT_ZGLOSZENIE ),
+		iskt_typy_demo()
+	)
+);
+sprawdz( 'spis obejmuje wpisy bloga', true, in_array( 'post', iskt_typy_demo(), true ) );
+sprawdz( 'spis obejmuje załączniki', true, in_array( 'attachment', iskt_typy_demo(), true ) );
+sprawdz( 'spis obejmuje kategorie wpisów', true, in_array( 'category', iskt_taksonomie_demo(), true ) );
+
+/*
+ * Oznaczenie nie może kolidować z żadnym polem katalogu — inaczej sprzątanie
+ * zabierałoby wpisy właściciela na podstawie pola, które on sam wypełnił.
+ */
+sprawdz(
+	'oznaczenie nie koliduje z polami katalogu',
+	true,
+	( static function (): bool {
+		foreach ( iskt_definicje_pol() as $pola ) {
+			if ( array_key_exists( ISKT_META_DEMO, $pola ) ) {
+				return false;
+			}
+		}
+
+		return true;
+	} )()
+);
+
+// Podsumowania. Liczby podajemy wprost, bez odmiany przez przypadki — patrz komentarz przy funkcji.
+sprawdz(
+	'podsumowanie wymienia obie grupy',
+	'Usunięto dane demonstracyjne — wpisy: 12, hasła taksonomii: 2.',
+	iskt_podsumowanie_usuwania( array( 'wpisy' => 12, 'hasla' => 2 ) )
+);
+sprawdz(
+	'pominięte pozycje trafiają do podsumowania',
+	'Usunięto dane demonstracyjne — wpisy: 3, hasła taksonomii: 0. Pominięto z braku uprawnień: 1.',
+	iskt_podsumowanie_usuwania( array( 'wpisy' => 3, 'hasla' => 0, 'pominiete' => 1 ) )
+);
+sprawdz(
+	'brak danych demonstracyjnych ma własny komunikat',
+	'Nie znaleziono danych demonstracyjnych — nie było czego usuwać.',
+	iskt_podsumowanie_usuwania( array() )
+);
+
+sprawdz(
+	'spis liczy pozycje w rozbiciu na grupy',
+	array( 'iskt_szkolenie' => 2, 'post' => 1 ),
+	iskt_policz_spis( array( 'iskt_szkolenie' => array( 'a', 'b' ), 'post' => array( 'c' ) ) )
+);
+sprawdz(
+	'suma spisu liczy wszystkie grupy',
+	3,
+	iskt_suma_spisu( array( 'iskt_szkolenie' => array( 'a', 'b' ), 'post' => array( 'c' ) ) )
+);
+sprawdz( 'pusty spis sumuje się do zera', 0, iskt_suma_spisu( array() ) );
+
+/*
+ * §9 i zakres zadania 12 rozdzielają dwa mechanizmy: usuwanie wpisów i znacznik
+ * „[do potwierdzenia: …]” w rejestrze tekstów. Ta asercja pilnuje, żeby nie zrosły
+ * się w jeden — rejestr tekstów ma przeżyć sprzątanie nietknięty.
+ */
+sprawdz(
+	'rejestr tekstów nie zna pola oznaczenia',
+	false,
+	array_key_exists( ISKT_META_DEMO, iskt_definicje_tekstow() )
+);
 
 // --- Wynik -----------------------------------------------------------------
 

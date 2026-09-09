@@ -9,10 +9,19 @@
  * Test może więc wystartować na środowisku, na którym już był, i nie zobaczy
  * dziesięciu kopii tego samego artykułu.
  *
+ * Wpisy ORAZ założone przez skrypt kategorie dostają pole `_iskt_demo` — bez
+ * oznaczenia kategorii sprzątanie z zadania 12 zostawiałoby w menu puste
+ * „Demo — Dofinansowania”. Oznaczamy także przy powtórnym uruchomieniu, żeby dane
+ * zasiane przed wprowadzeniem tego pola weszły do spisu.
+ *
  * @package ISKT\Szkolenia\Tests
  */
 
 defined( 'WP_CLI' ) || exit;
+
+if ( ! function_exists( 'iskt_oznacz_demo' ) ) {
+	WP_CLI::error( 'Wtyczka iskt-szkolenia-core nie jest aktywna — dane wpadłyby do bazy bez oznaczenia demonstracyjnego.' );
+}
 
 /** Kategoria wpisu → opis pokazywany na archiwum kategorii. */
 $iskt_kategorie = array(
@@ -27,12 +36,13 @@ foreach ( $iskt_kategorie as $iskt_nazwa => $iskt_opis ) {
 
 	if ( $iskt_istnieje instanceof WP_Term ) {
 		$iskt_termy[ $iskt_nazwa ] = (int) $iskt_istnieje->term_id;
-		continue;
+	} else {
+		$iskt_wynik = wp_insert_term( $iskt_nazwa, 'category', array( 'description' => $iskt_opis ) );
+
+		$iskt_termy[ $iskt_nazwa ] = is_array( $iskt_wynik ) ? (int) $iskt_wynik['term_id'] : 0;
 	}
 
-	$iskt_wynik = wp_insert_term( $iskt_nazwa, 'category', array( 'description' => $iskt_opis ) );
-
-	$iskt_termy[ $iskt_nazwa ] = is_array( $iskt_wynik ) ? (int) $iskt_wynik['term_id'] : 0;
+	iskt_oznacz_demo_termin( $iskt_termy[ $iskt_nazwa ] );
 }
 
 /*
@@ -69,6 +79,8 @@ foreach ( $iskt_wpisy as $iskt_wpis ) {
 	);
 
 	if ( array() !== $iskt_znalezione ) {
+		iskt_oznacz_demo( (int) $iskt_znalezione[0] );
+
 		WP_CLI::log( 'jest: ' . $iskt_wpis['tytul'] );
 		continue;
 	}
@@ -84,6 +96,8 @@ foreach ( $iskt_wpisy as $iskt_wpis ) {
 			'post_category' => array( $iskt_termy[ $iskt_wpis['kategoria'] ] ),
 		)
 	);
+
+	iskt_oznacz_demo( (int) $iskt_id );
 
 	WP_CLI::log( 'dodane: ' . $iskt_wpis['tytul'] . ' -> ' . get_permalink( $iskt_id ) );
 }

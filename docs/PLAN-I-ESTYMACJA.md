@@ -75,15 +75,15 @@ z wyglądem z załącznika oraz możliwością samodzielnego dodania i edycji sz
 
 ### M3 — gotowość do odbioru
 
-| # | Zadanie | Kompetencja | Dni |
-|---|---|---|---|
-| 11 | Dostępność i responsywność 360/768/1440, klawiatura, fokus, kontrast + pomiar wydajności | QA + frontend | 2,0 |
-| 12 | Treści demonstracyjne z jawnym oznaczeniem i mechanizmem usunięcia jednym działaniem | backend WP | 1,0 |
-| 13 | Eksport (`wp db export` + `wp-content` + ustawienia), test odtworzenia w czystym WordPressie, instrukcja migracji i wycofania | backend + dok. | 2,0 |
-| 14 | Instrukcja administracji dla właściciela | dokumentacja | 1,5 |
-| 15 | Przegląd bezpieczeństwa: uprawnienia, formularz, media, brak sekretów w paczce | security | 1,0 |
-| 16 | QA końcowe: przejście 14 kryteriów akceptacji §11 | QA | 2,0 |
-| | **Razem M3** | | **9,5** |
+| # | Zadanie | Kompetencja | Dni | Stan |
+|---|---|---|---|---|
+| 11 | Dostępność i responsywność 360/768/1440, klawiatura, fokus, kontrast + pomiar wydajności | QA + frontend | 2,0 | |
+| 12 | Treści demonstracyjne z jawnym oznaczeniem i mechanizmem usunięcia jednym działaniem | backend WP | 1,0 | **wykonane 2026-09-09** — `DANE-DEMONSTRACYJNE.md`; sprawdzone w przeglądarce |
+| 13 | Eksport (`wp db export` + `wp-content` + ustawienia), test odtworzenia w czystym WordPressie, instrukcja migracji i wycofania | backend + dok. | 2,0 | odblokowane przez zadanie 12 |
+| 14 | Instrukcja administracji dla właściciela | dokumentacja | 1,5 | |
+| 15 | Przegląd bezpieczeństwa: uprawnienia, formularz, media, brak sekretów w paczce | security | 1,0 | |
+| 16 | QA końcowe: przejście 14 kryteriów akceptacji §11 | QA | 2,0 | |
+| | **Razem M3** | | **9,5** | |
 
 ### Podsumowanie
 
@@ -205,6 +205,45 @@ na czystych danych. Drugi przebieg tworzy szkolenie o identycznym tytule, a term
 trafia do niewłaściwej kopii — główny test odbiorowy M1 daje wtedy fałszywy błąd.
 Trafiło do QA razem z pytaniem, czy właściciel nie ma tego samego problemu przy
 wyborze szkolenia dla terminu.
+
+## 5b. M3 — zadanie 12 (2026-09-09)
+
+Treści demonstracyjne mają własne oznaczenie i własny ekran usuwania.
+
+Każdy wpis i każde hasło taksonomii założone na pokaz nosi pole `_iskt_demo`.
+Prefiks „Demo —” w tytule zostaje jako oznaczenie dla człowieka (§9), ale
+**decyduje pole** — zmiana tytułu nie wyprowadza wpisu ze spisu, a wpis właściciela
+nazwany przypadkiem „Demo — …” nie zostanie skasowany. Odrzucone warianty
+(taksonomia, opcja ze spisem identyfikatorów) i uzasadnienie:
+`DANE-DEMONSTRACYJNE.md` §2.
+
+Właściciel dostaje dwie rzeczy: plakietkę **„Dane demonstracyjne”** na listach
+w panelu — natywnym mechanizmem, tym samym, którym WordPress pokazuje „Szkic” —
+oraz ekran **Szkolenia → Dane demonstracyjne** z imiennym spisem i jednym
+zgłoszeniem formularza, które kasuje wszystko naraz.
+
+Trzy decyzje warte odnotowania przy odbiorze:
+
+- **kasujemy z pominięciem kosza.** Kosz zostawiłby te same wpisy w bazie,
+  a paczka przekazania z zadania 13 powstaje z eksportu bazy;
+- **sprzątanie nie dotyka opcji.** Rejestr tekstów globalnych i znacznik
+  `[do potwierdzenia: …]` to osobny mechanizm i przeżywają nietknięte;
+- **zasiewy oznaczają swoje dane same**, a skrypty przerywają z błędem przy
+  nieaktywnej wtyczce. Testy klikające w panelu (`odbior-m1`, `trenerzy`) domykają
+  oznaczenie po przebiegu — inaczej wpis powstały „ręcznie” wymykałby się spisowi.
+
+W środowisku roboczym leżało 95 wpisów i 2 kategorie bez żadnego spisu; jeden
+przebieg `oznacz-demo.php` wciągnął je wszystkie.
+
+**Weryfikacja:** `php tests/run.php` — 261 asercji (30 nowych), w tym dosłowny zapis
+obietnicy z §8: z listy czterech wpisów do usunięcia idą wyłącznie dwa oznaczone.
+Playwright `tests/e2e/dane-demonstracyjne.spec.js` — 6/6: właściciel zakłada własne
+szkolenie, kasuje 18 pozycji demonstracyjnych jednym zgłoszeniem formularza, po czym
+jego wpis, kategorie startowe i teksty serwisu stoją nietknięte, a widoki publiczne
+nie pokazują pustych sekcji ani błędów. Test sam odtwarza dane po przebiegu —
+środowisko dzielą inne zadania ISK-17.
+
+To zadanie odblokowuje zadanie 13: paczka przekazania powstaje na czystych danych.
 
 ## 6. Czego estymacja NIE zawiera
 

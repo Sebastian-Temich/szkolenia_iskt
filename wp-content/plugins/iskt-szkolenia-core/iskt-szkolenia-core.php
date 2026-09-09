@@ -59,6 +59,7 @@ require_once ISKT_CORE_DIR . '/includes/terminy.php';
 require_once ISKT_CORE_DIR . '/includes/prezentacja.php';
 require_once ISKT_CORE_DIR . '/includes/katalog.php';
 require_once ISKT_CORE_DIR . '/includes/teksty.php';
+require_once ISKT_CORE_DIR . '/includes/demo.php';
 require_once ISKT_CORE_DIR . '/includes/odbiorca.php';
 require_once ISKT_CORE_DIR . '/includes/formularz.php';
 require_once ISKT_CORE_DIR . '/includes/bloki.php';
@@ -68,6 +69,7 @@ if ( is_admin() ) {
 	require_once ISKT_CORE_DIR . '/includes/admin/pola.php';
 	require_once ISKT_CORE_DIR . '/includes/admin/kolumny.php';
 	require_once ISKT_CORE_DIR . '/includes/admin/teksty.php';
+	require_once ISKT_CORE_DIR . '/includes/admin/demo.php';
 }
 
 register_activation_hook( ISKT_CORE_FILE, 'iskt_on_activate' );

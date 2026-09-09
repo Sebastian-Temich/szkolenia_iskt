@@ -10,6 +10,7 @@
  * Sprawdzamy przy okazji §4.4: termin zakończony nie może być pokazany jako nadchodzący.
  */
 const { test, expect } = require('@playwright/test');
+const { execFileSync } = require('child_process');
 
 const base = 'http://localhost:8888';
 const shots = 'qa-artifacts/isk-17-m1-odbior';
@@ -333,4 +334,18 @@ test('wyróżnione szkolenie pojawia się na stronie głównej', async ({ page }
 
   await page.setViewportSize({ width: 1440, height: 900 });
   await page.screenshot({ path: `${shots}/strona-glowna-z-wyroznionym-1440.png`, fullPage: true });
+});
+
+/*
+ * Trener, szkolenie i terminy z tego testu powstają klikaniem w panelu — celowo,
+ * bo tylko to dowodzi kryterium §11 pkt 2. Skutkiem ubocznym jest to, że żaden
+ * skrypt zasiewu ich nie widzi, więc oznaczenie demonstracyjne zakładamy po
+ * przebiegu (zadanie 12, `docs/DANE-DEMONSTRACYJNE.md`).
+ */
+test.afterAll(() => {
+  execFileSync(
+    'npx',
+    ['@wordpress/env', 'run', 'cli', 'wp', 'eval-file', 'wp-content/iskt-tests/e2e/oznacz-demo.php'],
+    { stdio: 'inherit' }
+  );
 });

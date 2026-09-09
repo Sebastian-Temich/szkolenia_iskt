@@ -262,6 +262,28 @@ function get_post_meta( $post_id, $klucz = '', $single = false ) {
 }
 
 /**
+ * Rejestr pól haseł taksonomii używany przez atrapę `get_term_meta()`.
+ *
+ * @var array<int, array<string, mixed>>
+ */
+$GLOBALS['iskt_test_pola_pojec'] = array();
+
+/**
+ * Zwraca pole hasła taksonomii z rejestru testowego.
+ *
+ * @param int    $term_id Identyfikator hasła.
+ * @param string $klucz   Nazwa pola.
+ * @param bool   $single  Czy zwrócić pojedynczą wartość.
+ *
+ * @return mixed
+ */
+function get_term_meta( $term_id, $klucz = '', $single = false ) {
+	unset( $single );
+
+	return $GLOBALS['iskt_test_pola_pojec'][ (int) $term_id ][ $klucz ] ?? '';
+}
+
+/**
  * Odwzorowuje `__()` — tłumaczenia nie wpływają na testowaną logikę.
  *
  * @param string $tekst  Tekst.

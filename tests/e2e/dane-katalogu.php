@@ -12,7 +12,10 @@
  * tworzyć kolejne kopie. Powtórne uruchomienie testu daje ten sam katalog.
  *
  * Każdy tytuł zaczyna się od „Demo —”, bo §9 zabrania przedstawiania
- * niezatwierdzonych treści jako oferty ISKT.
+ * niezatwierdzonych treści jako oferty ISKT. Tytuł jest jednak tylko podpowiedzią
+ * dla człowieka — właściwym oznaczeniem jest pole `_iskt_demo`, ustawiane niżej
+ * przez `iskt_oznacz_demo()`. Dzięki niemu ekran „Szkolenia → Dane demonstracyjne”
+ * zna ten katalog bez zgadywania po tytule (zadanie 12, `docs/DANE-DEMONSTRACYJNE.md`).
  *
  * Bez `declare( strict_types = 1 )` wbrew regule reszty repozytorium: `wp eval-file`
  * wykonuje treść pliku przez `eval()`, a deklaracja typów musi być pierwszą
@@ -23,6 +26,10 @@
 
 if ( ! defined( 'WP_CLI' ) ) {
 	exit( 1 );
+}
+
+if ( ! function_exists( 'iskt_oznacz_demo' ) ) {
+	WP_CLI::error( 'Wtyczka iskt-szkolenia-core nie jest aktywna — dane wpadłyby do bazy bez oznaczenia demonstracyjnego.' );
 }
 
 /**
@@ -167,6 +174,8 @@ foreach ( $iskt_katalog as $iskt_pozycja ) {
 	if ( is_wp_error( $iskt_id ) ) {
 		WP_CLI::error( 'Nie udało się zapisać szkolenia ' . $iskt_pozycja['slug'] . ': ' . $iskt_id->get_error_message() );
 	}
+
+	iskt_oznacz_demo( (int) $iskt_id );
 
 	wp_set_object_terms( (int) $iskt_id, array( $iskt_pozycja['kategoria'] ), 'iskt_kategoria', false );
 	wp_set_object_terms( (int) $iskt_id, array( $iskt_pozycja['forma'] ), 'iskt_forma', false );
