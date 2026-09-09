@@ -60,11 +60,11 @@ $iskt_czytaj    = iskt_tekst_motywu( 'aktualnosci_czytaj' );
 			<?php endif; ?>
 		</p>
 
-		<h3 class="iskt-card__title">
+		<h2 class="iskt-card__title">
 			<a class="iskt-card__link" href="<?php echo esc_url( $iskt_adres ); ?>">
 				<?php echo esc_html( get_the_title( $iskt_wpis ) ); ?>
 			</a>
-		</h3>
+		</h2>
 
 		<?php if ( '' !== $iskt_zajawka ) : ?>
 			<p class="iskt-aktualnosc-karta__zajawka"><?php echo esc_html( wp_trim_words( $iskt_zajawka, 24, '…' ) ); ?></p>

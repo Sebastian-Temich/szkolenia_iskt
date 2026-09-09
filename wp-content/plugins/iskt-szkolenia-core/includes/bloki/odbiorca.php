@@ -124,6 +124,21 @@ function iskt_render_tresc_odbiorcy( array $atrybuty, string $tresc = '' ): stri
 
 	$aktywny = $wariant === iskt_odbiorca_aktywny();
 
+	/*
+	 * W dokumencie może istnieć tylko jeden znacznik h1. Nieaktywny wariant nadal
+	 * musi pozostać w DOM, aby przełącznik działał bez przeładowania, dlatego jego
+	 * h1 zachowuje semantykę nagłówka poziomu 1 przez ARIA. Po przełączeniu jest
+	 * jedynym nagłówkiem poziomu 1 widocznym dla technologii asystujących, podczas
+	 * gdy h1 poprzedniego wariantu jest ukryty razem z panelem.
+	 */
+	if ( ! $aktywny ) {
+		$tresc = preg_replace(
+			array( '/<h1\b([^>]*)>/i', '/<\/h1>/i' ),
+			array( '<div role="heading" aria-level="1"$1>', '</div>' ),
+			$tresc
+		) ?? $tresc;
+	}
+
 	return sprintf(
 		'<div %1$s data-iskt-switch-panel="%2$s"%3$s>%4$s</div>',
 		iskt_atrybuty_bloku( array( 'class' => 'iskt-odbiorca' ) ),

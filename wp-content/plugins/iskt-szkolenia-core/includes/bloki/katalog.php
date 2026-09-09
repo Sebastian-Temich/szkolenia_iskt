@@ -190,8 +190,9 @@ function iskt_render_wyroznione_szkolenia( array $atrybuty ): string {
  *
  * @param WP_Post $szkolenie         Szkolenie.
  * @param bool    $pokaz_wyroznienie Czy oznaczyć szkolenie wyróżnione.
+ * @param int     $poziom_naglowka   Poziom nagłówka tytułu karty (2 albo 3).
  */
-function iskt_karta_szkolenia( WP_Post $szkolenie, bool $pokaz_wyroznienie = false ): string {
+function iskt_karta_szkolenia( WP_Post $szkolenie, bool $pokaz_wyroznienie = false, int $poziom_naglowka = 3 ): string {
 	$id    = (int) $szkolenie->ID;
 	$adres = get_permalink( $id );
 
@@ -219,9 +220,10 @@ function iskt_karta_szkolenia( WP_Post $szkolenie, bool $pokaz_wyroznienie = fal
 		$html .= '<p class="iskt-badge iskt-badge--solid iskt-card__flag">' . esc_html( iskt_tekst( 'szkolenie_odznaka_wyroznione' ) ) . '</p>';
 	}
 
-	$html .= '<h3 class="iskt-card__title">';
+	$poziom_naglowka = 2 === $poziom_naglowka ? 2 : 3;
+	$html .= '<h' . $poziom_naglowka . ' class="iskt-card__title">';
 	$html .= '<a class="iskt-card__link" href="' . esc_url( $adres ) . '">' . esc_html( get_the_title( $id ) ) . '</a>';
-	$html .= '</h3>';
+	$html .= '</h' . $poziom_naglowka . '>';
 
 	$fakty = array_filter(
 		array(

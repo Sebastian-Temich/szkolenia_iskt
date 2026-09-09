@@ -52,7 +52,8 @@
 
   --text-primary:    var(--ink-900);
   --text-secondary:  var(--neutral-600);
-  --text-muted:      var(--neutral-500);
+  /* neutral-500 daje tylko 3,8:1 na bieli przy tekście 12–14 px. */
+  --text-muted:      var(--neutral-600);
   --text-brand:      var(--green-700);
   --text-on-dark:    var(--neutral-50);
   --text-on-brand:   #FFFFFF;

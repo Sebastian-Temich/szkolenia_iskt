@@ -1,0 +1,242 @@
+[
+  {
+    "name": "home",
+    "width": 360,
+    "url": "http://localhost:8888/",
+    "h1": 1,
+    "skips": [],
+    "unlabeled": [],
+    "scrollWidth": 360,
+    "clientWidth": 360
+  },
+  {
+    "name": "home",
+    "width": 768,
+    "url": "http://localhost:8888/",
+    "h1": 1,
+    "skips": [],
+    "unlabeled": [],
+    "scrollWidth": 768,
+    "clientWidth": 768
+  },
+  {
+    "name": "home",
+    "width": 1440,
+    "url": "http://localhost:8888/",
+    "h1": 1,
+    "skips": [],
+    "unlabeled": [],
+    "scrollWidth": 1440,
+    "clientWidth": 1440
+  },
+  {
+    "name": "katalog",
+    "width": 360,
+    "url": "http://localhost:8888/szkolenia/",
+    "h1": 1,
+    "skips": [],
+    "unlabeled": [],
+    "scrollWidth": 360,
+    "clientWidth": 360
+  },
+  {
+    "name": "katalog",
+    "width": 768,
+    "url": "http://localhost:8888/szkolenia/",
+    "h1": 1,
+    "skips": [],
+    "unlabeled": [],
+    "scrollWidth": 768,
+    "clientWidth": 768
+  },
+  {
+    "name": "katalog",
+    "width": 1440,
+    "url": "http://localhost:8888/szkolenia/",
+    "h1": 1,
+    "skips": [],
+    "unlabeled": [],
+    "scrollWidth": 1440,
+    "clientWidth": 1440
+  },
+  {
+    "name": "szkolenie",
+    "width": 360,
+    "url": "http://localhost:8888/szkolenia/demo-formularz-esg-w-praktyce/",
+    "h1": 1,
+    "skips": [],
+    "unlabeled": [],
+    "scrollWidth": 360,
+    "clientWidth": 360
+  },
+  {
+    "name": "szkolenie",
+    "width": 768,
+    "url": "http://localhost:8888/szkolenia/demo-formularz-esg-w-praktyce/",
+    "h1": 1,
+    "skips": [],
+    "unlabeled": [],
+    "scrollWidth": 768,
+    "clientWidth": 768
+  },
+  {
+    "name": "szkolenie",
+    "width": 1440,
+    "url": "http://localhost:8888/szkolenia/demo-formularz-esg-w-praktyce/",
+    "h1": 1,
+    "skips": [],
+    "unlabeled": [],
+    "scrollWidth": 1440,
+    "clientWidth": 1440
+  },
+  {
+    "name": "trenerzy",
+    "width": 360,
+    "url": "http://localhost:8888/trenerzy/",
+    "h1": 1,
+    "skips": [],
+    "unlabeled": [],
+    "scrollWidth": 360,
+    "clientWidth": 360
+  },
+  {
+    "name": "trenerzy",
+    "width": 768,
+    "url": "http://localhost:8888/trenerzy/",
+    "h1": 1,
+    "skips": [],
+    "unlabeled": [],
+    "scrollWidth": 768,
+    "clientWidth": 768
+  },
+  {
+    "name": "trenerzy",
+    "width": 1440,
+    "url": "http://localhost:8888/trenerzy/",
+    "h1": 1,
+    "skips": [],
+    "unlabeled": [],
+    "scrollWidth": 1440,
+    "clientWidth": 1440
+  },
+  {
+    "name": "trener",
+    "width": 360,
+    "url": "http://localhost:8888/trenerzy/demo-anna-kowalczyk/",
+    "h1": 1,
+    "skips": [],
+    "unlabeled": [],
+    "scrollWidth": 360,
+    "clientWidth": 360
+  },
+  {
+    "name": "trener",
+    "width": 768,
+    "url": "http://localhost:8888/trenerzy/demo-anna-kowalczyk/",
+    "h1": 1,
+    "skips": [],
+    "unlabeled": [],
+    "scrollWidth": 768,
+    "clientWidth": 768
+  },
+  {
+    "name": "trener",
+    "width": 1440,
+    "url": "http://localhost:8888/trenerzy/demo-anna-kowalczyk/",
+    "h1": 1,
+    "skips": [],
+    "unlabeled": [],
+    "scrollWidth": 1440,
+    "clientWidth": 1440
+  },
+  {
+    "name": "aktualnosci",
+    "width": 360,
+    "url": "http://localhost:8888/aktualnosci/",
+    "h1": 1,
+    "skips": [],
+    "unlabeled": [],
+    "scrollWidth": 360,
+    "clientWidth": 360
+  },
+  {
+    "name": "aktualnosci",
+    "width": 768,
+    "url": "http://localhost:8888/aktualnosci/",
+    "h1": 1,
+    "skips": [],
+    "unlabeled": [],
+    "scrollWidth": 768,
+    "clientWidth": 768
+  },
+  {
+    "name": "aktualnosci",
+    "width": 1440,
+    "url": "http://localhost:8888/aktualnosci/",
+    "h1": 1,
+    "skips": [],
+    "unlabeled": [],
+    "scrollWidth": 1440,
+    "clientWidth": 1440
+  },
+  {
+    "name": "artykul",
+    "width": 360,
+    "url": "http://localhost:8888/2026/09/09/test-dostepnosci-szkolenia/",
+    "h1": 1,
+    "skips": [],
+    "unlabeled": [],
+    "scrollWidth": 360,
+    "clientWidth": 360
+  },
+  {
+    "name": "artykul",
+    "width": 768,
+    "url": "http://localhost:8888/2026/09/09/test-dostepnosci-szkolenia/",
+    "h1": 1,
+    "skips": [],
+    "unlabeled": [],
+    "scrollWidth": 768,
+    "clientWidth": 768
+  },
+  {
+    "name": "artykul",
+    "width": 1440,
+    "url": "http://localhost:8888/2026/09/09/test-dostepnosci-szkolenia/",
+    "h1": 1,
+    "skips": [],
+    "unlabeled": [],
+    "scrollWidth": 1440,
+    "clientWidth": 1440
+  },
+  {
+    "name": "zgloszenie",
+    "width": 360,
+    "url": "http://localhost:8888/zgloszenie/",
+    "h1": 1,
+    "skips": [],
+    "unlabeled": [],
+    "scrollWidth": 360,
+    "clientWidth": 360
+  },
+  {
+    "name": "zgloszenie",
+    "width": 768,
+    "url": "http://localhost:8888/zgloszenie/",
+    "h1": 1,
+    "skips": [],
+    "unlabeled": [],
+    "scrollWidth": 768,
+    "clientWidth": 768
+  },
+  {
+    "name": "zgloszenie",
+    "width": 1440,
+    "url": "http://localhost:8888/zgloszenie/",
+    "h1": 1,
+    "skips": [],
+    "unlabeled": [],
+    "scrollWidth": 1440,
+    "clientWidth": 1440
+  }
+]

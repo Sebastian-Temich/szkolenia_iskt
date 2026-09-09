@@ -159,6 +159,13 @@ Sekcje strony szkolenia pojawiają się wyłącznie wtedy, gdy mają treść: sz
 bez wpisanego programu nie pokazuje pustego nagłówka „Program szkolenia”, a bez
 terminów — pustej listy terminów.
 
+### Kontrola M3 — dostępność i responsywność
+
+Audyt ISK-29 nie wykazał nowych odstępstw od wzorca wizualnego. Korekty poziomów
+nagłówków, pojedynczego `h1` oraz kontrastu tekstu pomocniczego realizują §7 i nie
+zmieniają przyjętej kompozycji. Dowody i wyniki Lighthouse znajdują się w
+`qa-artifacts/isk-17-m3-dostepnosc/RAPORT.md`.
+
 ---
 
 # Zadanie 7 — trenerzy: lista i profil

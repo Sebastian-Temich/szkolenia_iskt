@@ -70,7 +70,7 @@ if ( $iskt_termin instanceof WP_Term ) {
 
 						if ( $iskt_szkolenie instanceof WP_Post ) {
 							// Karta pochodzi z wtyczki i sama escape'uje każde pole (includes/bloki/katalog.php).
-							echo iskt_karta_szkolenia( $iskt_szkolenie, true ); // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped
+							echo iskt_karta_szkolenia( $iskt_szkolenie, true, 2 ); // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped
 						}
 					endwhile;
 					?>
