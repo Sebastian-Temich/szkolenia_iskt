@@ -29,6 +29,7 @@ Zlecenie: ISK-17. Docelowy hosting: SEOHost (wdrożenie poza zakresem tego zlece
 | [`docs/FORMULARZ-ZGLOSZENIOWY.md`](docs/FORMULARZ-ZGLOSZENIOWY.md) | Formularz zgłoszeniowy: walidacja, wysyłka, granice ochrony antyspamowej, pytanie o retencję |
 | [`docs/ODBIOR-M1.md`](docs/ODBIOR-M1.md) | Przejście odbiorowe M1: co kliknąć, czego jeszcze nie ma, treści do potwierdzenia |
 | [`docs/KATALOG-SZKOLEN.md`](docs/KATALOG-SZKOLEN.md) | Katalog: wyszukiwanie, filtry, paginacja, puste widoki i decyzja o indeksowaniu (§7) |
+| [`docs/ADMINISTRACJA.md`](docs/ADMINISTRACJA.md) | Instrukcja administracji dla właściciela: prowadzenie oferty z panelu, role, czego serwis nie robi (§11 pkt 13) |
 
 ## Struktura
 
