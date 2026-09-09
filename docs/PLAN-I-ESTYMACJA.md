@@ -55,10 +55,10 @@ z wyglądem z załącznika oraz możliwością samodzielnego dodania i edycji sz
 
 | # | Zadanie | Kompetencja | Dni | Stan |
 |---|---|---|---|---|
-| 1 | Środowisko `wp-env`, szkielet motywu i wtyczki, tokeny designu, lint PHP, testy sanityzacji | WP/frontend | 1,5 | **częściowo — patrz §5** |
+| 1 | Środowisko `wp-env`, szkielet motywu i wtyczki, tokeny designu, lint PHP, testy sanityzacji | WP/frontend | 1,5 | **wykonane 2026-09-09** — środowisko uruchomione, wygląd sprawdzony w przeglądarce |
 | 2 | Model danych: typy treści, taksonomie, pola natywne, uprawnienia, relacje, kolumny panelu | backend WP | 3,5 | **wykonane 2026-09-09** |
-| 3 | Motyw: siatka, typografia, nagłówek, stopka, menu, komponenty wspólne | WP/frontend | 2,5 | **wykonane 2026-09-09** — `MOTYW-KOMPONENTY.md`, `ODSTEPSTWA-OD-WZORCA.md`; wygląd niesprawdzony w przeglądarce (brak Dockera) |
-| 4 | Strona główna: wzorce bloków + bloki dynamiczne, przełącznik „Dla Ciebie”/„Dla firm”, ukrywanie pustych sekcji | WP/frontend | 4,0 | **wykonane 2026-09-09** — `STRONA-GLOWNA.md`; wygląd niesprawdzony w przeglądarce (brak Dockera) |
+| 3 | Motyw: siatka, typografia, nagłówek, stopka, menu, komponenty wspólne | WP/frontend | 2,5 | **wykonane 2026-09-09** — `MOTYW-KOMPONENTY.md`, `ODSTEPSTWA-OD-WZORCA.md`; wygląd sprawdzony w przeglądarce |
+| 4 | Strona główna: wzorce bloków + bloki dynamiczne, przełącznik „Dla Ciebie”/„Dla firm”, ukrywanie pustych sekcji | WP/frontend | 4,0 | **wykonane 2026-09-09** — `STRONA-GLOWNA.md`; wygląd sprawdzony w przeglądarce |
 | 5 | Strona szkolenia: szablon, program, korzyści, cena z jednostką i podatkiem, dofinansowanie, terminy, trenerzy | WP/frontend | 2,5 | **wykonane 2026-09-09** — `ODSTEPSTWA-OD-WZORCA.md` §8; wygląd niesprawdzony w przeglądarce (brak Dockera) |
 | | **Razem M1** | | **14,0** | |
 
@@ -92,8 +92,8 @@ z wyglądem z załącznika oraz możliwością samodzielnego dodania i edycji sz
 | M1 + M2 + M3 | 34,5 |
 | Koordynacja i przeglądy | 3,0 |
 | **Razem** | **37,5** |
-| Wykonane 2026-09-09 (zadania 2, 3, 4, 5 i część 1) | −13,0 |
-| **Pozostało** | **24,5** |
+| Wykonane 2026-09-09 (zadania 1, 2, 3, 4, 5 — cały M1) | −14,0 |
+| **Pozostało** | **23,5** |
 
 ### Kalendarz
 
@@ -157,12 +157,15 @@ Każda sekcja pojawia się wyłącznie wtedy, gdy ma treść. Terminy zakończon
 odsiewane po stronie bazy (§4.4), a powiązani trenerzy pochodzą z relacji zapisanej
 na szkoleniu, więc oba widoki pokazują to samo (§4.5). Odstępstwa: `ODSTEPSTWA-OD-WZORCA.md` §8.
 
-**Kamień milowy M1 jest kompletny po stronie kodu** — brakuje wyłącznie obejrzenia
-w przeglądarce, co wymaga uruchomienia `wp-env`.
+**Kamień milowy M1 jest kompletny i sprawdzony w przeglądarce.** Środowisko `wp-env`
+działa, a ścieżka właściciela z definicji M1 — dodanie trenera, szkolenia z programem
+i ceną, dwóch terminów oraz obejrzenie efektu na stronie — przechodzi w panelu
+od początku do końca (`tests/e2e/odbior-m1.spec.js`, 6/6 zaliczonych). Test klika
+w panelu, a nie zapisuje danych przez WP-CLI: inaczej ominąłby skrzynki metadanych
+i `save_post`, czyli dokładnie tę część, którą ma potwierdzać.
 
-Zadanie 1 pozostaje częściowe: `wp-env` nie zostało uruchomione, bo w środowisku
-wykonawczym nie działał demon Dockera. Nie blokuje to zadań 3–5 — blokuje wyłącznie
-uruchomienie i test wizualny. Patrz §7.
+Zakres przekazany do odbioru i lista rzeczy, których M1 świadomie nie zawiera:
+`ODBIOR-M1.md`.
 
 ## 6. Czego estymacja NIE zawiera
 
@@ -178,7 +181,7 @@ uruchomienie i test wizualny. Patrz §7.
 
 | Ryzyko | Wpływ | Postępowanie |
 |---|---|---|
-| Brak działającego Dockera w środowisku wykonawczym | Kod powstaje, ale nie jest uruchamiany ani oglądany | Weryfikacja przez lint i testy jednostkowe; uruchomienie `wp-env` jako pierwsza czynność po udostępnieniu środowiska. **Wymaga działania po stronie organizacji** |
+| ~~Brak działającego Dockera w środowisku wykonawczym~~ | — | **Zamknięte 2026-09-09**: Docker działa, `wp-env` uruchomione, wygląd i ścieżka redaktora sprawdzone w przeglądarce |
 | Brak zatwierdzonych treści ofertowych | Blokuje publikację, nie budowę | Budujemy na oznaczonych danych demonstracyjnych; §14 wprost na to pozwala |
 | Brak dostępu do poczty szkolenia@iskt.pl | Brak testu dostarczenia end-to-end | Test wysyłki w środowisku wewnętrznym; test docelowy dokumentowany osobno po migracji (§8) |
 | Terminy i aktualności bez wzorca wizualnego | Możliwa iteracja projektowa | Propozycja do akceptacji przed implementacją — bramka przed zadaniem 8 |

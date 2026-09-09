@@ -32,3 +32,9 @@ wp-config-local.php
 # Narzędzia
 .phpunit.result.cache
 .phpcs-cache
+
+# Wyniki uruchomień testów przeglądarkowych
+/test-results/
+
+# Spakowane paczki dowodów QA — trafiają do zgłoszenia jako załącznik, nie do repozytorium
+/qa-artifacts/*.zip

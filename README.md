@@ -3,16 +3,15 @@
 Serwis szkoleniowy **szkolenia.iskt.pl** — ISKT Greennovation.
 Zlecenie: ISK-17. Docelowy hosting: SEOHost (wdrożenie poza zakresem tego zlecenia).
 
-> **Status: realizacja M1.** ISKT zatwierdziło start 2026-09-09 w zakresie
-> opisanym w `docs/ADR-002-rewizja-zakresu-bez-platnych-zaleznosci.md`.
-> Wykonane: model danych katalogu (zadanie 2), motyw — siatka, nagłówek, stopka,
-> menu i komponenty (zadanie 3), strona główna — wzorce sekcji, bloki dynamiczne
-> i przełącznik odbiorcy (zadanie 4), strona szkolenia (zadanie 5).
-> **M1 jest kompletny po stronie kodu.** Kolejne: katalog z wyszukiwaniem
-> i filtrami (zadanie 6, M2).
->
-> Wyglądu nie obejrzano jeszcze w przeglądarce — `wp-env` nie zostało uruchomione
-> z powodu braku działającego demona Dockera w środowisku wykonawczym.
+> **Status: M1 wykonany i sprawdzony w przeglądarce — czeka na odbiór.**
+> ISKT zatwierdziło start 2026-09-09 w zakresie opisanym
+> w `docs/ADR-002-rewizja-zakresu-bez-platnych-zaleznosci.md`.
+> Wykonane: model danych katalogu (zadanie 2), motyw (zadanie 3), strona główna
+> (zadanie 4), strona szkolenia (zadanie 5) oraz środowisko `wp-env` (zadanie 1).
+> Ścieżka właściciela „dodaj trenera → szkolenie → dwa terminy → zobacz na stronie”
+> przechodzi w panelu od początku do końca: `tests/e2e/odbior-m1.spec.js`, 6/6.
+> Co obejrzeć i czego M1 jeszcze nie ma: [`docs/ODBIOR-M1.md`](docs/ODBIOR-M1.md).
+> Kolejne: katalog z wyszukiwaniem i filtrami (zadanie 6, M2).
 
 ## Dokumentacja
 
@@ -25,6 +24,7 @@ Zlecenie: ISK-17. Docelowy hosting: SEOHost (wdrożenie poza zakresem tego zlece
 | [`docs/MOTYW-KOMPONENTY.md`](docs/MOTYW-KOMPONENTY.md) | Umowa nazewnicza motywu: siatka, typografia, komponenty |
 | [`docs/STRONA-GLOWNA.md`](docs/STRONA-GLOWNA.md) | Sekcje strony głównej, bloki dynamiczne i przełącznik odbiorcy |
 | [`docs/ODSTEPSTWA-OD-WZORCA.md`](docs/ODSTEPSTWA-OD-WZORCA.md) | Rejestr odstępstw od załącznika wymagany przez §11 pkt 1 |
+| [`docs/ODBIOR-M1.md`](docs/ODBIOR-M1.md) | Przejście odbiorowe M1: co kliknąć, czego jeszcze nie ma, treści do potwierdzenia |
 
 ## Struktura
 
@@ -75,7 +75,19 @@ Panel administracyjny:
 - hasło: `password`
 
 Po starcie należy aktywować motyw `iskt-szkolenia` i wtyczkę
-`iskt-szkolenia-core`, a następnie wykonać testy wizualne opisane w `ISK-20`.
+`iskt-szkolenia-core`. Motyw sam zakłada wtedy stronę główną, ustawia ją jako
+startową i wyłącza indeksowanie — dokładnie raz na instalację.
+
+Instalacja pracuje po polsku; ustawia się to raz, bo dotyczy dat i separatora
+tysięcy na całym serwisie:
+
+```bash
+npx @wordpress/env run cli wp language core install pl_PL --activate
+npx @wordpress/env run cli wp option update date_format 'j F Y'
+npx @wordpress/env run cli wp option update time_format 'H:i'
+```
+
+Przejście odbiorowe M1 i test end-to-end: [`docs/ODBIOR-M1.md`](docs/ODBIOR-M1.md).
 
 Wymagania docelowe: PHP 8.2+, MySQL 8.0+ lub MariaDB 10.6+.
 
