@@ -116,3 +116,24 @@ Szczegóły rozwiązań: `STRONA-GLOWNA.md`.
   (`iskt_karta_szkolenia()`) jest już wspólna dla obu widoków.
 - **Ekran tekstów globalnych** — zadanie 10. Wariant domyślny odbiorcy czeka
   w opcji `iskt_odbiorca_domyslny`, gotowy do podpięcia pod Settings API.
+
+---
+
+# Zadanie 5 — strona szkolenia
+
+## 8. Odstępstwa strony szkolenia
+
+| # | Wzorzec | Co robimy | Dlaczego |
+|---|---|---|---|
+| 8.1 | Panel z ceną: duża kwota „z dofinansowaniem”, pod nią przekreślona cena pełna i dopisek „za osobę · dofinansowanie do 80%” | Jedna kwota — ta wpisana przez właściciela — z jednostką i sposobem prezentowania podatku | Jak 6.1: §4.3 zabrania wyliczania ceny po dofinansowaniu. Dopisek „do 80%” jest dodatkowo treścią do potwierdzenia (§9) |
+| 8.2 | Sekcja „Prowadzący” z **wpisanym na stałe** „Ekspert ISKT · Praktyk z 10+ lat doświadczenia” — ten sam tekst przy każdym szkoleniu | Prawdziwi trenerzy z relacji szkolenie–trener, ze zdjęciem, rolą i odnośnikiem do profilu | §4.5 wymaga spójnej prezentacji powiązań w obu widokach. Powiązanie zapisujemy tylko na szkoleniu, profil trenera wylicza swoje szkolenia zapytaniem zwrotnym |
+| 8.3 | „Najbliższe terminy” jako **trzy teksty wpisane w kod** (`terms: [...]`), identyczne dla wszystkich szkoleń | Terminy z modelu danych: data lub zakres, tryb, miejsce, status zgłoszeń. Terminy zakończone odsiewane po stronie bazy | §4.4 wprost: zakończony termin nie może być pokazywany jako nadchodzący. Lokalizacja przy terminie online jest pomijana, żeby nie wyglądała jak adres, pod który trzeba przyjechać |
+| 8.4 | Przycisk „Zapisz się na szkolenie” | „Zapytaj o to szkolenie” plus zdanie: wysłanie zapytania nie rezerwuje miejsca | §5: zgłoszenie nie jest automatycznym potwierdzeniem rezerwacji. „Zapisz się” obiecuje rezerwację, której system nie robi. Zdanie stoi przy przycisku, nie w regulaminie — tam, gdzie ktoś je przeczyta przed kliknięciem |
+| 8.5 | Plakietka „Dofinansowanie do 80%” przy tytule | Plakietka „Możliwe dofinansowanie”; konkretne warunki w polu tekstowym szkolenia | §9 wymienia procenty wsparcia jako treść do potwierdzenia. Plakietka mówi, że szkolenie kwalifikuje się do wsparcia — nie obiecuje poziomu, którego nikt nie przyznał |
+| 8.6 | Program szkolenia jako kafelki z ręcznie wpisanym numerem (`n: '01'`) | Lista uporządkowana `<ol>`; numer rysuje licznik CSS | Numeracja modułów jest znaczeniem, nie ozdobą. Po usunięciu modułu w panelu numery same się poprawiają, a czytnik ekranu ogłasza „lista, 4 elementy” |
+| 8.7 | Ścieżka „← Katalog / kategoria” przełączająca stan komponentu | Zwykłe odnośniki do archiwum i do archiwum kategorii | Działa środkowy przycisk myszy, „otwórz w nowej karcie” i przycisk „Wstecz” (§11 pkt 6) |
+| 8.8 | Przycisk zgłoszenia otwiera formularz na stronie głównej | Odnośnik do sekcji kontaktu na stronie głównej | Formularz z walidacją serwerową to zadanie 9. Odnośnik prowadzi do czegoś, co istnieje — zaślepka „#” byłaby złamaniem §11 pkt 10 nawet na etapie pośrednim |
+
+Sekcje strony szkolenia pojawiają się wyłącznie wtedy, gdy mają treść: szkolenie
+bez wpisanego programu nie pokazuje pustego nagłówka „Program szkolenia”, a bez
+terminów — pustej listy terminów.

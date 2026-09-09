@@ -129,6 +129,44 @@ function iskt_poziom_szkolenia( int $szkolenie_id ): string {
 }
 
 /**
+ * Składa termin w komplet danych do wyświetlenia.
+ *
+ * Jedno miejsce opisu terminu, wspólne dla strony szkolenia i listy wyboru
+ * w formularzu zgłoszeniowym (zadanie 9) — dzięki temu odwiedzający wybiera
+ * w formularzu dokładnie ten sam termin, który przeczytał na stronie.
+ *
+ * @param int $termin_id Identyfikator terminu.
+ *
+ * @return array{etykieta: string, miejsce: string, status: string, status_klucz: string, zamkniety: bool}
+ */
+function iskt_opis_terminu( int $termin_id ): array {
+	$status_klucz = (string) get_post_meta( $termin_id, '_iskt_status_zgloszen', true );
+	$statusy      = iskt_slownik_statusow_zgloszen();
+
+	$tryb    = (string) get_post_meta( $termin_id, '_iskt_tryb', true );
+	$tryby   = iskt_slownik_trybow();
+	$miejsce = $tryby[ $tryb ] ?? '';
+
+	$lokalizacja = (string) get_post_meta( $termin_id, '_iskt_lokalizacja', true );
+
+	/*
+	 * Lokalizacja ma sens tylko przy zajęciach na miejscu. Przy terminie online
+	 * bywa wpisana omyłkowo i wyglądałaby jak adres, pod który trzeba przyjechać.
+	 */
+	if ( '' !== $lokalizacja && 'online' !== $tryb ) {
+		$miejsce = '' !== $miejsce ? $miejsce . ' · ' . $lokalizacja : $lokalizacja;
+	}
+
+	return array(
+		'etykieta'     => iskt_etykieta_terminu( $termin_id ),
+		'miejsce'      => $miejsce,
+		'status'       => $statusy[ $status_klucz ] ?? '',
+		'status_klucz' => isset( $statusy[ $status_klucz ] ) ? $status_klucz : '',
+		'zamkniety'    => 'zamkniete' === $status_klucz,
+	);
+}
+
+/**
  * Zwraca symbol graficzny dla identyfikatora zapisanego przy kategorii.
  *
  * Wtyczka zna tylko identyfikator (patrz `includes/kategorie.php`); kształt

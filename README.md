@@ -7,7 +7,9 @@ Zlecenie: ISK-17. Docelowy hosting: SEOHost (wdrożenie poza zakresem tego zlece
 > opisanym w `docs/ADR-002-rewizja-zakresu-bez-platnych-zaleznosci.md`.
 > Wykonane: model danych katalogu (zadanie 2), motyw — siatka, nagłówek, stopka,
 > menu i komponenty (zadanie 3), strona główna — wzorce sekcji, bloki dynamiczne
-> i przełącznik odbiorcy (zadanie 4). Kolejne: strona szkolenia (zadanie 5).
+> i przełącznik odbiorcy (zadanie 4), strona szkolenia (zadanie 5).
+> **M1 jest kompletny po stronie kodu.** Kolejne: katalog z wyszukiwaniem
+> i filtrami (zadanie 6, M2).
 >
 > Wyglądu nie obejrzano jeszcze w przeglądarce — `wp-env` nie zostało uruchomione
 > z powodu braku działającego demona Dockera w środowisku wykonawczym.
@@ -16,7 +18,7 @@ Zlecenie: ISK-17. Docelowy hosting: SEOHost (wdrożenie poza zakresem tego zlece
 
 | Dokument | Zawartość |
 |---|---|
-| [`docs/PLAN-I-ESTYMACJA.md`](docs/PLAN-I-ESTYMACJA.md) | Podział pracy, estymacja 37,5 dnia (pozostało 27,0), ryzyka, bramki |
+| [`docs/PLAN-I-ESTYMACJA.md`](docs/PLAN-I-ESTYMACJA.md) | Podział pracy, estymacja 37,5 dnia (pozostało 24,5), ryzyka, bramki |
 | [`docs/ADR-001-architektura.md`](docs/ADR-001-architektura.md) | Decyzja architektoniczna wymagana przez §6 |
 | [`docs/PROTOTYP-INWENTARYZACJA.md`](docs/PROTOTYP-INWENTARYZACJA.md) | Inwentaryzacja załączników i braki prototypu względem zlecenia |
 | [`docs/MATERIALY-I-DECYZJE.md`](docs/MATERIALY-I-DECYZJE.md) | Czego potrzebujemy od ISKT i treści do potwierdzenia |

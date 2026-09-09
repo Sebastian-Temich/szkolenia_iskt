@@ -358,3 +358,18 @@ function get_the_terms( int $post_id, string $taksonomia ) {
 
 	return array() === $terminy ? false : $terminy;
 }
+
+/**
+ * Odwzorowuje `wp_date()` w zakresie potrzebnym testom etykiety terminu.
+ *
+ * Oryginał uwzględnia strefę czasową i tłumaczenia; tutaj wystarczy format,
+ * bo testy sprawdzają składanie opisu terminu, a nie lokalizację dat.
+ *
+ * @param string   $format     Format daty.
+ * @param int|null $znacznik   Znacznik czasu.
+ *
+ * @return string|false
+ */
+function wp_date( string $format, ?int $znacznik = null ) {
+	return gmdate( $format, $znacznik ?? 0 );
+}

@@ -331,6 +331,42 @@ sprawdz( 'brak form daje pustą listę', array(), iskt_formy_szkolenia( 21 ) );
 sprawdz( 'kategoria wybierana alfabetycznie, żeby wynik był powtarzalny', 'AI', iskt_kategoria_szkolenia( 20 )->name );
 sprawdz( 'brak kategorii zwraca null', null, iskt_kategoria_szkolenia( 21 ) );
 
+// --- Opis terminu na stronie szkolenia -------------------------------------
+
+$GLOBALS['iskt_test_opcje']['date_format'] = 'Y-m-d';
+$GLOBALS['iskt_test_pola']                 = array(
+	30 => array(
+		'_iskt_data_start'      => '2026-10-03',
+		'_iskt_data_koniec'     => '2026-10-04',
+		'_iskt_tryb'            => 'stacjonarnie',
+		'_iskt_lokalizacja'     => 'Żory',
+		'_iskt_status_zgloszen' => 'otwarte',
+	),
+	31 => array(
+		'_iskt_data_start'      => '2026-10-03',
+		'_iskt_tryb'            => 'online',
+		'_iskt_lokalizacja'     => 'Żory',
+		'_iskt_status_zgloszen' => 'zamkniete',
+	),
+	32 => array(
+		'_iskt_termin_indywidualny' => true,
+		'_iskt_status_zgloszen'     => 'nieznany',
+	),
+);
+
+$iskt_termin = iskt_opis_terminu( 30 );
+sprawdz( 'zakres dat składany z obu pól', '2026-10-03 – 2026-10-04', $iskt_termin['etykieta'] );
+sprawdz( 'miejsce łączy tryb i lokalizację', 'Stacjonarnie · Żory', $iskt_termin['miejsce'] );
+sprawdz( 'status otwartych zgłoszeń nie jest zamknięty', false, $iskt_termin['zamkniety'] );
+
+$iskt_online = iskt_opis_terminu( 31 );
+sprawdz( 'przy terminie online lokalizacja nie udaje adresu', 'Online', $iskt_online['miejsce'] );
+sprawdz( 'zamknięte zgłoszenia rozpoznane', true, $iskt_online['zamkniety'] );
+
+$iskt_indywidualny = iskt_opis_terminu( 32 );
+sprawdz( 'termin indywidualny ma własną etykietę', 'Termin ustalany indywidualnie', $iskt_indywidualny['etykieta'] );
+sprawdz( 'nieznany status nie jest wyświetlany', '', $iskt_indywidualny['status'] );
+
 // --- Wynik -----------------------------------------------------------------
 
 printf( "\n%d przeszło, %d nie przeszło\n", $GLOBALS['iskt_ok'], $GLOBALS['iskt_bledy'] );

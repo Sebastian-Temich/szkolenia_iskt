@@ -59,7 +59,7 @@ z wyglądem z załącznika oraz możliwością samodzielnego dodania i edycji sz
 | 2 | Model danych: typy treści, taksonomie, pola natywne, uprawnienia, relacje, kolumny panelu | backend WP | 3,5 | **wykonane 2026-09-09** |
 | 3 | Motyw: siatka, typografia, nagłówek, stopka, menu, komponenty wspólne | WP/frontend | 2,5 | **wykonane 2026-09-09** — `MOTYW-KOMPONENTY.md`, `ODSTEPSTWA-OD-WZORCA.md`; wygląd niesprawdzony w przeglądarce (brak Dockera) |
 | 4 | Strona główna: wzorce bloków + bloki dynamiczne, przełącznik „Dla Ciebie”/„Dla firm”, ukrywanie pustych sekcji | WP/frontend | 4,0 | **wykonane 2026-09-09** — `STRONA-GLOWNA.md`; wygląd niesprawdzony w przeglądarce (brak Dockera) |
-| 5 | Strona szkolenia: szablon, program, korzyści, cena z jednostką i podatkiem, dofinansowanie, terminy, trenerzy | WP/frontend | 2,5 | do zrobienia |
+| 5 | Strona szkolenia: szablon, program, korzyści, cena z jednostką i podatkiem, dofinansowanie, terminy, trenerzy | WP/frontend | 2,5 | **wykonane 2026-09-09** — `ODSTEPSTWA-OD-WZORCA.md` §8; wygląd niesprawdzony w przeglądarce (brak Dockera) |
 | | **Razem M1** | | **14,0** | |
 
 ### M2 — pełny serwis
@@ -92,8 +92,8 @@ z wyglądem z załącznika oraz możliwością samodzielnego dodania i edycji sz
 | M1 + M2 + M3 | 34,5 |
 | Koordynacja i przeglądy | 3,0 |
 | **Razem** | **37,5** |
-| Wykonane 2026-09-09 (zadania 2, 3, 4 i część 1) | −10,5 |
-| **Pozostało** | **27,0** |
+| Wykonane 2026-09-09 (zadania 2, 3, 4, 5 i część 1) | −13,0 |
+| **Pozostało** | **24,5** |
 
 ### Kalendarz
 
@@ -124,7 +124,7 @@ Zadanie 2 — model danych — jest wykonane i zweryfikowane:
   ustalanego indywidualnie;
 - kolumny list w panelu: szkolenie, data realizacji z oznaczeniem zakończonego, tryb, status zgłoszeń.
 
-**Weryfikacja:** `php -l` na wszystkich plikach oraz 79 asercji w `tests/run.php`
+**Weryfikacja:** `php -l` na wszystkich plikach oraz 86 asercji w `tests/run.php`
 (sanityzacja dat, cen, list, programu, słowników, relacji trenerów, rozróżnienie
 terminów zakończonych). Testy uruchamiają prawdziwy kod wtyczki, nie jego kopię.
 
@@ -147,6 +147,18 @@ Zadanie 4 — strona główna — dostarcza:
 
 Rozwiązania i uzasadnienia: `STRONA-GLOWNA.md`. Odstępstwa od załącznika,
 w tym rezygnacja z wyliczanej ceny po dofinansowaniu: `ODSTEPSTWA-OD-WZORCA.md` §6.
+
+Zadanie 5 — strona szkolenia — dostarcza `single-iskt_szkolenie.php` z trzema
+częściami szablonu: nagłówkiem (ścieżka powrotu, plakietki, tytuł, zajawka, fakty),
+treścią (opis, korzyści, program jako lista uporządkowana, grupa docelowa)
+i panelem bocznym (cena, terminy, trenerzy, dofinansowanie).
+
+Każda sekcja pojawia się wyłącznie wtedy, gdy ma treść. Terminy zakończone są
+odsiewane po stronie bazy (§4.4), a powiązani trenerzy pochodzą z relacji zapisanej
+na szkoleniu, więc oba widoki pokazują to samo (§4.5). Odstępstwa: `ODSTEPSTWA-OD-WZORCA.md` §8.
+
+**Kamień milowy M1 jest kompletny po stronie kodu** — brakuje wyłącznie obejrzenia
+w przeglądarce, co wymaga uruchomienia `wp-env`.
 
 Zadanie 1 pozostaje częściowe: `wp-env` nie zostało uruchomione, bo w środowisku
 wykonawczym nie działał demon Dockera. Nie blokuje to zadań 3–5 — blokuje wyłącznie
