@@ -65,8 +65,10 @@ async function usunPozostalosci(page, postType, szukanyTytul) {
       return;
     }
 
-    await wiersz.locator('a.submitdelete').click({ force: true });
-    await page.waitForLoadState('domcontentloaded');
+    // Akcja wiersza jest ukryta do czasu hovera. Przejście pod jej podpisany
+    // nonce'em adres jest stabilniejsze od wymuszania kliknięcia poza viewportem.
+    const adresKosza = await wiersz.locator('a.submitdelete').getAttribute('href');
+    await page.goto(adresKosza);
   }
 }
 
