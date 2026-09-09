@@ -29,7 +29,7 @@ $iskt_adres_zgloszenia = home_url( '/#kontakt' );
 <div class="iskt-card iskt-card--padded iskt-panel-oferta">
 
 	<?php if ( '' !== $iskt_cena['kwota'] ) : ?>
-		<p class="iskt-eyebrow"><?php esc_html_e( 'Cena szkolenia', 'iskt-szkolenia' ); ?></p>
+		<p class="iskt-eyebrow"><?php echo esc_html( iskt_tekst( 'szkolenie_naglowek_cena' ) ); ?></p>
 
 		<p class="iskt-price iskt-price--lg">
 			<span class="iskt-price__value"><?php echo esc_html( $iskt_cena['kwota'] ); ?></span>
@@ -42,7 +42,7 @@ $iskt_adres_zgloszenia = home_url( '/#kontakt' );
 
 	<p>
 		<a class="iskt-button iskt-button--primary iskt-button--block" href="<?php echo esc_url( $iskt_adres_zgloszenia ); ?>">
-			<?php esc_html_e( 'Zapytaj o to szkolenie', 'iskt-szkolenia' ); ?>
+			<?php echo esc_html( iskt_tekst( 'szkolenie_cta' ) ); ?>
 		</a>
 	</p>
 
@@ -54,13 +54,13 @@ $iskt_adres_zgloszenia = home_url( '/#kontakt' );
 	 */
 	?>
 	<p class="iskt-text-xs iskt-muted">
-		<?php esc_html_e( 'Wysłanie zapytania nie rezerwuje miejsca na szkoleniu. Odpowiemy z potwierdzeniem dostępności.', 'iskt-szkolenia' ); ?>
+		<?php echo esc_html( iskt_tekst( 'szkolenie_zastrzezenie' ) ); ?>
 	</p>
 </div>
 
 <?php if ( array() !== $iskt_terminy ) : ?>
 	<section class="iskt-card iskt-card--padded" aria-labelledby="iskt-terminy">
-		<h2 id="iskt-terminy" class="iskt-title-xs"><?php esc_html_e( 'Najbliższe terminy', 'iskt-szkolenia' ); ?></h2>
+		<h2 id="iskt-terminy" class="iskt-title-xs"><?php echo esc_html( iskt_tekst( 'szkolenie_naglowek_terminy' ) ); ?></h2>
 
 		<?php
 		/*
@@ -92,11 +92,29 @@ $iskt_adres_zgloszenia = home_url( '/#kontakt' );
 			<?php endforeach; ?>
 		</ul>
 	</section>
+<?php else : ?>
+	<?php
+	/*
+	 * Brak nadchodzących terminów to nie brak oferty. §4.4 wymaga obsługi terminu
+	 * ustalanego indywidualnie, a §4.4 zdanie ostatnie — żeby archiwizacja terminu
+	 * nie usuwała strony szkolenia. Milczenie w tym miejscu czytałoby się jak
+	 * wycofane szkolenie, więc mówimy wprost, co dalej. Treść jest edytowalna
+	 * (Szkolenia → Teksty serwisu).
+	 */
+	$iskt_bez_terminow = iskt_tekst( 'szkolenie_brak_terminow' );
+	?>
+
+	<?php if ( '' !== $iskt_bez_terminow ) : ?>
+		<section class="iskt-card iskt-card--padded" aria-labelledby="iskt-terminy">
+			<h2 id="iskt-terminy" class="iskt-title-xs"><?php echo esc_html( iskt_tekst( 'szkolenie_naglowek_terminy' ) ); ?></h2>
+			<p class="iskt-muted"><?php echo esc_html( $iskt_bez_terminow ); ?></p>
+		</section>
+	<?php endif; ?>
 <?php endif; ?>
 
 <?php if ( array() !== $iskt_trenerzy ) : ?>
 	<section class="iskt-card iskt-card--padded" aria-labelledby="iskt-trenerzy">
-		<h2 id="iskt-trenerzy" class="iskt-title-xs"><?php esc_html_e( 'Prowadzący', 'iskt-szkolenia' ); ?></h2>
+		<h2 id="iskt-trenerzy" class="iskt-title-xs"><?php echo esc_html( iskt_tekst( 'szkolenie_naglowek_trenerzy' ) ); ?></h2>
 
 		<?php
 		/*
@@ -135,13 +153,13 @@ $iskt_adres_zgloszenia = home_url( '/#kontakt' );
 	<section class="iskt-card iskt-card--muted iskt-card--padded" aria-labelledby="iskt-dofinansowanie">
 		<h2 id="iskt-dofinansowanie" class="iskt-title-xs">
 			<?php iskt_the_icon( 'banknote' ); ?>
-			<?php esc_html_e( 'Dofinansowanie', 'iskt-szkolenia' ); ?>
+			<?php echo esc_html( iskt_tekst( 'szkolenie_naglowek_dofinansowanie' ) ); ?>
 		</h2>
 
 		<?php if ( '' !== $iskt_warunki ) : ?>
 			<p><?php echo nl2br( esc_html( $iskt_warunki ) ); ?></p>
 		<?php else : ?>
-			<p><?php esc_html_e( 'To szkolenie może zostać objęte dofinansowaniem. Napisz do nas — sprawdzimy dostępne źródła i warunki.', 'iskt-szkolenia' ); ?></p>
+			<p><?php echo esc_html( iskt_tekst( 'szkolenie_dofinansowanie_opis' ) ); ?></p>
 		<?php endif; ?>
 	</section>
 <?php endif; ?>

@@ -35,7 +35,7 @@ defined( 'ABSPATH' ) || exit;
 	<div class="iskt-card__footer">
 		<span class="iskt-card__more" aria-hidden="true">
 			<?php
-			esc_html_e( 'Czytaj dalej', 'iskt-szkolenia' );
+			echo esc_html( iskt_tekst_motywu( 'aktualnosci_czytaj', __( 'Czytaj dalej', 'iskt-szkolenia' ) ) );
 			iskt_the_icon( 'arrow-right' );
 			?>
 		</span>

@@ -22,14 +22,14 @@ $iskt_grupa = trim( (string) get_post_meta( $iskt_id, '_iskt_grupa_docelowa', tr
 ?>
 
 <?php if ( '' !== trim( get_the_content() ) ) : ?>
-	<section class="iskt-prose" aria-label="<?php esc_attr_e( 'Opis szkolenia', 'iskt-szkolenia' ); ?>">
+	<section class="iskt-prose" aria-label="<?php echo esc_attr( iskt_tekst( 'szkolenie_naglowek_opis' ) ); ?>">
 		<?php the_content(); ?>
 	</section>
 <?php endif; ?>
 
 <?php if ( array() !== $iskt_korzysci ) : ?>
 	<section aria-labelledby="iskt-korzysci">
-		<h2 id="iskt-korzysci" class="iskt-title-sm"><?php esc_html_e( 'Czego się nauczysz', 'iskt-szkolenia' ); ?></h2>
+		<h2 id="iskt-korzysci" class="iskt-title-sm"><?php echo esc_html( iskt_tekst( 'szkolenie_naglowek_korzysci' ) ); ?></h2>
 
 		<ul class="iskt-list--check iskt-korzysci">
 			<?php foreach ( $iskt_korzysci as $iskt_korzysc ) : ?>
@@ -41,7 +41,7 @@ $iskt_grupa = trim( (string) get_post_meta( $iskt_id, '_iskt_grupa_docelowa', tr
 
 <?php if ( array() !== $iskt_program ) : ?>
 	<section aria-labelledby="iskt-program">
-		<h2 id="iskt-program" class="iskt-title-sm"><?php esc_html_e( 'Program szkolenia', 'iskt-szkolenia' ); ?></h2>
+		<h2 id="iskt-program" class="iskt-title-sm"><?php echo esc_html( iskt_tekst( 'szkolenie_naglowek_program' ) ); ?></h2>
 
 		<?php
 		/*
@@ -66,7 +66,7 @@ $iskt_grupa = trim( (string) get_post_meta( $iskt_id, '_iskt_grupa_docelowa', tr
 
 <?php if ( '' !== $iskt_grupa ) : ?>
 	<section class="iskt-card iskt-card--muted iskt-card--padded" aria-labelledby="iskt-grupa">
-		<h2 id="iskt-grupa" class="iskt-title-xs"><?php esc_html_e( 'Dla kogo jest to szkolenie', 'iskt-szkolenia' ); ?></h2>
+		<h2 id="iskt-grupa" class="iskt-title-xs"><?php echo esc_html( iskt_tekst( 'szkolenie_naglowek_grupa' ) ); ?></h2>
 		<p><?php echo nl2br( esc_html( $iskt_grupa ) ); ?></p>
 	</section>
 <?php endif; ?>

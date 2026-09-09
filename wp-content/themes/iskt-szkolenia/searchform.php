@@ -18,7 +18,7 @@ $iskt_field_id = wp_unique_id( 'iskt-szukaj-' );
 <form class="iskt-search-form" role="search" method="get" action="<?php echo esc_url( home_url( '/' ) ); ?>">
 	<div class="iskt-field">
 		<label class="iskt-field__label" for="<?php echo esc_attr( $iskt_field_id ); ?>">
-			<?php esc_html_e( 'Szukaj w serwisie', 'iskt-szkolenia' ); ?>
+			<?php echo esc_html( iskt_tekst_motywu( 'wyszukiwanie_etykieta', __( 'Szukaj w serwisie', 'iskt-szkolenia' ) ) ); ?>
 		</label>
 
 		<div class="iskt-search-form__row">
@@ -28,11 +28,11 @@ $iskt_field_id = wp_unique_id( 'iskt-szukaj-' );
 				type="search"
 				name="s"
 				value="<?php echo esc_attr( get_search_query() ); ?>"
-				placeholder="<?php esc_attr_e( 'np. ESG, AI, angielski', 'iskt-szkolenia' ); ?>"
+				placeholder="<?php echo esc_attr( iskt_tekst_motywu( 'wyszukiwanie_podpowiedz', __( 'np. ESG, AI, angielski', 'iskt-szkolenia' ) ) ); ?>"
 			>
 			<button class="iskt-button iskt-button--primary" type="submit">
 				<?php iskt_the_icon( 'search', 'iskt-button__icon' ); ?>
-				<?php esc_html_e( 'Szukaj', 'iskt-szkolenia' ); ?>
+				<?php echo esc_html( iskt_tekst_motywu( 'wyszukiwanie_przycisk', __( 'Szukaj', 'iskt-szkolenia' ) ) ); ?>
 			</button>
 		</div>
 	</div>

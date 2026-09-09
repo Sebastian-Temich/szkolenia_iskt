@@ -373,3 +373,54 @@ function get_the_terms( int $post_id, string $taksonomia ) {
 function wp_date( string $format, ?int $znacznik = null ) {
 	return gmdate( $format, $znacznik ?? 0 );
 }
+
+/**
+ * Odwzorowuje `sanitize_email()` w zakresie potrzebnym testom tekstów globalnych.
+ *
+ * Oryginał rozbiera adres na część lokalną i domenę i odrzuca niedozwolone znaki.
+ * Atrapa robi to samo filtrem `FILTER_VALIDATE_EMAIL` — dla adresów, które trafiają
+ * do pola kontaktowego, obie drogi dają ten sam wynik: poprawny adres albo pustkę.
+ *
+ * @param string $adres Adres wejściowy.
+ */
+function sanitize_email( string $adres ): string {
+	$czysty = filter_var( trim( $adres ), FILTER_VALIDATE_EMAIL );
+
+	return is_string( $czysty ) ? $czysty : '';
+}
+
+/**
+ * Odwzorowuje `esc_url_raw()` w zakresie potrzebnym testom.
+ *
+ * Sprawdzamy to, co sprawdza oryginał w tym zastosowaniu: adres musi mieć
+ * dozwolony schemat, inaczej nie trafia do bazy. `javascript:` odpada.
+ *
+ * @param string $adres Adres wejściowy.
+ */
+function esc_url_raw( string $adres ): string {
+	$adres = trim( $adres );
+
+	if ( '' === $adres ) {
+		return '';
+	}
+
+	$schemat = strtolower( (string) wp_parse_url( $adres, PHP_URL_SCHEME ) );
+
+	if ( ! in_array( $schemat, array( 'http', 'https', 'mailto' ), true ) ) {
+		return '';
+	}
+
+	return $adres;
+}
+
+/**
+ * Odwzorowuje `wp_parse_url()` przez `parse_url()`.
+ *
+ * @param string $adres     Adres wejściowy.
+ * @param int    $skladowa  Składowa do zwrócenia.
+ *
+ * @return mixed
+ */
+function wp_parse_url( string $adres, int $skladowa = -1 ) {
+	return parse_url( $adres, $skladowa );
+}

@@ -20,9 +20,9 @@ $iskt_katalog   = get_post_type_archive_link( (string) get_post_type() );
  */
 $iskt_fakty = array_filter(
 	array(
-		__( 'Czas trwania', 'iskt-szkolenia' ) => (string) get_post_meta( $iskt_id, '_iskt_czas_trwania', true ),
-		__( 'Forma', 'iskt-szkolenia' )        => implode( ' / ', iskt_formy_szkolenia( $iskt_id ) ),
-		__( 'Poziom', 'iskt-szkolenia' )       => iskt_poziom_szkolenia( $iskt_id ),
+		iskt_tekst( 'szkolenie_etykieta_czas' )   => (string) get_post_meta( $iskt_id, '_iskt_czas_trwania', true ),
+		iskt_tekst( 'szkolenie_etykieta_forma' )  => implode( ' / ', iskt_formy_szkolenia( $iskt_id ) ),
+		iskt_tekst( 'szkolenie_etykieta_poziom' ) => iskt_poziom_szkolenia( $iskt_id ),
 	),
 	static fn ( string $wartosc ): bool => '' !== $wartosc
 );
@@ -35,7 +35,7 @@ $iskt_fakty = array_filter(
 			<nav class="iskt-breadcrumb" aria-label="<?php esc_attr_e( 'Ścieżka nawigacji', 'iskt-szkolenia' ); ?>">
 				<a href="<?php echo esc_url( $iskt_katalog ); ?>">
 					<?php iskt_the_icon( 'arrow-left' ); ?>
-					<?php esc_html_e( 'Katalog szkoleń', 'iskt-szkolenia' ); ?>
+					<?php echo esc_html( iskt_tekst( 'szkolenie_sciezka_katalog' ) ); ?>
 				</a>
 
 				<?php if ( $iskt_kategoria instanceof WP_Term ) : ?>
@@ -55,7 +55,7 @@ $iskt_fakty = array_filter(
 				<?php endif; ?>
 
 				<?php if ( (bool) get_post_meta( $iskt_id, '_iskt_wyroznione', true ) ) : ?>
-					<span class="iskt-badge iskt-badge--solid"><?php esc_html_e( 'Wyróżnione', 'iskt-szkolenia' ); ?></span>
+					<span class="iskt-badge iskt-badge--solid"><?php echo esc_html( iskt_tekst( 'szkolenie_odznaka_wyroznione' ) ); ?></span>
 				<?php endif; ?>
 
 				<?php
@@ -68,7 +68,7 @@ $iskt_fakty = array_filter(
 					?>
 					<span class="iskt-badge iskt-badge--accent">
 						<?php iskt_the_icon( 'banknote' ); ?>
-						<?php esc_html_e( 'Możliwe dofinansowanie', 'iskt-szkolenia' ); ?>
+						<?php echo esc_html( iskt_tekst( 'szkolenie_odznaka_dofinansowanie' ) ); ?>
 					</span>
 				<?php endif; ?>
 			</p>

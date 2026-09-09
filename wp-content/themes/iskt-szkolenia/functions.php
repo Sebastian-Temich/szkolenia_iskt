@@ -28,6 +28,7 @@ const ISKT_TOKEN_FILES = array( 'fonts', 'colors', 'typography', 'spacing', 'eff
  */
 const ISKT_STYLE_FILES = array( 'uklad', 'typografia', 'komponenty', 'szkielet', 'sekcje' );
 
+require_once get_theme_file_path( 'inc/teksty.php' );
 require_once get_theme_file_path( 'inc/ikony.php' );
 require_once get_theme_file_path( 'inc/nawigacja.php' );
 require_once get_theme_file_path( 'inc/szablony.php' );

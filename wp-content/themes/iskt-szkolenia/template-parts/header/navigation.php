@@ -14,7 +14,7 @@ declare( strict_types = 1 );
 defined( 'ABSPATH' ) || exit;
 
 ?>
-<nav class="iskt-site-nav" aria-label="<?php esc_attr_e( 'Nawigacja główna', 'iskt-szkolenia' ); ?>">
+<nav class="iskt-site-nav" aria-label="<?php echo esc_attr( iskt_tekst_motywu( 'naglowek_nawigacja', __( 'Nawigacja główna', 'iskt-szkolenia' ) ) ); ?>">
 	<button
 		class="iskt-site-header__toggle"
 		type="button"
@@ -27,7 +27,7 @@ defined( 'ABSPATH' ) || exit;
 		iskt_the_icon( 'menu', 'iskt-icon--menu' );
 		iskt_the_icon( 'close', 'iskt-icon--close' );
 		?>
-		<span><?php esc_html_e( 'Menu', 'iskt-szkolenia' ); ?></span>
+		<span><?php echo esc_html( iskt_tekst_motywu( 'naglowek_menu', __( 'Menu', 'iskt-szkolenia' ) ) ); ?></span>
 	</button>
 
 	<div class="iskt-site-nav__panel" id="iskt-menu-glowne" data-iskt-nav>

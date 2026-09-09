@@ -33,7 +33,7 @@ defined( 'ABSPATH' ) || exit;
 	<?php else : ?>
 
 		<div class="iskt-notice">
-			<p><?php esc_html_e( 'Nie ma tu jeszcze żadnych treści.', 'iskt-szkolenia' ); ?></p>
+			<p><?php echo esc_html( iskt_tekst_motywu( 'aktualnosci_brak', __( 'Nie ma tu jeszcze żadnych treści.', 'iskt-szkolenia' ) ) ); ?></p>
 		</div>
 
 		<?php if ( current_user_can( 'publish_posts' ) ) : ?>

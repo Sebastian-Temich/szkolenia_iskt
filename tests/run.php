@@ -36,6 +36,7 @@ require_once $sciezka . 'terminy.php';
 require_once $sciezka . 'kategorie.php';
 require_once $sciezka . 'odbiorca.php';
 require_once $sciezka . 'prezentacja.php';
+require_once $sciezka . 'teksty.php';
 
 /*
  * `bloki/odbiorca.php` renderuje pojemnik wariantu i korzysta z pomocnika
@@ -386,6 +387,119 @@ sprawdz( 'sam film jest treścią', true, iskt_sekcja_ma_tresc( '<div><video src
 sprawdz( 'osadzona mapa jest treścią', true, iskt_sekcja_ma_tresc( '<div><iframe src="https://example.org"></iframe></div>' ) );
 sprawdz( 'samo pole formularza jest treścią', true, iskt_sekcja_ma_tresc( '<div><input type="email"></div>' ) );
 sprawdz( 'nazwa klasy nie udaje treści', false, iskt_sekcja_ma_tresc( '<div class="obrazek image video"></div>' ) );
+
+// --- Teksty globalne -------------------------------------------------------
+
+$GLOBALS['iskt_test_opcje'][ ISKT_OPCJA_TEKSTY ] = array();
+
+sprawdz(
+	'bez nadpisania wraca treść domyślna',
+	'Katalog szkoleń',
+	iskt_tekst( 'katalog_tytul' )
+);
+
+sprawdz(
+	'klucz spoza rejestru nie wysadza szablonu',
+	'',
+	iskt_tekst( 'klucz_ktorego_nie_ma' )
+);
+
+$GLOBALS['iskt_test_opcje'][ ISKT_OPCJA_TEKSTY ] = array(
+	'katalog_tytul' => 'Nasze szkolenia',
+	'kontakt_email' => 'biuro@example.org',
+);
+
+sprawdz( 'nadpisanie ma pierwszeństwo', 'Nasze szkolenia', iskt_tekst( 'katalog_tytul' ) );
+sprawdz( 'nadpisany adres e-mail wraca', 'biuro@example.org', iskt_tekst( 'kontakt_email' ) );
+sprawdz( 'nienadpisany klucz nadal domyślny', 'Wyczyść filtry', iskt_tekst( 'katalog_filtr_wyczysc' ) );
+
+$GLOBALS['iskt_test_opcje'][ ISKT_OPCJA_TEKSTY ] = array( 'katalog_tytul' => '   ' );
+
+sprawdz(
+	'nadpisanie z samych spacji nie kasuje napisu',
+	'Katalog szkoleń',
+	iskt_tekst( 'katalog_tytul' )
+);
+
+$GLOBALS['iskt_test_opcje'][ ISKT_OPCJA_TEKSTY ] = array();
+
+sprawdz(
+	'uszkodzona opcja nie przewraca serwisu',
+	'Katalog szkoleń',
+	( static function (): string {
+		$GLOBALS['iskt_test_opcje'][ ISKT_OPCJA_TEKSTY ] = 'nie tablica';
+
+		$wynik = iskt_tekst( 'katalog_tytul' );
+
+		$GLOBALS['iskt_test_opcje'][ ISKT_OPCJA_TEKSTY ] = array();
+
+		return $wynik;
+	} )()
+);
+
+sprawdz( 'tekst jednowierszowy traci znaczniki', 'Zapisy otwarte', iskt_sanitize_tekst( '<b>Zapisy otwarte</b>', 'linia' ) );
+sprawdz( 'obszar zachowuje wiersze', "Pierwszy\nDrugi", iskt_sanitize_tekst( "Pierwszy\nDrugi ", 'obszar' ) );
+sprawdz( 'niepoprawny adres e-mail odrzucony', '', iskt_sanitize_tekst( 'to nie jest adres', 'email' ) );
+sprawdz( 'poprawny adres e-mail przechodzi', 'szkolenia@iskt.pl', iskt_sanitize_tekst( ' szkolenia@iskt.pl ', 'email' ) );
+sprawdz( 'adres javascript odrzucony', '', iskt_sanitize_tekst( 'javascript:alert(1)', 'adres_www' ) );
+sprawdz( 'adres https przechodzi', 'https://iskt.pl/prywatnosc', iskt_sanitize_tekst( 'https://iskt.pl/prywatnosc', 'adres_www' ) );
+sprawdz( 'telefon zachowuje format', '+48 32 000 00 00', iskt_sanitize_tekst( '+48 32 000 00 00', 'telefon' ) );
+sprawdz( 'tekst w polu telefonu odsiany', '48 123', iskt_sanitize_tekst( 'tel 48 123', 'telefon' ) );
+sprawdz( 'tablica w polu tekstowym nie wysadza zapisu', '', iskt_sanitize_tekst( array( 'a' ), 'linia' ) );
+sprawdz( 'nieznany typ traktowany jak jeden wiersz', 'Tekst', iskt_sanitize_tekst( '<i>Tekst</i>', 'wymyslony' ) );
+
+sprawdz(
+	'zapis pomija klucze spoza rejestru',
+	array( 'katalog_tytul' => 'Oferta' ),
+	iskt_sanitize_teksty(
+		array(
+			'katalog_tytul' => 'Oferta',
+			'cudzy_klucz'   => 'wartość',
+		)
+	)
+);
+
+sprawdz(
+	'wartość równa domyślnej nie jest zapisywana',
+	array(),
+	iskt_sanitize_teksty( array( 'katalog_tytul' => 'Katalog szkoleń' ) )
+);
+
+sprawdz(
+	'puste pole oznacza powrót do treści domyślnej',
+	array(),
+	iskt_sanitize_teksty( array( 'katalog_tytul' => '' ) )
+);
+
+sprawdz( 'zapis czegoś, co nie jest tablicą, daje pustkę', array(), iskt_sanitize_teksty( 'ciąg' ) );
+
+sprawdz(
+	'każdy klucz rejestru ma etykietę i typ',
+	true,
+	( static function (): bool {
+		foreach ( iskt_definicje_tekstow() as $definicja ) {
+			if ( '' === (string) ( $definicja['etykieta'] ?? '' ) || '' === (string) ( $definicja['typ'] ?? '' ) ) {
+				return false;
+			}
+		}
+
+		return true;
+	} )()
+);
+
+sprawdz(
+	'klucze tekstów są unikalne między grupami',
+	true,
+	( static function (): bool {
+		$policzone = 0;
+
+		foreach ( iskt_rejestr_tekstow() as $grupa ) {
+			$policzone += count( $grupa['pola'] ?? array() );
+		}
+
+		return count( iskt_definicje_tekstow() ) === $policzone;
+	} )()
+);
 
 // --- Wynik -----------------------------------------------------------------
 
