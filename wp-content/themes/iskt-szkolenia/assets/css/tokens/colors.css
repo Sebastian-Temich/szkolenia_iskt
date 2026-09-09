@@ -1,0 +1,75 @@
+/* ISKT Greenovation — Color tokens
+   Palette sampled directly from the ISKT brand mark (green leaves + circuit globe).
+   Core wordmark green ≈ #1E551D, deepest #0A3400, leaf-lime #54841D, pale leaf #D5EBAC. */
+
+:root {
+  /* ---- Brand green scale (nature) ---- */
+  --green-50:  #F2F8EC;
+  --green-100: #E1EFCF;
+  --green-200: #D5EBAC;  /* lightest leaf */
+  --green-300: #A9CE6E;
+  --green-400: #7FA83A;
+  --green-500: #54841D;  /* leaf-lime accent */
+  --green-600: #2E6B1E;
+  --green-700: #1E551D;  /* PRIMARY — the ISKT wordmark green */
+  --green-800: #123F14;
+  --green-900: #0A3400;  /* deepest forest */
+
+  /* ---- Ink / tech (circuit side of the mark) ---- */
+  --ink-900: #0E1511;    /* near-black, faintly green-warm — primary text */
+  --ink-800: #182019;
+  --ink-700: #2A322C;
+  --ink-600: #3E4740;
+
+  /* ---- Warm-neutral grays ---- */
+  --neutral-0:   #FFFFFF;
+  --neutral-50:  #FAFBF8;
+  --neutral-100: #F3F5F0;
+  --neutral-200: #E7EAE2;
+  --neutral-300: #D4D9CD;
+  --neutral-400: #AEB4A6;
+  --neutral-500: #7E857A;
+  --neutral-600: #5B6157;
+  --neutral-700: #40453D;
+  --neutral-800: #282C26;
+  --neutral-900: #14170F;
+
+  /* ---- Status ---- */
+  --success-500: #2E6B1E;
+  --success-50:  #EAF4E3;
+  --warning-500: #B8860B;
+  --warning-50:  #FBF3DE;
+  --error-500:   #B23B2E;
+  --error-50:    #FBEBE8;
+  --info-500:    #1C6E6A;   /* eco-teal */
+  --info-50:     #E3F1F0;
+
+  /* ---- Semantic aliases ---- */
+  --color-primary:        var(--green-700);
+  --color-primary-hover:  var(--green-800);
+  --color-primary-active: var(--green-900);
+  --color-accent:         var(--green-500);   /* leaf-lime highlights */
+
+  --text-primary:    var(--ink-900);
+  --text-secondary:  var(--neutral-600);
+  --text-muted:      var(--neutral-500);
+  --text-brand:      var(--green-700);
+  --text-on-dark:    var(--neutral-50);
+  --text-on-brand:   #FFFFFF;
+  --text-link:       var(--green-700);
+  --text-link-hover: var(--green-900);
+
+  --surface-page:    var(--neutral-0);
+  --surface-subtle:  var(--neutral-50);
+  --surface-muted:   var(--green-50);   /* soft green wash sections */
+  --surface-card:    var(--neutral-0);
+  --surface-dark:    var(--ink-900);    /* tech / footer sections */
+  --surface-brand:   var(--green-700);
+
+  --border-subtle:  var(--neutral-200);
+  --border-default: var(--neutral-300);
+  --border-strong:  var(--neutral-400);
+  --border-brand:   var(--green-700);
+
+  --focus-ring: color-mix(in srgb, var(--green-500) 55%, transparent);
+}

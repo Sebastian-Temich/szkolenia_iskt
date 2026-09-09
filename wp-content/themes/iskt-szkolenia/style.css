@@ -1,0 +1,16 @@
+/*
+Theme Name: ISKT Szkolenia
+Theme URI: https://szkolenia.iskt.pl
+Author: ISKT Software House
+Description: Dedykowany motyw serwisu szkoleniowego ISKT Greennovation. Odpowiada wyłącznie za prezentację — model danych katalogu szkoleń, terminów i trenerów dostarcza wtyczka iskt-szkolenia-core, dzięki czemu zmiana motywu nie usuwa danych katalogu.
+Version: 0.1.0
+Requires at least: 6.5
+Requires PHP: 8.2
+License: GPL-2.0-or-later
+License URI: https://www.gnu.org/licenses/gpl-2.0.html
+Text Domain: iskt-szkolenia
+Tags: education, custom-colors, translation-ready, accessibility-ready
+*/
+
+/* Reguły stylów mieszkają w assets/css/. Ten plik zawiera wyłącznie nagłówek
+   motywu wymagany przez WordPress — arkusze wczytuje functions.php. */
